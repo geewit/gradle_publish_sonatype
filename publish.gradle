@@ -1,0 +1,134 @@
+apply plugin: 'java'
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
+apply plugin: 'pom'
+
+buildDir = 'target'
+
+ext {
+    pomFile = file("${project.buildDir}/generated-pom.xml")
+    isReleaseVersion = !(project.version =~ /-SNAPSHOT$/)
+}
+
+task javadocsJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocsJar
+}
+
+signing {
+    required { signatory != null && project.ext.isReleaseVersion }
+    sign configurations.archives
+}
+
+
+pom {
+    name POM_NAME
+    packaging POM_PACKAGING
+    description POM_DESCRIPTION
+    url POM_URL
+
+    scm {
+        url POM_SCM_URL
+        connection POM_SCM_CONNECTION
+        developerConnection POM_SCM_DEV_CONNECTION
+    }
+
+    licenses {
+        license {
+            name POM_LICENCE_NAME
+            url POM_LICENCE_URL
+            distribution POM_LICENCE_DIST
+        }
+    }
+
+    developers {
+        developer {
+            id POM_DEVELOPER_ID
+            name POM_DEVELOPER_NAME
+        }
+    }
+}
+
+def getRepositoryUsername() {
+    return hasProperty('SONATYPE_USERNAME') ? SONATYPE_USERNAME : ""
+}
+
+def getRepositoryPassword() {
+    return hasProperty('SONATYPE_PASSWORD') ? SONATYPE_PASSWORD : ""
+}
+
+publishing {
+    repositories {
+        maven {
+            if (project.ext.isReleaseVersion) {
+                url 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
+            } else {
+                url 'https://oss.sonatype.org/content/repositories/snapshots/'
+            }
+
+            credentials {
+                username = getRepositoryUsername()
+                password = getRepositoryPassword()
+            }
+        }
+    }
+
+    publications {
+        lib(MavenPublication) {
+            from components.java
+
+            artifact sourcesJar
+            artifact javadocsJar
+
+            if (signing.required) {
+                // Sign the artifacts.
+                project.tasks.signArchives.signatureFiles.each {
+                    artifact(it) {
+                        def matcher = it.file =~ /-?(?<classifier>sources|javadoc)?\.(?<extension>jar)\.asc$/
+                        if (matcher.find()) {
+                            classifier = matcher.group('classifier')
+                            extension = matcher.group('extension') + '.asc'
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+if (signing.required) {
+    project.afterEvaluate {
+        // Sign the pom.xml.
+        publishing.publications.lib(MavenPublication) {
+            pom.withXml {
+                writeTo(project.ext.pomFile)
+                def pomAscFile = signing.sign(project.ext.pomFile).signatureFiles[0]
+                artifact(pomAscFile) {
+                    classifier = null
+                    extension = 'pom.asc'
+                }
+                project.ext.pomFile.delete()
+            }
+        }
+    }
+}
+
+model {
+    tasks.publishLibPublicationToMavenLocal {
+        dependsOn(project.tasks.signArchives)
+    }
+
+    tasks.publishLibPublicationToMavenRepository {
+        dependsOn(project.tasks.signArchives)
+    }
+}
