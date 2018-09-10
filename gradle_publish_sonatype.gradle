@@ -90,8 +90,7 @@ afterEvaluate { project ->
     signing {
         def isRelease = isReleaseBuild()
         println "isRelease : $isRelease"
-        onlyIf { gradle.taskGraph.hasTask(uploadArchives) }
-        required { isRelease && hasUploadArchivesTask }
+        required { isRelease }
         sign configurations.archives
     }
 
