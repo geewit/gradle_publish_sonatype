@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'signing'
 
@@ -88,19 +88,19 @@ afterEvaluate { project ->
     }
 
     signing {
-        required { isReleaseBuild() && gradle.taskGraph.hasTask("uploadArchives") }
+        onlyif { isReleaseBuild() && gradle.taskGraph.hasTask("uploadArchives") }
         sign configurations.archives
     }
 
 
-    task sourcesJar(type: Jar) {
+    task sources(type: Jar) {
         classifier = 'sources'
         from sourceSets.main.allSource
     }
 
     artifacts {
         archives jar
-        archives javadoc
-        archives sourcesJar
+        archives sources
+        //archives javadoc
     }
 }
