@@ -100,11 +100,17 @@ afterEvaluate { project ->
     signing {
         def isRelease = isReleaseBuild()
         println "isRelease : $isRelease"
+        def signatoryNotNull = signatory != null
+        println "signatoryNotNull : $signatoryNotNull"
         required {
-            isRelease && gradle.taskGraph.hasTask("uploadArchives")
+            boolean signed = signatoryNotNull && isRelease && gradle.taskGraph.hasTask("uploadArchives")
+            println "signed : $signed"
+            signed
         }
         sign configurations.archives
     }
+
+
 
 
     task sources(type: Jar) {
