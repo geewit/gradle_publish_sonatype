@@ -91,6 +91,7 @@ afterEvaluate { project ->
         def isRelease = isReleaseBuild()
         println "isRelease : $isRelease"
         required { isRelease }
+        useGpgCmd()
         sign configurations.archives
     }
 
