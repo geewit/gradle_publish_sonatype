@@ -17,6 +17,8 @@ apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'signing'
 
+buildDir = 'target'
+
 def isReleaseBuild() {
     return VERSION_NAME.contains("SNAPSHOT") == false
 }
@@ -87,10 +89,20 @@ afterEvaluate { project ->
         }
     }
 
+    install {
+        repositories.mavenInstaller {
+            pom.groupId = project.group
+            pom.artifactId = project.name
+            pom.version = project.version
+        }
+    }
+
     signing {
         def isRelease = isReleaseBuild()
         println "isRelease : $isRelease"
-        required { isRelease }
+        required {
+            isRelease && gradle.taskGraph.hasTask("uploadArchives")
+        }
         sign configurations.archives
     }
 
