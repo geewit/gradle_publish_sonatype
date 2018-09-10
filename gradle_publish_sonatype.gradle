@@ -104,7 +104,7 @@ afterEvaluate { project ->
             boolean signed = signatoryNotNull && isRelease && gradle.taskGraph.hasTask("uploadArchives")
             println "isRelease : $isRelease"
             println "signatoryNotNull : $signatoryNotNull"
-            println "signed : $signed"
+//            println "signed : $signed"
             signed
         }
         sign configurations.archives
