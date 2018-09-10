@@ -98,11 +98,11 @@ afterEvaluate { project ->
     }
 
     signing {
-        def isRelease = isReleaseBuild()
-        println "isRelease : $isRelease"
-        def signatoryNotNull = signatory != null
-        println "signatoryNotNull : $signatoryNotNull"
         required {
+            def isRelease = isReleaseBuild()
+            println "isRelease : $isRelease"
+            def signatoryNotNull = signatory != null
+            println "signatoryNotNull : $signatoryNotNull"
             boolean signed = signatoryNotNull && isRelease && gradle.taskGraph.hasTask("uploadArchives")
             println "signed : $signed"
             signed
