@@ -121,6 +121,6 @@ afterEvaluate { project ->
     artifacts {
         archives jar
         archives sources
-        //archives javadoc
+        archives javadoc
     }
 }
