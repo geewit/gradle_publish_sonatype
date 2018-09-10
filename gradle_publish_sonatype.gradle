@@ -111,7 +111,11 @@ afterEvaluate { project ->
     }
 
 
-
+    javadoc {
+        source = sourceSets.main.allJava
+        classpath = configurations.compile
+        classifier = 'javadoc'
+    }
 
     task sources(type: Jar) {
         classifier = 'sources'
