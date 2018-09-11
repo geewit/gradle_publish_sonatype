@@ -31,7 +31,7 @@ signing {
 }
 
 
-pom {
+pom.project {
     name POM_NAME
     packaging POM_PACKAGING
     description POM_DESCRIPTION
