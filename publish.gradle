@@ -1,134 +1,117 @@
-apply plugin: 'java'
-apply plugin: 'maven-publish'
-apply plugin: 'signing'
+import java.nio.charset.StandardCharsets
 
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'signing'
 
 buildDir = 'target'
 
-ext {
-    pomFile = file("${project.buildDir}/generated-pom.xml")
-    isReleaseVersion = !(project.version =~ /-SNAPSHOT$/)
+repositories {
+    mavenLocal()
+    maven { url "http://repo1.maven.org/maven2" }
 }
 
-task javadocsJar(type: Jar) {
+compileJava {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+compileTestJava {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+//设置编码
+compileJava.options*.compilerArgs << "-Xlint:unchecked" << "-Xlint:options"
+
+[compileJava, javadoc]*.options*.encoding = StandardCharsets.UTF_8.name()
+
+def isReleaseBuild() {
+    return !version.contains("SNAPSHOT")
+}
+
+def getReleaseRepositoryUrl() {
+    return hasProperty('RELEASE_REPOSITORY_URL') ? getProperty('RELEASE_REPOSITORY_URL')
+            : "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+}
+
+def getSnapshotRepositoryUrl() {
+    return hasProperty('SNAPSHOT_REPOSITORY_URL') ? getProperty('SNAPSHOT_REPOSITORY_URL')
+            : "https://oss.sonatype.org/content/repositories/snapshots/"
+}
+
+def getRepositoryUsername() {
+    return hasProperty('SONATYPE_USERNAME') ? getProperty('SONATYPE_USERNAME') : ""
+}
+
+def getRepositoryPassword() {
+    return hasProperty('SONATYPE_PASSWORD') ? getProperty('SONATYPE_PASSWORD') : ""
+}
+
+
+task javadocs(type: Jar, dependsOn: javadoc) {
     classifier = 'javadoc'
     from javadoc.destinationDir
 }
 
-task sourcesJar(type: Jar) {
+task sources(type: Jar) {
     classifier = 'sources'
     from sourceSets.main.allSource
 }
 
 artifacts {
-    archives sourcesJar
-    archives javadocsJar
+    archives jar
+    archives javadocs
+    archives sources
 }
 
 signing {
-    required { signatory != null && project.ext.isReleaseVersion }
+    required { isReleaseBuild() }
     sign configurations.archives
 }
 
-
-pom.project {
-    name POM_NAME
-    packaging POM_PACKAGING
-    description POM_DESCRIPTION
-    url POM_URL
-
-    scm {
-        url POM_SCM_URL
-        connection POM_SCM_CONNECTION
-        developerConnection POM_SCM_DEV_CONNECTION
-    }
-
-    licenses {
-        license {
-            name POM_LICENCE_NAME
-            url POM_LICENCE_URL
-            distribution POM_LICENCE_DIST
-        }
-    }
-
-    developers {
-        developer {
-            id POM_DEVELOPER_ID
-            name POM_DEVELOPER_NAME
-        }
-    }
-}
-
-def getRepositoryUsername() {
-    return hasProperty('SONATYPE_USERNAME') ? SONATYPE_USERNAME : ""
-}
-
-def getRepositoryPassword() {
-    return hasProperty('SONATYPE_PASSWORD') ? SONATYPE_PASSWORD : ""
-}
-
-publishing {
+uploadArchives {
     repositories {
-        maven {
-            if (project.ext.isReleaseVersion) {
-                url 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
-            } else {
-                url 'https://oss.sonatype.org/content/repositories/snapshots/'
+        mavenDeployer {
+            beforeDeployment {
+                deployment -> signing.signPom(deployment)
             }
 
-            credentials {
-                username = getRepositoryUsername()
-                password = getRepositoryPassword()
+            repository(url: getReleaseRepositoryUrl()) {
+                authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())
             }
-        }
-    }
 
-    publications {
-        lib(MavenPublication) {
-            from components.java
+            snapshotRepository(url: getSnapshotRepositoryUrl()) {
+                authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())
+            }
 
-            artifact sourcesJar
-            artifact javadocsJar
+            pom.project {
+                name POM_ARTIFACT_ID
+                packaging POM_PACKAGING
+                description POM_DESCRIPTION
+                url POM_SCM_URL
 
-            if (signing.required) {
-                // Sign the artifacts.
-                project.tasks.signArchives.signatureFiles.each {
-                    artifact(it) {
-                        def matcher = it.file =~ /-?(?<classifier>sources|javadoc)?\.(?<extension>jar)\.asc$/
-                        if (matcher.find()) {
-                            classifier = matcher.group('classifier')
-                            extension = matcher.group('extension') + '.asc'
-                        }
+                licenses {
+                    license {
+                        name = POM_LICENCE_NAME
+                        url = POM_LICENCE_URL
+                    }
+                }
+
+                scm {
+                    url POM_SCM_URL
+                    connection POM_SCM_CONNECTION
+                    developerConnection POM_SCM_DEV_CONNECTION
+                }
+
+                developers {
+                    developer {
+                        id = POM_DEVELOPER_ID
+                        name = POM_DEVELOPER_NAME
+                        email = POM_DEVELOPER_EMAIL
                     }
                 }
             }
         }
-    }
-}
-
-if (signing.required) {
-    project.afterEvaluate {
-        // Sign the pom.xml.
-        publishing.publications.lib(MavenPublication) {
-            pom.withXml {
-                writeTo(project.ext.pomFile)
-                def pomAscFile = signing.sign(project.ext.pomFile).signatureFiles[0]
-                artifact(pomAscFile) {
-                    classifier = null
-                    extension = 'pom.asc'
-                }
-                project.ext.pomFile.delete()
-            }
-        }
-    }
-}
-
-model {
-    tasks.publishLibPublicationToMavenLocal {
-        dependsOn(project.tasks.signArchives)
-    }
-
-    tasks.publishLibPublicationToMavenRepository {
-        dependsOn(project.tasks.signArchives)
     }
 }
