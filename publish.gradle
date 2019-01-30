@@ -1,7 +1,7 @@
 import java.nio.charset.StandardCharsets
 
 apply plugin: 'java'
-apply plugin: 'maven'
+apply plugin: 'maven-publish'
 apply plugin: 'signing'
 
 buildDir = 'target'
@@ -74,35 +74,18 @@ artifacts {
     archives sources
 }
 
-signing {
-    required { isReleaseBuild() }
-    sign configurations.archives
-}
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId project.group
+            artifactId project.name
+            version "${version}"
+            from components.java
+            artifact javadocs
+            artifact sources
 
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            beforeDeployment {
-                deployment -> signing.signPom(deployment)
-            }
-
-            repository(url: getReleaseRepositoryUrl()) {
-                println("releaseRepositoryUrl:" + url)
-                def username = getRepositoryUsername()
-                def password = getRepositoryPassword()
-                println username +  ":" +  password
-                authentication(userName: username, password: password)
-            }
-
-            snapshotRepository(url: getSnapshotRepositoryUrl()) {
-                println("snapshotRepositoryUrl:" + url)
-                def username = getRepositoryUsername()
-                def password = getRepositoryPassword()
-                println username + ":" + password
-                authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())
-            }
-
-            pom.project {
+            // https://docs.gradle.org/current/dsl/org.gradle.api.publish.maven.MavenPublication.html
+            pom {
                 name POM_ARTIFACT_ID
                 packaging POM_PACKAGING
                 description POM_DESCRIPTION
@@ -131,4 +114,27 @@ uploadArchives {
             }
         }
     }
+    repositories {
+        maven {
+            name 'sonatypeRepository'
+            url getReleaseRepositoryUrl()
+            credentials {
+                username = getRepositoryUsername()
+                password = getRepositoryPassword()
+            }
+        }
+        maven {
+            name = 'sonatypeSnapshotRepository'
+            url = getSnapshotRepositoryUrl()
+            credentials {
+                username = getRepositoryUsername()
+                password = getRepositoryPassword()
+            }
+        }
+    }
 }
+
+signing {
+    sign publishing.publications.mavenJava
+}
+
