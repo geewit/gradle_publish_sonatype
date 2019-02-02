@@ -34,7 +34,7 @@ def isReleaseBuild() {
 def getReleaseRepositoryUrl() {
     def releaseRepositoryUrl = hasProperty('RELEASE_REPOSITORY_URL') ? getProperty('RELEASE_REPOSITORY_URL')
             : "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
-    println "releaseRepositoryUrl:" releaseRepositoryUrl
+    println "releaseRepositoryUrl:" + releaseRepositoryUrl
     return releaseRepositoryUrl
 }
 
@@ -74,9 +74,11 @@ artifacts {
     archives sources
 }
 
+
+// https://docs.gradle.org/current/dsl/org.gradle.api.publish.maven.MavenPublication.html
 publishing {
     publications {
-        mavenJava(MavenPublication) {
+        maven(MavenPublication) {
             groupId project.group
             artifactId project.name
             version "${version}"
@@ -84,26 +86,16 @@ publishing {
             artifact javadocs
             artifact sources
 
-            // https://docs.gradle.org/current/dsl/org.gradle.api.publish.maven.MavenPublication.html
             pom {
-                name POM_ARTIFACT_ID
-                packaging POM_PACKAGING
-                description POM_DESCRIPTION
-                url POM_SCM_URL
-
+                name = POM_ARTIFACT_ID
+                description = POM_DESCRIPTION
+                url = POM_SCM_URL
                 licenses {
                     license {
                         name = POM_LICENCE_NAME
                         url = POM_LICENCE_URL
                     }
                 }
-
-                scm {
-                    url POM_SCM_URL
-                    connection POM_SCM_CONNECTION
-                    developerConnection POM_SCM_DEV_CONNECTION
-                }
-
                 developers {
                     developer {
                         id = POM_DEVELOPER_ID
@@ -111,21 +103,19 @@ publishing {
                         email = POM_DEVELOPER_EMAIL
                     }
                 }
+                scm {
+                    url = POM_SCM_URL
+                    connection = POM_SCM_CONNECTION
+                    developerConnection = POM_SCM_DEV_CONNECTION
+                }
             }
         }
     }
     repositories {
         maven {
-            name 'sonatypeRepository'
+            name = 'sonatypeRepository'
+            url = version.endsWith('SNAPSHOT') ? getSnapshotRepositoryUrl() : getReleaseRepositoryUrl()
             url getReleaseRepositoryUrl()
-            credentials {
-                username = getRepositoryUsername()
-                password = getRepositoryPassword()
-            }
-        }
-        maven {
-            name = 'sonatypeSnapshotRepository'
-            url = getSnapshotRepositoryUrl()
             credentials {
                 username = getRepositoryUsername()
                 password = getRepositoryPassword()
@@ -135,6 +125,5 @@ publishing {
 }
 
 signing {
-    sign publishing.publications.mavenJava
+    sign publishing.publications.maven
 }
-
