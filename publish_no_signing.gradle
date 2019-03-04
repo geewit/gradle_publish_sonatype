@@ -1,0 +1,124 @@
+import java.nio.charset.StandardCharsets
+
+apply plugin: 'java'
+apply plugin: 'maven-publish'
+
+buildDir = 'target'
+
+repositories {
+    mavenLocal()
+    maven { url "https://maven.aliyun.com/repository/central" }
+    maven { url "http://repo1.maven.org/maven2" }
+}
+
+compileJava {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+compileTestJava {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+//设置编码
+compileJava.options*.compilerArgs << "-Xlint:unchecked" << "-Xlint:options"
+
+[compileJava, javadoc]*.options*.encoding = StandardCharsets.UTF_8.name()
+
+def isReleaseBuild() {
+    return !version.contains("SNAPSHOT")
+}
+
+def getReleaseRepositoryUrl() {
+    def releaseRepositoryUrl = hasProperty('RELEASE_REPOSITORY_URL') ? getProperty('RELEASE_REPOSITORY_URL')
+            : "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+    println "releaseRepositoryUrl:" + releaseRepositoryUrl
+    return releaseRepositoryUrl
+}
+
+def getSnapshotRepositoryUrl() {
+    def snapshotRepositoryUrl =  hasProperty('SNAPSHOT_REPOSITORY_URL') ? getProperty('SNAPSHOT_REPOSITORY_URL')
+            : "https://oss.sonatype.org/content/repositories/snapshots/"
+    println "snapshotRepositoryUrl:" + snapshotRepositoryUrl
+    return snapshotRepositoryUrl
+}
+
+def getRepositoryUsername() {
+    def username = hasProperty('SONATYPE_USERNAME') ? getProperty('SONATYPE_USERNAME') : ""
+    println "username:" + username
+    return username
+}
+
+def getRepositoryPassword() {
+    def password = hasProperty('SONATYPE_PASSWORD') ? getProperty('SONATYPE_PASSWORD') : ""
+    println "password:" + password
+    return password
+}
+
+
+task javadocs(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+task sources(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives jar
+    archives javadocs
+    archives sources
+}
+
+
+// https://docs.gradle.org/current/dsl/org.gradle.api.publish.maven.MavenPublication.html
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId project.group
+            artifactId project.name
+            version "${version}"
+            from components.java
+            artifact javadocs
+            artifact sources
+
+            pom {
+                name = POM_ARTIFACT_ID
+                description = POM_DESCRIPTION
+                url = POM_SCM_URL
+                licenses {
+                    license {
+                        name = POM_LICENCE_NAME
+                        url = POM_LICENCE_URL
+                    }
+                }
+                developers {
+                    developer {
+                        id = POM_DEVELOPER_ID
+                        name = POM_DEVELOPER_NAME
+                        email = POM_DEVELOPER_EMAIL
+                    }
+                }
+                scm {
+                    url = POM_SCM_URL
+                    connection = POM_SCM_CONNECTION
+                    developerConnection = POM_SCM_DEV_CONNECTION
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            name = 'nexusRepository'
+            url = version.endsWith('SNAPSHOT') ? getSnapshotRepositoryUrl() : getReleaseRepositoryUrl()
+            url getReleaseRepositoryUrl()
+            credentials {
+                username = getRepositoryUsername()
+                password = getRepositoryPassword()
+            }
+        }
+    }
+}
