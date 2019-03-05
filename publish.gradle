@@ -32,31 +32,27 @@ def isReleaseBuild() {
 }
 
 def getReleaseRepositoryUrl() {
-    def RELEASE_REPOSITORY_URL_KEY = hasProperty('RELEASE_REPOSITORY_URL_KEY') ? getProperty('RELEASE_REPOSITORY_URL_KEY') : 'RELEASE_REPOSITORY_URL'
-    def releaseRepositoryUrl = hasProperty(RELEASE_REPOSITORY_URL_KEY) ? getProperty(RELEASE_REPOSITORY_URL_KEY)
+    def releaseRepositoryUrl = hasProperty('RELEASE_REPOSITORY_URL') ? getProperty('RELEASE_REPOSITORY_URL')
             : "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
     println "releaseRepositoryUrl:" + releaseRepositoryUrl
     return releaseRepositoryUrl
 }
 
 def getSnapshotRepositoryUrl() {
-    def SNAPSHOT_REPOSITORY_URL_KEY = hasProperty('SNAPSHOT_REPOSITORY_URL_KEY') ? getProperty('SNAPSHOT_REPOSITORY_URL_KEY') : 'SNAPSHOT_REPOSITORY_URL'
-    def snapshotRepositoryUrl =  hasProperty(SNAPSHOT_REPOSITORY_URL_KEY) ? getProperty(SNAPSHOT_REPOSITORY_URL_KEY)
+    def snapshotRepositoryUrl =  hasProperty('SNAPSHOT_REPOSITORY_URL') ? getProperty('SNAPSHOT_REPOSITORY_URL')
             : "https://oss.sonatype.org/content/repositories/snapshots/"
     println "snapshotRepositoryUrl:" + snapshotRepositoryUrl
     return snapshotRepositoryUrl
 }
 
 def getRepositoryUsername() {
-    def SONATYPE_USERNAME_KEY = hasProperty('SONATYPE_USERNAME_KEY') ? getProperty('SONATYPE_USERNAME_KEY') : 'SONATYPE_USERNAME'
-    def username = hasProperty(SONATYPE_USERNAME_KEY) ? getProperty(SONATYPE_USERNAME_KEY) : ""
+    def username = hasProperty('SONATYPE_USERNAME') ? getProperty('SONATYPE_USERNAME') : ""
     println "username:" + username
     return username
 }
 
 def getRepositoryPassword() {
-    def SONATYPE_PASSWORD_KEY = hasProperty('SONATYPE_PASSWORD_KEY') ? getProperty('SONATYPE_PASSWORD_KEY') : 'SONATYPE_PASSWORD'
-    def password = hasProperty(SONATYPE_PASSWORD_KEY) ? getProperty(SONATYPE_PASSWORD_KEY) : ""
+    def password = hasProperty('SONATYPE_PASSWORD') ? getProperty('SONATYPE_PASSWORD') : ""
     println "password:" + password
     return password
 }
