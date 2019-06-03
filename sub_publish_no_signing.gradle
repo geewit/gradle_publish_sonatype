@@ -26,7 +26,7 @@ def isSkipSubProject(Project project) {
 def artifactId(Project project) {
 
     def prj = project.parent
-    def artifactId = project.findProperty('artifactId')
+    def artifactId = ext.artifactId
     if(artifactId == null) {
         artifactId = project.name
         println "artifactId = ${artifactId}"
