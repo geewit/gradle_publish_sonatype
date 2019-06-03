@@ -39,7 +39,9 @@ def artifactId(Project project) {
     def artifactId
     if(project.ext.has("artifactId")) {
         artifactId = project.ext.get("artifactId")
+        println "project.ext.artifactId = ${artifactId}"
     } else {
+        println "project.ext.has not artifactId"
         artifactId = project.name
         println "artifactId = ${artifactId}"
         while (prj != null) {
