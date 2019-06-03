@@ -36,8 +36,10 @@ def artifactId(Project project) {
 
     def prj = project.parent
 
-    def artifactId = project.ext.get("artifactId")
-    if(artifactId == null) {
+    def artifactId
+    if(project.ext.has("artifactId")) {
+        artifactId = project.ext.get("artifactId")
+    } else {
         artifactId = project.name
         println "artifactId = ${artifactId}"
         while (prj != null) {
