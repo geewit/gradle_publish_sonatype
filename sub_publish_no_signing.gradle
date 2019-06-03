@@ -39,9 +39,9 @@ def artifactId(Project project) {
     def artifactId
     if(project.hasProperty("artifactId")) {
         artifactId = project.property("artifactId")
-        println "project.ext.artifactId = ${artifactId}"
+        println "project.artifactId = ${artifactId}"
     } else {
-        println "project.ext.has not artifactId"
+        println "project has not artifactId"
         artifactId = project.name
         println "artifactId = ${artifactId}"
         while (prj != null) {
@@ -141,8 +141,10 @@ subprojects {
         publishing {
             publications {
                 maven(MavenPublication) {
+                    def artifactId = artifactId(project)
+                    println "artifact: ${groupId}:${artifactId}:${version}"
                     groupId project.group
-                    artifactId artifactId(project)
+                    artifactId artifactId
                     version "${version}"
                     from components.java
                     artifact sources
