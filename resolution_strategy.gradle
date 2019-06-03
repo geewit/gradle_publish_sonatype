@@ -1,0 +1,223 @@
+if (details.requested.group == 'javax.activation' || details.requested.group == 'com.sun.activation') {
+    if(details.requested.name == 'activation') {
+        details.useTarget(group: details.requested.group, name: 'javax.activation-api', version: javax_activation_api_version)
+    } else {
+        details.useVersion javax_activation_version
+    }
+} else if (details.requested.group == 'javax.annotation') {
+    details.useVersion javax_annotation_api_version
+} else if (details.requested.group == 'javax.persistence') {
+    details.useTarget(group: details.requested.group, name: 'javax.persistence-api', version: javax_persistence_api_version)
+} else if (details.requested.group == 'javax.servlet') {
+    details.useVersion javax_servlet_api_version
+} else if (details.requested.group == 'javax.transaction') {
+    if(details.requested.name == 'jta') {
+        details.useTarget(group: details.requested.group, name: 'javax.transaction-api', version: javax_transaction_api_version)
+    } else {
+        details.useVersion javax_transaction_api_version
+    }
+} else if (details.requested.group == 'javax.validation') {
+    details.useVersion javax_validation_api_version
+} else if (details.requested.group == 'javax.websocket') {
+    details.useVersion javax_websocket_api_version
+} else if (details.requested.group == 'com.aliyun') {
+    if(details.requested.name == 'aliyun-java-sdk-core') {
+        details.useVersion aliyun_java_sdk_core_version
+    }
+} else if (details.requested.group == 'com.aliyun') {
+    if(details.requested.name == 'aliyun-java-sdk-core') {
+        details.useVersion aliyun_java_sdk_core_version
+    }
+} else if (details.requested.group == 'org.codehaus.mojo' && details.requested.name == 'animal-sniffer-annotations') {
+    details.useVersion animal_sniffer_annotations_version
+} else if (details.requested.group == 'org.antlr' && details.requested.name.startsWith('antlr4')) {
+    details.useVersion antlr4_version
+} else if (details.requested.group == 'org.ow2.asm' && details.requested.name == 'asm') {
+    details.useVersion asm_version
+} else if (details.requested.group == 'org.aspectj') {
+    details.useVersion aspectj_version
+} else if (details.requested.group == 'net.bytebuddy') {
+    details.useVersion bytebuddy_version
+} else if (details.requested.group == 'org.checkerframework') {
+    details.useVersion checker_version
+} else if (details.requested.group == 'com.fasterxml' && details.requested.name == 'classmate') {
+    details.useVersion classmate_version
+} else if (details.requested.group == 'commons-codec' && details.requested.name == 'commons-codec') {
+    details.useVersion commons_codec_version
+} else if (details.requested.group == 'commons-collections' && details.requested.name == 'commons-collections') {
+    details.useVersion commons_collections_version
+} else if (details.requested.group == 'commons-lang' && details.requested.name == 'commons-lang') {
+    details.useVersion commons_lang_version
+} else if (details.requested.group == 'org.apache.commons') {
+    if(details.requested.name == 'commons-collections4') {
+        details.useVersion commons_collections4_version
+    } else if(details.requested.name == 'commons-compress') {
+        details.useVersion commons_compress_version
+    } else if(details.requested.name == 'commons-configuration2') {
+        details.useVersion commons_configuration2_version
+    } else if(details.requested.name == 'commons-lang3') {
+        details.useVersion commons_lang3_version
+    } else if (details.requested.name == 'commons-pool2') {
+        details.useVersion commons_pool2_version
+    }
+} else if (details.requested.group == 'com.github.virtuald' && details.requested.name == 'curvesapi') {
+    details.useVersion curvesapi_version
+} else if (details.requested.group == 'com.alibaba') {
+    if(details.requested.name == 'fastjson') {
+        details.useVersion fastjson_version
+    } else if(details.requested.name == 'druid') {
+        details.useVersion druid_version
+    } else if(details.requested.name == 'druid-spring-boot-starter') {
+        details.useVersion druid_version
+    }
+} else if (details.requested.group == 'net.sf.ehcache') {
+    details.useVersion ehcache_version
+} else if (details.requested.group == 'com.google.errorprone') {
+    details.useVersion errorprone_version
+} else if (details.requested.group == 'de.ruedigermoeller') {
+    details.useVersion fst_version
+} else if (details.requested.group == 'com.google.code.findbugs') {
+    details.useVersion findbugs_version
+} else if (details.requested.group == 'com.google.code.gson') {
+    details.useVersion gson_version
+} else if (details.requested.group == 'com.google.guava' && details.requested.name == 'guava') {
+    details.useVersion guava_version
+} else if (details.requested.group == 'org.hibernate') {
+    details.useVersion hibernate_version
+} else if (details.requested.group == 'org.hibernate.common') {
+    details.useVersion hibernate_common_annotations_version
+} else if (details.requested.group == 'org.hibernate.validator') {
+    details.useVersion hibernate_validator_version
+} else if (details.requested.group.startsWith('org.glassfish.hk2')) {
+    details.useVersion hk2_version
+} else if (details.requested.group == 'org.apache.httpcomponents') {
+    if(details.requested.name == 'httpclient') {
+        details.useVersion httpclient_version
+    } else if (details.requested.name == 'httpcore' || details.requested.name == 'httpcore-nio') {
+        details.useVersion httpcore_version
+    }
+} else if (details.requested.group == 'com.ibm.icu') {
+    details.useVersion icu_version
+} else if (details.requested.group.startsWith('com.fasterxml.jackson')) {
+    details.useVersion jackson_version
+} else if (details.requested.group == 'org.javassist') {
+    details.useVersion javassist_version
+} else if (details.requested.group == 'javax.json' && details.requested.name == 'javax.json-api') {
+    details.useVersion javax_json_version
+} else if (details.requested.group == 'org.glassfish' && details.requested.name == 'javax.json') {
+    details.useVersion javax_json_version
+} else if (details.requested.group == 'javax.mail' || details.requested.group == 'com.sun.mail') {
+    details.useVersion javax_mail_version
+} else if(details.requested.group == 'javax.ws.rs' && details.requested.name == 'javax.ws.rs-api') {
+    details.useVersion javax_ws_rs_api_version
+} else if(details.requested.group == 'javax.xml.bind') {
+    details.useVersion jaxb_api_version
+} else if (details.requested.group == 'com.sun.xml.bind') {
+    if(details.requested.name == 'jaxb-core') {
+        details.useVersion jaxb_core_version
+    } else if(details.requested.name == 'jaxb-impl') {
+        details.useVersion jaxb_impl_version
+    }
+} else if (details.requested.group == 'org.glassfish.jaxb') {
+    details.useVersion jaxb_runtime_version
+} else if (details.requested.group == 'org.jboss' && details.requested.name == 'jandex') {
+    details.useVersion jboss_jandex_version
+} else if (details.requested.group == 'org.jboss.logging') {
+    details.useVersion jboss_logging_version
+} else if (details.requested.group == 'org.jboss.threads') {
+    details.useVersion jboss_threads_version
+} else if (details.requested.group == 'org.jboss.xnio') {
+    details.useVersion jboss_xnio_version
+} else if (details.requested.group == 'org.jdom' && details.requested.name == 'jdom2') {
+    details.useVersion jdom2_version
+} else if (details.requested.group.startsWith('org.glassfish.jersey')) {
+    if(details.requested.name == 'jersey-spring3') {
+        details.useTarget(group: details.requested.group, name: 'jersey-spring4', version: jersey_version)
+    } else {
+        details.useVersion jersey_version
+    }
+} else if (details.requested.group == 'net.minidev' && details.requested.name == 'json-smart') {
+    details.useVersion json_smart_version
+} else if (details.requested.group == 'com.google.j2objc') {
+    details.useVersion j2objc_version
+} else if(details.requested.group == 'io.lettuce') {
+    details.useVersion lettuce_version
+} else if (details.requested.group == 'org.apache.logging.log4j') {
+    details.useVersion log4j2_version
+} else if (details.requested.group == 'org.mapstruct') {
+    details.useVersion mapstruct_version
+} else if (details.requested.group == 'mysql' && details.requested.name == "mysql-connector-java") {
+    details.useVersion mysql_version
+} else if (details.requested.group == 'org.objenesis') {
+    details.useVersion objenesis_version
+} else if (details.requested.group == 'com.squareup.okhttp3') {
+    details.useVersion okhttp_version
+} else if (details.requested.group == 'com.squareup.okio') {
+    details.useVersion okio_version
+} else if (details.requested.group == 'io.projectreactor' && details.requested.name == 'reactor-core') {
+    details.useVersion reactor_version
+} else if (details.requested.group == 'io.reactivex.rxjava2') {
+    details.useVersion rxjava2_version
+} else if (details.requested.group == 'org.slf4j') {
+    details.useVersion slf4j_version
+} else if (details.requested.group == "org.yaml" && details.requested.name == "snakeyaml") {
+    details.useVersion snakeyaml_version
+} else if (details.requested.group == 'org.springframework') {
+    details.useVersion spring_version
+} else if (details.requested.group == 'org.springframework.boot') {
+    details.useVersion spring_boot_version
+} else if (details.requested.group == 'org.springframework.data') {
+    details.useVersion spring_data_version
+} else if(details.requested.group == 'org.springframework.security') {
+    details.useVersion spring_security_version
+} else if (details.requested.group == 'org.springframework.session') {
+    details.useVersion spring_session_version
+} else if (details.requested.group == 'org.jvnet.staxex') {
+    details.useVersion staxex_version
+} else if (details.requested.group == "io.swagger") {
+    details.useVersion swagger_version
+} else if (details.requested.group == 'io.geewit.boot') {
+    if(details.requested.name == 'gw-boot-starter-jpa') {
+        details.useVersion gw_boot_starter_jpa_version
+    }
+} else if (details.requested.group == 'io.geewit.core') {
+    if (details.requested.name == 'gw-core-jackson') {
+        details.useVersion gw_core_jackson_version
+    } else if (details.requested.name == 'gw-core-okhttp') {
+        details.useVersion gw_core_okhttp_version
+    } else if(details.requested.name == 'gw-core-utils') {
+        details.useVersion gw_core_utils_version
+    }
+} else if (details.requested.group == 'io.geewit.data') {
+    if (details.requested.name == 'gw-data-jpa-envers') {
+        details.useVersion gw_data_jpa_envers_version
+    } else if(details.requested.name == 'gw-data-jpa-essential') {
+        details.useVersion gw_data_jpa_essential_version
+    }
+} else if (details.requested.group == 'mysql' && details.requested.name == 'mysql-connector-java') {
+    details.useVersion mysql_version
+} else if (details.requested.group == 'org.jodd') {
+    details.useVersion jodd_version
+} else if (details.requested.group == 'org.json' && details.requested.name == 'json') {
+    details.useVersion json_version
+} else if (details.requested.group == 'io.netty') {
+    details.useVersion netty_version
+} else if(details.requested.group == 'com.nimbusds') {
+    if(details.requested.name == 'nimbus-jose-jwt') {
+        details.useVersion nimbus_jose_jwt_version
+    } else if(details.requested.name == 'oauth2-oidc-sdk') {
+        details.useVersion nimbus_oauth2_oidc_sdk_version
+    }
+} else if (details.requested.group == 'nz.net.ultraq.thymeleaf' && details.requested.name == 'thymeleaf-layout-dialect') {
+    details.useVersion thymeleaf_layout_dialect_version
+} else if (details.requested.group == 'io.undertow') {
+    details.useVersion undertow_version
+} else if (details.requested.group == 'org.unbescape') {
+    details.useVersion unbescape_version
+} else if (details.requested.group == 'org.wildfly.common') {
+    details.useVersion wildfly_common_version
+} else if (details.requested.group == 'org.wildfly.client') {
+    details.useVersion wildfly_client_version
+} else if (details.requested.group == 'com.sun.xml.fastinfoset') {
+    details.useVersion fastinfoset_version
+}

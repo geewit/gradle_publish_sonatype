@@ -26,14 +26,17 @@ def isSkipSubProject(Project project) {
 def artifactId(Project project) {
 
     def prj = project.parent
-    def artifactId = project.name
-    println "artifactId = ${artifactId}"
-    while (prj != null) {
-        println "prj.name = ${prj.name}"
-        println "prj.depth = ${prj.depth}"
-        artifactId = "${prj.name}-${artifactId}"
+    def artifactId = project.findProperty('artifactId')
+    if(artifactId == null) {
+        artifactId = project.name
         println "artifactId = ${artifactId}"
-        prj = prj.parent
+        while (prj != null) {
+            println "prj.name = ${prj.name}"
+            println "prj.depth = ${prj.depth}"
+            artifactId = "${prj.name}-${artifactId}"
+            println "artifactId = ${artifactId}"
+            prj = prj.parent
+        }
     }
     println "--------- final artifactId = ${artifactId}"
     return artifactId
