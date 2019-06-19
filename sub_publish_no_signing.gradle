@@ -73,17 +73,17 @@ subprojects {
 
     if(isSkipSubProject(it as Project)) {
 //        assemble.enable = false
-        build.enabled = false
-        documentation.enabled = false
-        help.enabled = false
-        other.enabled = false
-        verification.enabled = false
+//        build.enabled = false
+//        documentation.enabled = false
+//        help.enabled = false
+//        other.enabled = false
+//        verification.enabled = false
 //        buildDependents.enable = false
 //        buildNeeded.enable = false
 //        classes.enable = false
 //        clean.enable = false
 //        jar.enable = false
-        publishing.enabled = false
+//        publishing.enabled = false
 //        testClasses.enable = false
 
     } else {
