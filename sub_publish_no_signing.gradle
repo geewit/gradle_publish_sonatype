@@ -71,7 +71,22 @@ subprojects {
         println "profile = ${profile}"
     }
 
-    if(!isSkipSubProject(it as Project)) {
+    if(isSkipSubProject(it as Project)) {
+//        assemble.enable = false
+        build.enable = false
+        documentation.enable = false
+        help.enable = false
+        other.enable = false
+        verification.enable = false
+//        buildDependents.enable = false
+//        buildNeeded.enable = false
+//        classes.enable = false
+//        clean.enable = false
+//        jar.enable = false
+        publishing.enable = false
+//        testClasses.enable = false
+
+    } else {
         apply plugin: 'java'
         apply plugin: 'maven-publish'
 
