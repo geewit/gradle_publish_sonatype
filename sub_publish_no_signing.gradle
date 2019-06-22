@@ -136,12 +136,12 @@ subprojects {
             archives sources
         }
 
-// https://docs.gradle.org/current/dsl/org.gradle.api.publish.maven.MavenPublication.html
+        // https://docs.gradle.org/current/dsl/org.gradle.api.publish.maven.MavenPublication.html
         publishing {
             publications {
                 maven(MavenPublication) {
                     groupId project.group
-                    artifactId artifactId(project)
+                    artifactId artifactId(it)
                     version "${version}"
                     println "artifact: ${groupId}:${artifactId}:${version}"
                     from components.java
@@ -169,7 +169,7 @@ subprojects {
             repositories {
                 maven {
                     name = 'nexusRepository'
-                    url = isSnapshotBuild() ? getSnapshotRepositoryUrl() : getReleaseRepositoryUrl()
+                    url = getRepositoryUrl(project)
                     credentials {
                         username = getRepositoryUsername()
                         password = getRepositoryPassword()
@@ -180,9 +180,12 @@ subprojects {
     }
 }
 
+def getRepositoryUrl(Project project) {
+    return isSnapshotBuild(project) ? getSnapshotRepositoryUrl() : getReleaseRepositoryUrl()
+}
 
-def isSnapshotBuild() {
-    return version.endsWith('SNAPSHOT')
+def isSnapshotBuild(Project project) {
+    return project.version.endsWith('SNAPSHOT')
 }
 
 def getReleaseRepositoryUrl() {

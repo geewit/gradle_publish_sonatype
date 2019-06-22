@@ -82,7 +82,7 @@ publishing {
             artifact sources
 
             pom {
-                name = POM_ARTIFACT_ID
+                name = artifactId
                 description = POM_DESCRIPTION
                 url = POM_SCM_URL
                 developers {
