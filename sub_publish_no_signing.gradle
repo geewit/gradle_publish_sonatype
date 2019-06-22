@@ -123,6 +123,8 @@ subprojects {
 
         compileJava.options*.compilerArgs << "-Xlint:unchecked" << "-Xlint:options"
 
+        compileTestJava.options*.compilerArgs << "-Xlint:unchecked" << "-Xlint:options"
+
         [compileJava, compileTestJava, javadoc]*.options*.encoding = StandardCharsets.UTF_8.name()
 
 
