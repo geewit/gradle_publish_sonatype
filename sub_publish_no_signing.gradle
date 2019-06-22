@@ -141,7 +141,7 @@ subprojects {
             publications {
                 maven(MavenPublication) {
                     groupId project.group
-                    artifactId artifactId(it)
+                    artifactId artifactId(project)
                     version "${version}"
                     println "artifact: ${groupId}:${artifactId}:${version}"
                     from components.java
