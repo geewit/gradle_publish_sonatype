@@ -28,8 +28,8 @@ compileTestJava.options*.compilerArgs << "-Xlint:unchecked" << "-Xlint:options"
 
 [compileJava, compileTestJava, javadoc]*.options*.encoding = StandardCharsets.UTF_8.name()
 
-def isReleaseBuild() {
-    return !version.contains("SNAPSHOT")
+def isSnapshotBuild() {
+    return version.contains("SNAPSHOT")
 }
 
 def getRepositoryUrl() {
