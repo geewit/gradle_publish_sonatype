@@ -22,6 +22,29 @@ def isSkipSubProject(Project project) {
     // FileTree tree = project.fileTree(dir: project.projectDir, includes: ['build.gradle', 'settings.gradle'])
 }
 
+def groupId(Project project) {
+    def prj = project.parent
+
+    def groupId
+    if(project.hasProperty("groupId")) {
+        groupId = project.property("groupId")
+        println "project.groupId = ${groupId}"
+    } else {
+        println "project has not groupId"
+        groupId = project.group
+        println "groupId = ${groupId}"
+        while (groupId != null && prj != null) {
+            println "prj.name = ${prj.name}"
+            println "prj.depth = ${prj.depth}"
+            groupId = project.group
+            println "groupId = ${groupId}"
+            prj = prj.parent
+        }
+    }
+    println "--------- final groupId = ${groupId}"
+    return groupId
+}
+
 def artifactId(Project project) {
 
     def prj = project.parent
@@ -45,6 +68,7 @@ def artifactId(Project project) {
     println "--------- final artifactId = ${artifactId}"
     return artifactId
 }
+
 
 subprojects {
     buildscript {
@@ -142,7 +166,7 @@ subprojects {
         publishing {
             publications {
                 maven(MavenPublication) {
-                    groupId project.group
+                    groupId groupId(project)
                     artifactId artifactId(project)
                     version "${version}"
                     println "artifact: ${groupId}:${artifactId}:${version}"
