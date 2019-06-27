@@ -37,8 +37,8 @@ def getRepositoryUrl() {
 def getReleaseRepositoryUrl() {
     def property_default_key = 'RELEASE_REPOSITORY_URL'
     def property_key = 'RELEASE_REPOSITORY_URL_KEY'
-    def RELEASE_REPOSITORY_URL_KEY = hasProperty(property_key) ? getProperty(property_key) : property_default_key
-    def releaseRepositoryUrl = hasProperty(RELEASE_REPOSITORY_URL_KEY) ? getProperty(RELEASE_REPOSITORY_URL_KEY)
+    def release_repository_url_key = hasProperty(property_key) ? getProperty(property_key) : property_default_key
+    def releaseRepositoryUrl = hasProperty(release_repository_url_key) ? getProperty(release_repository_url_key)
             : "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
     println "releaseRepositoryUrl:" + releaseRepositoryUrl
     return releaseRepositoryUrl
@@ -47,8 +47,8 @@ def getReleaseRepositoryUrl() {
 def getSnapshotRepositoryUrl() {
     def property_default_key = 'SNAPSHOT_REPOSITORY_URL'
     def property_key = 'SNAPSHOT_REPOSITORY_URL_KEY'
-    def SNAPSHOT_REPOSITORY_URL_KEY = hasProperty(property_key) ? getProperty(property_key) : property_default_key
-    def snapshotRepositoryUrl =  hasProperty(SNAPSHOT_REPOSITORY_URL_KEY) ? getProperty(SNAPSHOT_REPOSITORY_URL_KEY)
+    def snapshot_repository_url_key = hasProperty(property_key) ? getProperty(property_key) : property_default_key
+    def snapshotRepositoryUrl =  hasProperty(snapshot_repository_url_key) ? getProperty(snapshot_repository_url_key)
             : "https://oss.sonatype.org/content/repositories/snapshots/"
     println "snapshotRepositoryUrl:" + snapshotRepositoryUrl
     return snapshotRepositoryUrl
@@ -57,8 +57,8 @@ def getSnapshotRepositoryUrl() {
 def getRepositoryUsername() {
     def property_default_key = 'SONATYPE_USERNAME'
     def property_key = 'SONATYPE_USERNAME_KEY'
-    def SONATYPE_USERNAME_KEY = hasProperty(property_key) ? getProperty(property_key) : property_default_key
-    def username = hasProperty(SONATYPE_USERNAME_KEY) ? getProperty(SONATYPE_USERNAME_KEY) : ""
+    def username_key = hasProperty(property_key) ? getProperty(property_key) : property_default_key
+    def username = hasProperty(username_key) ? getProperty(username_key) : ""
     println "username:" + username
     return username
 }
@@ -66,8 +66,8 @@ def getRepositoryUsername() {
 def getRepositoryPassword() {
     def property_default_key = 'SONATYPE_PASSWORD'
     def property_key = 'SONATYPE_PASSWORD_KEY'
-    def SONATYPE_PASSWORD_KEY = hasProperty(property_key) ? getProperty(property_key) : property_default_key
-    def password = hasProperty(SONATYPE_PASSWORD_KEY) ? getProperty(SONATYPE_PASSWORD_KEY) : ""
+    def password_key = hasProperty(property_key) ? getProperty(property_key) : property_default_key
+    def password = hasProperty(password_key) ? getProperty(password_key) : ""
     println "password:" + password
     return password
 }
