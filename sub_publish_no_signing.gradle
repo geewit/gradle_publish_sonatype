@@ -1,18 +1,5 @@
 import java.nio.charset.StandardCharsets
 
-allprojects {
-    buildDir = 'target'
-    apply plugin: "idea"
-    idea {
-        module {
-            excludeDirs += file( ".gradle" )
-            excludeDirs += file( ".idea" )
-            excludeDirs += buildDir
-            downloadJavadoc = false
-            downloadSources = true
-        }
-    }
-}
 
 def isSkipSubProject(Project project) {
     println "buildscript = ${project.buildscript.sourceFile}"
@@ -20,6 +7,19 @@ def isSkipSubProject(Project project) {
     println "isSkipSubProject = ${isSkipSubProject}"
     return isSkipSubProject
     // FileTree tree = project.fileTree(dir: project.projectDir, includes: ['build.gradle', 'settings.gradle'])
+}
+
+def isUIProject(Project project) {
+    def package_json = file("${project.projectDir}/package.json")
+    if (package_json.exists()) {
+        return true
+    }
+    return false
+}
+
+ext {
+    isSkipSubProject = this.&isSkipSubProject
+    isUIProject = this.&isUIProject
 }
 
 def groupId(Project project) {
@@ -69,6 +69,25 @@ def artifactId(Project project) {
     return artifactId
 }
 
+allprojects {
+    buildDir = 'target'
+    apply plugin: "idea"
+    idea {
+        module {
+            excludeDirs += file( ".gradle" )
+            excludeDirs += file( ".idea" )
+            excludeDirs += buildDir
+            downloadJavadoc = false
+            downloadSources = true
+        }
+    }
+    Properties props = new Properties()
+    props.load(rootProject.file('version.properties').newReader())
+    props.each { prop ->
+        println "${prop.key}: ${prop.value}"
+        project.ext.set(prop.key, prop.value)
+    }
+}
 
 subprojects {
     buildscript {
@@ -94,9 +113,58 @@ subprojects {
 //            println "${count++} task.name: ${task.name}"
 //            task.enabled = false
 //        }
+    } else if(isUIProject(it as Project)) {
+        task npm_install(type: Npm) {
+            if (profile == 'production') {
+                doFirst {
+                    println 'before npm install, delete package-lock.json first'
+                    def package_lock_json = file("${project.projectDir}/package-lock.json")
+                    println "package_lock_json : ${package_lock_json}"
+                    if (package_lock_json.exists()) {
+                        package_lock_json.delete()
+                    }
+                }
+            }
+            args = ['install', '--no-optional', '--registry=https://registry.npm.taobao.org']
+        }
+
+        task run_dev(type: Npm, dependsOn: npm_install) {
+            args = ['run', 'dev']
+        }
+
+        task rebuild_sass(type: Npm, dependsOn: npm_install) {
+            args = ['rebuild', 'node-sass', '--sass-binary-site=https://npm.taobao.org/mirrors/node-sass']
+        }
+
+        task build_prod(type: Npm, dependsOn: rebuild_sass) {
+            args = ['run', 'build:prod']
+        }
+
+        build_prod.mustRunAfter rebuild_sass
+
+        task build_sit(type: Npm) {
+            args = ['run', 'build:sit']
+        }
+
+        class Npm extends Exec {
+            Npm() {
+                workingDir project.projectDir
+                inputs.dir project.projectDir
+                // Add task to the standard build group
+                group = BasePlugin.BUILD_GROUP
+                def os = System.getProperty('os.name')
+                println "Operating System : ${os}"
+                if (os.toLowerCase().contains('windows')) {
+                    executable 'npm.cmd'
+                } else {
+                    executable 'npm'
+                }
+            }
+        }
     } else {
         apply plugin: 'java'
         apply plugin: 'maven-publish'
+        apply from: 'https://gitee.com/geewit/gradle_publish_sonatype/raw/master/dependency-strategy.gradle'
 
         repositories {
             mavenLocal()
@@ -121,6 +189,29 @@ subprojects {
 
         configurations {
             all { config ->
+                config.exclude group: "org.apache.geronimo.specs"
+                config.exclude group: "org.jboss.spec.javax.annotation"
+                config.exclude group: "org.jboss.spec.javax.servlet"
+                config.exclude group: "org.jboss.spec.javax.transaction"
+                config.exclude group: "org.jboss.spec.javax.websocket"
+                config.exclude group: "org.hibernate.javax.persistence"
+                config.exclude group: "org.springframework.boot", module:"spring-boot-starter-logging"
+                config.exclude group: "org.springframework.boot", module:"spring-boot-starter-tomcat"
+                config.exclude group: "org.apache.tomcat", module:"tomcat-jdbc"
+                config.exclude group: "org.apache.tomcat.embed"
+                config.exclude group: "org.glassfish.hk2", module:"osgi-resource-locator"
+                config.exclude group: "org.glassfish.hk2.external", module:"javax.inject"
+                config.exclude group: "com.vaadin.external.google"
+                config.exclude group: "com.zaxxer"
+                config.exclude group: "org.codehaus.jackson"
+                config.exclude group: "org.codehaus.jettison"
+                config.exclude group: "org.slf4j", module:"slf4j-log4j12"
+                if (profile != 'development') {
+                    config.exclude group: "org.springframework.boot", module:"spring-boot-devtools"
+                }
+                resolutionStrategy.eachDependency { details ->
+                    resolutionStrategy(details)
+                }
             }
         }
 
