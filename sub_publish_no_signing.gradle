@@ -69,6 +69,22 @@ def artifactId(Project project) {
     return artifactId
 }
 
+class Npm extends Exec {
+    Npm() {
+        workingDir project.projectDir
+        inputs.dir project.projectDir
+        // Add task to the standard build group
+        group = BasePlugin.BUILD_GROUP
+        def os = System.getProperty('os.name')
+        println "Operating System : ${os}"
+        if (os.toLowerCase().contains('windows')) {
+            executable 'npm.cmd'
+        } else {
+            executable 'npm'
+        }
+    }
+}
+
 allprojects {
     buildDir = 'target'
     apply plugin: "idea"
@@ -146,21 +162,6 @@ subprojects {
             args = ['run', 'build:sit']
         }
 
-        class Npm extends Exec {
-            Npm() {
-                workingDir project.projectDir
-                inputs.dir project.projectDir
-                // Add task to the standard build group
-                group = BasePlugin.BUILD_GROUP
-                def os = System.getProperty('os.name')
-                println "Operating System : ${os}"
-                if (os.toLowerCase().contains('windows')) {
-                    executable 'npm.cmd'
-                } else {
-                    executable 'npm'
-                }
-            }
-        }
     } else {
         apply plugin: 'java'
         apply plugin: 'maven-publish'
