@@ -32,7 +32,17 @@ compileTestJava {
 //设置编码
 compileJava.options*.compilerArgs << "-Xlint:unchecked" << "-Xlint:options"
 
-[compileJava, javadoc]*.options*.encoding = StandardCharsets.UTF_8.name()
+compileTestJava.options*.compilerArgs << "-Xlint:unchecked" << "-Xlint:options"
+
+[compileJava, compileTestJava, javadoc]*.options*.encoding = StandardCharsets.UTF_8.name()
+
+def getRepositoryUrl() {
+    return isSnapshotBuild() ? getSnapshotRepositoryUrl() : getReleaseRepositoryUrl()
+}
+
+def isSnapshotBuild() {
+    return version.endsWith('SNAPSHOT')
+}
 
 def getReleaseRepositoryUrl() {
     def property_default_key = 'REPOSITORY_RELEASE_URL'
