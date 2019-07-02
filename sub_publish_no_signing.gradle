@@ -98,10 +98,13 @@ allprojects {
         }
     }
     Properties props = new Properties()
-    props.load(rootProject.file('version.properties').newReader())
-    props.each { prop ->
-        println "${prop.key}: ${prop.value}"
-        project.ext.set(prop.key, prop.value)
+    def versionFile = rootProject.file('version.properties')
+    if(versionFile.exists()) {
+        props.load(versionFile.newReader())
+        props.each { prop ->
+            println "${prop.key}: ${prop.value}"
+            project.ext.set(prop.key, prop.value)
+        }
     }
 }
 
