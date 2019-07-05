@@ -95,6 +95,7 @@ allprojects {
             excludeDirs += buildDir
             downloadJavadoc = false
             downloadSources = true
+            name = project.name
         }
     }
     Properties props = new Properties()
@@ -124,14 +125,7 @@ subprojects {
     }
 
     if(isSkipSubProject(it as Project)) {
-//        println "Project = ${it.name}"
-//        def taskList = it.getTasks().withType(Task)
-//        def count = 0
-//        println "遍历所有的task，打印出其名字"
-//        taskList.all { Task task ->
-//            println "${count++} task.name: ${task.name}"
-//            task.enabled = false
-//        }
+
     } else if(isUIProject(it as Project)) {
         task npm_install(type: Npm) {
             if (profile == 'production') {
@@ -228,23 +222,27 @@ subprojects {
                     srcDirs = ['src/main/resources']
                 }
             }
+            test {
+                java {
+                    srcDirs = ['src/test/java']
+                }
+                resources {
+                    srcDirs = ['src/test/resources']
+                }
+            }
         }
 
-        compileJava {
+        tasks.withType(JavaCompile).configureEach {
             sourceCompatibility = JavaVersion.VERSION_1_8
             targetCompatibility = JavaVersion.VERSION_1_8
+
+            options*.compilerArgs << "-Xlint:unchecked" << "-Xlint:options"
+            options*.encoding = StandardCharsets.UTF_8.name()
         }
 
-        compileTestJava {
-            sourceCompatibility = JavaVersion.VERSION_1_8
-            targetCompatibility = JavaVersion.VERSION_1_8
+        tasks.withType(Javadoc).configureEach {
+            options*.encoding = StandardCharsets.UTF_8.name()
         }
-
-        compileJava.options*.compilerArgs << "-Xlint:unchecked" << "-Xlint:options"
-
-        compileTestJava.options*.compilerArgs << "-Xlint:unchecked" << "-Xlint:options"
-
-        [compileJava, compileTestJava, javadoc]*.options*.encoding = StandardCharsets.UTF_8.name()
 
 
         task sources(type: Jar) {
