@@ -1,0 +1,46 @@
+def buildFullProjectName(File rootDir, File dir) {
+    if(dir == null || !dir.exists() || !dir.isDirectory()) {
+        return ""
+    }
+    if(!file("${dir}/build.gradle").exists() && !file("${dir}/settings.gradle").exists()) {
+        return ""
+    }
+    if(rootDir.absolutePath == dir.absolutePath) {
+        return ""
+    }
+    def fullProjectName = dir.name
+    if(dir.parentFile != null && dir.parentFile.exists()) {
+        fullProjectName = buildFullProjectName(rootDir, dir.parentFile) + ":${fullProjectName}"
+    }
+    return fullProjectName
+}
+
+rootDir.traverse(
+        type: groovy.io.FileType.DIRECTORIES,
+        preDir: {
+            if (!file("${it}/build.gradle").exists() && !file("${it}/settings.gradle").exists()) {
+                return groovy.io.FileVisitResult.SKIP_SUBTREE
+            }
+        }) { dir ->
+    if (dir) {
+        def fullProjectName = buildFullProjectName(rootDir, dir)
+        if(!fullProjectName.isBlank()) {
+            println "fullProjectName: ${fullProjectName}"
+            include fullProjectName //register the project path using : notation
+        }
+    }
+}
+
+rootProject.children.each { project ->
+    setSubprojectBuildFile(project)
+}
+
+void setSubprojectBuildFile(def project) {
+    if(file("${project.projectDir}/build.gradle").exists() || file("${project.projectDir}/settings.gradle").exists()) {
+        println "------project: ${project.name}"
+        project.buildFileName = "build.gradle"
+        project.children.each { subproject ->
+            setSubprojectBuildFile(subproject)
+        }
+    }
+}
