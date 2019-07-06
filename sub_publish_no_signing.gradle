@@ -123,7 +123,7 @@ subprojects {
         println "profile = ${profile}"
     }
 
-    if(isSkipProject(it as Project)) {
+    if(isSkipProject(it as Project) && !isUIProject(it as Project)) {
 
     } else if(isUIProject(it as Project)) {
         task npm_install(type: Npm) {
