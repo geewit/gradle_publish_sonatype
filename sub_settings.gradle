@@ -36,7 +36,7 @@ rootProject.children.each { project ->
 }
 
 void setSubprojectBuildFile(def project) {
-    if(file("${project.projectDir}/build.gradle").exists() || file("${project.projectDir}/settings.gradle").exists()) {
+    if(file("${project.projectDir}/build.gradle").exists() || file("${project.projectDir}/settings.gradle").exists() || file("${project.projectDir}/package.json").exists()) {
         println "------project: ${project.name}"
         project.buildFileName = "build.gradle"
         project.children.each { subproject ->
