@@ -2,7 +2,7 @@ def buildFullProjectName(File rootDir, File dir) {
     if(dir == null || !dir.exists() || !dir.isDirectory()) {
         return ""
     }
-    if(!file("${dir}/build.gradle").exists() && !file("${dir}/settings.gradle").exists() && !file("${it}/package.json").exists()) {
+    if(!file("${dir}/build.gradle").exists() && !file("${dir}/settings.gradle").exists() && !file("${dir}/package.json").exists()) {
         return ""
     }
     if(rootDir.absolutePath == dir.absolutePath) {
