@@ -18,7 +18,7 @@ def buildFullProjectName(File rootDir, File dir) {
 rootDir.traverse(
         type: groovy.io.FileType.DIRECTORIES,
         preDir: {
-            if (!file("${it}/build.gradle").exists() && !file("${it}/settings.gradle").exists() && !file("${it}/package.json")) {
+            if (!file("${it}/build.gradle").exists() && !file("${it}/settings.gradle").exists() && !file("${it}/package.json").exists()) {
                 return groovy.io.FileVisitResult.SKIP_SUBTREE
             }
         }) { dir ->
