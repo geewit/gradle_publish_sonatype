@@ -1,10 +1,10 @@
 import java.nio.charset.StandardCharsets
 
 
-def isSkipSubProject(Project project) {
-    def isSkipSubProject = !project.buildscript.sourceFile.exists() && !isUIProject(project)
-    println "isSkipSubProject = ${isSkipSubProject}"
-    return isSkipSubProject
+def isSkipProject(Project project) {
+    def isSkipProject = !project.buildscript.sourceFile.exists()
+    println "isSkipProject = ${isSkipProject}"
+    return isSkipProject
     // FileTree tree = project.fileTree(dir: project.projectDir, includes: ['build.gradle', 'settings.gradle'])
 }
 
@@ -17,7 +17,7 @@ def isUIProject(Project project) {
 }
 
 ext {
-    isSkipSubProject = this.&isSkipSubProject
+    isSkipProject = this.&isSkipProject
     isUIProject = this.&isUIProject
 }
 
@@ -123,7 +123,7 @@ subprojects {
         println "profile = ${profile}"
     }
 
-    if(isSkipSubProject(it as Project)) {
+    if(isSkipProject(it as Project)) {
 
     } else if(isUIProject(it as Project)) {
         task npm_install(type: Npm) {
