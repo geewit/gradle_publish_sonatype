@@ -2,8 +2,7 @@ import java.nio.charset.StandardCharsets
 
 
 def isSkipSubProject(Project project) {
-    println "buildscript = ${project.buildscript.sourceFile}"
-    def isSkipSubProject = !project.buildscript.sourceFile.exists()
+    def isSkipSubProject = !project.buildscript.sourceFile.exists() && !isUIProject(project)
     println "isSkipSubProject = ${isSkipSubProject}"
     return isSkipSubProject
     // FileTree tree = project.fileTree(dir: project.projectDir, includes: ['build.gradle', 'settings.gradle'])
