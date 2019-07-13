@@ -344,7 +344,11 @@ def resolutionStrategy(DependencyResolveDetails details) {
             }
         }
     } else if (details.requested.group == 'io.geewit.core') {
-        if (details.requested.name == 'gw-core-jackson') {
+        if (details.requested.name == 'gw-core-exception') {
+            if(project.hasProperty("gw_core_exception_version")) {
+                details.useVersion gw_core_exception_version
+            }
+        } else if (details.requested.name == 'gw-core-jackson') {
             if(project.hasProperty("gw_core_jackson_version")) {
                 details.useVersion gw_core_jackson_version
             }
