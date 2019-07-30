@@ -69,6 +69,10 @@ def resolutionStrategy(DependencyResolveDetails details) {
         if (project.hasProperty("classmate_version")) {
             details.useVersion classmate_version
         }
+    } else if (details.requested.group == 'commons-beanutils' && details.requested.name == 'commons-beanutils') {
+        if (project.hasProperty("commons_beanutils_version")) {
+            details.useVersion commons_beanutils_version
+        }
     } else if (details.requested.group == 'commons-codec' && details.requested.name == 'commons-codec') {
         if (project.hasProperty("commons_codec_version")) {
             details.useVersion commons_codec_version
@@ -76,6 +80,10 @@ def resolutionStrategy(DependencyResolveDetails details) {
     } else if (details.requested.group == 'commons-collections' && details.requested.name == 'commons-collections') {
         if (project.hasProperty("commons_collections_version")) {
             details.useVersion commons_collections_version
+        }
+    } else if (details.requested.group == 'commons-io' && details.requested.name == 'commons-io') {
+        if (project.hasProperty("commons_io_version")) {
+            details.useVersion commons_io_version
         }
     } else if (details.requested.group == 'commons-lang' && details.requested.name == 'commons-lang') {
         if (project.hasProperty("commons_lang_version")) {
@@ -101,6 +109,10 @@ def resolutionStrategy(DependencyResolveDetails details) {
         } else if (details.requested.name == 'commons-pool2') {
             if (project.hasProperty("commons_pool2_version")) {
                 details.useVersion commons_pool2_version
+            }
+        } else if (details.requested.name == 'commons-text') {
+            if (project.hasProperty("commons_text_version")) {
+                details.useVersion commons_text_version
             }
         }
     } else if (details.requested.group == 'com.github.virtuald' && details.requested.name == 'curvesapi') {
@@ -378,6 +390,10 @@ def resolutionStrategy(DependencyResolveDetails details) {
     } else if (details.requested.group == 'mysql' && details.requested.name == 'mysql-connector-java') {
         if (project.hasProperty("mysql_version")) {
             details.useVersion mysql_version
+        }
+    } else if (details.requested.group == 'io.jsonwebtoken') {
+        if (project.hasProperty("jjwt_version")) {
+            details.useVersion jjwt_version
         }
     } else if (details.requested.group == 'org.jodd') {
         if (project.hasProperty("jodd_version")) {
