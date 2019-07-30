@@ -1,428 +1,432 @@
 def resolutionStrategy(DependencyResolveDetails details) {
     if (details.requested.group == 'javax.activation' || details.requested.group == 'com.sun.activation') {
-        if(project.hasProperty("javax_activation_version")) {
-            if(details.requested.name == 'activation') {
+        if (project.hasProperty("javax_activation_version")) {
+            if (details.requested.name == 'activation') {
                 details.useTarget(group: details.requested.group, name: 'javax.activation-api', version: javax_activation_version)
             } else {
                 details.useVersion javax_activation_version
             }
         }
     } else if (details.requested.group == 'javax.annotation') {
-        if(project.hasProperty("javax_annotation_api_version")) {
+        if (project.hasProperty("javax_annotation_api_version")) {
             details.useVersion javax_annotation_api_version
         }
     } else if (details.requested.group == 'javax.persistence') {
-        if(project.hasProperty("javax_persistence_api_version")) {
+        if (project.hasProperty("javax_persistence_api_version")) {
             details.useTarget(group: details.requested.group, name: 'javax.persistence-api', version: javax_persistence_api_version)
         }
     } else if (details.requested.group == 'javax.servlet') {
-        if(project.hasProperty("javax_servlet_api_version")) {
+        if (project.hasProperty("javax_servlet_api_version")) {
             details.useVersion javax_servlet_api_version
         }
     } else if (details.requested.group == 'javax.transaction') {
-        if(project.hasProperty("javax_transaction_api_version")) {
-            if(details.requested.name == 'jta') {
+        if (project.hasProperty("javax_transaction_api_version")) {
+            if (details.requested.name == 'jta') {
                 details.useTarget(group: details.requested.group, name: 'javax.transaction-api', version: javax_transaction_api_version)
             } else {
                 details.useVersion javax_transaction_api_version
             }
         }
     } else if (details.requested.group == 'javax.validation') {
-        if(project.hasProperty("javax_validation_api_version")) {
+        if (project.hasProperty("javax_validation_api_version")) {
             details.useVersion javax_validation_api_version
         }
     } else if (details.requested.group == 'javax.websocket') {
-        if(project.hasProperty("javax_websocket_api_version")) {
+        if (project.hasProperty("javax_websocket_api_version")) {
             details.useVersion javax_websocket_api_version
         }
     } else if (details.requested.group == 'com.aliyun') {
-        if(details.requested.name == 'aliyun-java-sdk-core') {
-            if(project.hasProperty("aliyun_java_sdk_core_version")) {
+        if (details.requested.name == 'aliyun-java-sdk-core') {
+            if (project.hasProperty("aliyun_java_sdk_core_version")) {
                 details.useVersion aliyun_java_sdk_core_version
             }
         }
     } else if (details.requested.group == 'org.codehaus.mojo' && details.requested.name == 'animal-sniffer-annotations') {
-        if(project.hasProperty("animal_sniffer_annotations_version")) {
+        if (project.hasProperty("animal_sniffer_annotations_version")) {
             details.useVersion animal_sniffer_annotations_version
         }
     } else if (details.requested.group == 'org.antlr' && details.requested.name.startsWith('antlr4')) {
-        if(project.hasProperty("antlr4_version")) {
+        if (project.hasProperty("antlr4_version")) {
             details.useVersion antlr4_version
         }
     } else if (details.requested.group == 'org.ow2.asm' && details.requested.name == 'asm') {
-        if(project.hasProperty("asm_version")) {
+        if (project.hasProperty("asm_version")) {
             details.useVersion asm_version
         }
     } else if (details.requested.group == 'org.aspectj') {
-        if(project.hasProperty("aspectj_version")) {
+        if (project.hasProperty("aspectj_version")) {
             details.useVersion aspectj_version
         }
     } else if (details.requested.group == 'net.bytebuddy') {
-        if(project.hasProperty("bytebuddy_version")) {
+        if (project.hasProperty("bytebuddy_version")) {
             details.useVersion bytebuddy_version
         }
     } else if (details.requested.group == 'org.checkerframework') {
-        if(project.hasProperty("checker_version")) {
+        if (project.hasProperty("checker_version")) {
             details.useVersion checker_version
         }
     } else if (details.requested.group == 'com.fasterxml' && details.requested.name == 'classmate') {
-        if(project.hasProperty("classmate_version")) {
+        if (project.hasProperty("classmate_version")) {
             details.useVersion classmate_version
         }
     } else if (details.requested.group == 'commons-codec' && details.requested.name == 'commons-codec') {
-        if(project.hasProperty("commons_codec_version")) {
+        if (project.hasProperty("commons_codec_version")) {
             details.useVersion commons_codec_version
         }
     } else if (details.requested.group == 'commons-collections' && details.requested.name == 'commons-collections') {
-        if(project.hasProperty("commons_collections_version")) {
+        if (project.hasProperty("commons_collections_version")) {
             details.useVersion commons_collections_version
         }
     } else if (details.requested.group == 'commons-lang' && details.requested.name == 'commons-lang') {
-        if(project.hasProperty("commons_lang_version")) {
+        if (project.hasProperty("commons_lang_version")) {
             details.useVersion commons_lang_version
         }
     } else if (details.requested.group == 'org.apache.commons') {
-        if(details.requested.name == 'commons-collections4') {
-            if(project.hasProperty("commons_collections4_version")) {
+        if (details.requested.name == 'commons-collections4') {
+            if (project.hasProperty("commons_collections4_version")) {
                 details.useVersion commons_collections4_version
             }
-        } else if(details.requested.name == 'commons-compress') {
-            if(project.hasProperty("commons_compress_version")) {
+        } else if (details.requested.name == 'commons-compress') {
+            if (project.hasProperty("commons_compress_version")) {
                 details.useVersion commons_compress_version
             }
-        } else if(details.requested.name == 'commons-configuration2') {
-            if(project.hasProperty("commons_configuration2_version")) {
+        } else if (details.requested.name == 'commons-configuration2') {
+            if (project.hasProperty("commons_configuration2_version")) {
                 details.useVersion commons_configuration2_version
             }
-        } else if(details.requested.name == 'commons-lang3') {
-            if(project.hasProperty("commons_lang3_version")) {
+        } else if (details.requested.name == 'commons-lang3') {
+            if (project.hasProperty("commons_lang3_version")) {
                 details.useVersion commons_lang3_version
             }
         } else if (details.requested.name == 'commons-pool2') {
-            if(project.hasProperty("commons_pool2_version")) {
+            if (project.hasProperty("commons_pool2_version")) {
                 details.useVersion commons_pool2_version
             }
         }
     } else if (details.requested.group == 'com.github.virtuald' && details.requested.name == 'curvesapi') {
-        if(project.hasProperty("curvesapi_version")) {
+        if (project.hasProperty("curvesapi_version")) {
             details.useVersion curvesapi_version
         }
     } else if (details.requested.group == 'com.alibaba') {
-        if(details.requested.name == 'fastjson') {
-            if(project.hasProperty("fastjson_version")) {
+        if (details.requested.name == 'fastjson') {
+            if (project.hasProperty("fastjson_version")) {
                 details.useVersion fastjson_version
             }
-        } else if(details.requested.name == 'druid') {
-            if(project.hasProperty("druid_version")) {
+        } else if (details.requested.name == 'druid') {
+            if (project.hasProperty("druid_version")) {
                 details.useVersion druid_version
             }
-        } else if(details.requested.name == 'druid-spring-boot-starter') {
-            if(project.hasProperty("druid_version")) {
+        } else if (details.requested.name == 'druid-spring-boot-starter') {
+            if (project.hasProperty("druid_version")) {
                 details.useVersion druid_version
             }
         }
     } else if (details.requested.group == 'net.sf.ehcache') {
-        if(project.hasProperty("ehcache_version")) {
+        if (project.hasProperty("ehcache_version")) {
             details.useVersion ehcache_version
         }
     } else if (details.requested.group == 'com.google.errorprone') {
-        if(project.hasProperty("errorprone_version")) {
+        if (project.hasProperty("errorprone_version")) {
             details.useVersion errorprone_version
         }
     } else if (details.requested.group == 'de.ruedigermoeller') {
-        if(project.hasProperty("fst_version")) {
+        if (project.hasProperty("fst_version")) {
             details.useVersion fst_version
         }
     } else if (details.requested.group == 'com.google.code.findbugs') {
-        if(project.hasProperty("findbugs_version")) {
+        if (project.hasProperty("findbugs_version")) {
             details.useVersion findbugs_version
         }
     } else if (details.requested.group == 'com.google.code.gson') {
-        if(project.hasProperty("gson_version")) {
+        if (project.hasProperty("gson_version")) {
             details.useVersion gson_version
         }
     } else if (details.requested.group == 'com.google.guava' && details.requested.name == 'guava') {
-        if(project.hasProperty("guava_version")) {
+        if (project.hasProperty("guava_version")) {
             details.useVersion guava_version
         }
     } else if (details.requested.group == 'org.hibernate') {
-        if(project.hasProperty("hibernate_version")) {
+        if (project.hasProperty("hibernate_version")) {
             details.useVersion hibernate_version
         }
     } else if (details.requested.group == 'org.hibernate.common') {
-        if(project.hasProperty("hibernate_common_annotations_version")) {
+        if (project.hasProperty("hibernate_common_annotations_version")) {
             details.useVersion hibernate_common_annotations_version
         }
     } else if (details.requested.group == 'org.hibernate.validator') {
-        if(project.hasProperty("hibernate_validator_version")) {
+        if (project.hasProperty("hibernate_validator_version")) {
             details.useVersion hibernate_validator_version
         }
     } else if (details.requested.group.startsWith('org.glassfish.hk2')) {
-        if(project.hasProperty("hk2_version")) {
+        if (project.hasProperty("hk2_version")) {
             details.useVersion hk2_version
         }
     } else if (details.requested.group == 'org.apache.httpcomponents') {
-        if(details.requested.name == 'httpclient') {
-            if(project.hasProperty("httpclient_version")) {
+        if (details.requested.name == 'httpclient') {
+            if (project.hasProperty("httpclient_version")) {
                 details.useVersion httpclient_version
             }
         } else if (details.requested.name == 'httpcore' || details.requested.name == 'httpcore-nio') {
-            if(project.hasProperty("httpcore_version")) {
+            if (project.hasProperty("httpcore_version")) {
                 details.useVersion httpcore_version
             }
         }
     } else if (details.requested.group == 'com.ibm.icu') {
-        if(project.hasProperty("icu_version")) {
+        if (project.hasProperty("icu_version")) {
             details.useVersion icu_version
         }
     } else if (details.requested.group.startsWith('com.fasterxml.jackson')) {
-        if(project.hasProperty("jackson_version")) {
+        if (project.hasProperty("jackson_version")) {
             details.useVersion jackson_version
         }
     } else if (details.requested.group == 'org.javassist') {
-        if(project.hasProperty("javassist_version")) {
+        if (project.hasProperty("javassist_version")) {
             details.useVersion javassist_version
         }
     } else if (details.requested.group == 'javax.json' && details.requested.name == 'javax.json-api') {
-        if(project.hasProperty("javax_json_version")) {
+        if (project.hasProperty("javax_json_version")) {
             details.useVersion javax_json_version
         }
     } else if (details.requested.group == 'org.glassfish' && details.requested.name == 'javax.json') {
-        if(project.hasProperty("javax_json_version")) {
+        if (project.hasProperty("javax_json_version")) {
             details.useVersion javax_json_version
         }
     } else if (details.requested.group == 'javax.mail' || details.requested.group == 'com.sun.mail') {
-        if(project.hasProperty("javax_mail_version")) {
+        if (project.hasProperty("javax_mail_version")) {
             details.useVersion javax_mail_version
         }
-    } else if(details.requested.group == 'javax.ws.rs' && details.requested.name == 'javax.ws.rs-api') {
-        if(project.hasProperty("javax_ws_rs_api_version")) {
+    } else if (details.requested.group == 'javax.ws.rs' && details.requested.name == 'javax.ws.rs-api') {
+        if (project.hasProperty("javax_ws_rs_api_version")) {
             details.useVersion javax_ws_rs_api_version
         }
-    } else if(details.requested.group == 'javax.xml.bind') {
-        if(project.hasProperty("jaxb_api_version")) {
+    } else if (details.requested.group == 'javax.xml.bind') {
+        if (project.hasProperty("jaxb_api_version")) {
             details.useVersion jaxb_api_version
         }
     } else if (details.requested.group == 'com.sun.xml.bind') {
-        if(details.requested.name == 'jaxb-core') {
-            if(project.hasProperty("jaxb_core_version")) {
+        if (details.requested.name == 'jaxb-core') {
+            if (project.hasProperty("jaxb_core_version")) {
                 details.useVersion jaxb_core_version
             }
-        } else if(details.requested.name == 'jaxb-impl') {
-            if(project.hasProperty("jaxb_impl_version")) {
+        } else if (details.requested.name == 'jaxb-impl') {
+            if (project.hasProperty("jaxb_impl_version")) {
                 details.useVersion jaxb_impl_version
             }
         }
     } else if (details.requested.group == 'org.glassfish.jaxb') {
-        if(project.hasProperty("jaxb_runtime_version")) {
+        if (project.hasProperty("jaxb_runtime_version")) {
             details.useVersion jaxb_runtime_version
         }
     } else if (details.requested.group == 'org.jboss' && details.requested.name == 'jandex') {
-        if(project.hasProperty("jboss_jandex_version")) {
+        if (project.hasProperty("jboss_jandex_version")) {
             details.useVersion jboss_jandex_version
         }
     } else if (details.requested.group == 'org.jboss.logging') {
-        if(project.hasProperty("jboss_logging_version")) {
+        if (project.hasProperty("jboss_logging_version")) {
             details.useVersion jboss_logging_version
         }
     } else if (details.requested.group == 'org.jboss.threads') {
-        if(project.hasProperty("jboss_threads_version")) {
+        if (project.hasProperty("jboss_threads_version")) {
             details.useVersion jboss_threads_version
         }
     } else if (details.requested.group == 'org.jboss.xnio') {
-        if(project.hasProperty("jboss_xnio_version")) {
+        if (project.hasProperty("jboss_xnio_version")) {
             details.useVersion jboss_xnio_version
         }
-    } else if (details.requested.group == 'org.jdom' && details.requested.name == 'jdom2') {
-        if(project.hasProperty("jdom2_version")) {
-            details.useVersion jdom2_version
+    } else if (details.requested.group == 'org.jdom') {
+        if (details.requested.name == 'jdom') {
+            if (project.hasProperty("jdom_version")) {
+                details.useVersion jdom_version
+            }
+        } else if (details.requested.name == 'jdom2') {
+            if (project.hasProperty("jdom2_version")) {
+                details.useVersion jdom2_version
+            }
         }
     } else if (details.requested.group.startsWith('org.glassfish.jersey')) {
-        if(details.requested.name == 'jersey-spring3') {
-            if(project.hasProperty("jersey_version")) {
+        if (project.hasProperty("jersey_version")) {
+            if (details.requested.name == 'jersey-spring3') {
                 details.useTarget(group: details.requested.group, name: 'jersey-spring4', version: jersey_version)
-            }
-        } else {
-            if(project.hasProperty("jersey_version")) {
+            } else {
                 details.useVersion jersey_version
             }
         }
     } else if (details.requested.group == 'net.minidev' && details.requested.name == 'json-smart') {
-        if(project.hasProperty("json_smart_version")) {
+        if (project.hasProperty("json_smart_version")) {
             details.useVersion json_smart_version
         }
     } else if (details.requested.group == 'com.google.j2objc') {
-        if(project.hasProperty("j2objc_version")) {
+        if (project.hasProperty("j2objc_version")) {
             details.useVersion j2objc_version
         }
-    } else if(details.requested.group == 'io.lettuce') {
-        if(project.hasProperty("lettuce_version")) {
+    } else if (details.requested.group == 'io.lettuce') {
+        if (project.hasProperty("lettuce_version")) {
             details.useVersion lettuce_version
         }
     } else if (details.requested.group == 'org.apache.logging.log4j') {
-        if(project.hasProperty("log4j2_version")) {
+        if (project.hasProperty("log4j2_version")) {
             details.useVersion log4j2_version
         }
     } else if (details.requested.group == 'org.mapstruct') {
-        if(project.hasProperty("mapstruct_version")) {
+        if (project.hasProperty("mapstruct_version")) {
             details.useVersion mapstruct_version
         }
     } else if (details.requested.group == 'mysql' && details.requested.name == "mysql-connector-java") {
-        if(project.hasProperty("mysql_version")) {
+        if (project.hasProperty("mysql_version")) {
             details.useVersion mysql_version
         }
     } else if (details.requested.group == 'org.objenesis') {
-        if(project.hasProperty("objenesis_version")) {
+        if (project.hasProperty("objenesis_version")) {
             details.useVersion objenesis_version
         }
     } else if (details.requested.group == 'com.squareup.okhttp3') {
-        if(project.hasProperty("okhttp_version")) {
+        if (project.hasProperty("okhttp_version")) {
             details.useVersion okhttp_version
         }
     } else if (details.requested.group == 'com.squareup.okio') {
-        if(project.hasProperty("okio_version")) {
+        if (project.hasProperty("okio_version")) {
             details.useVersion okio_version
         }
     } else if (details.requested.group == 'io.projectreactor' && details.requested.name == 'reactor-core') {
-        if(project.hasProperty("reactor_version")) {
+        if (project.hasProperty("reactor_version")) {
             details.useVersion reactor_version
         }
     } else if (details.requested.group == 'io.reactivex.rxjava2') {
-        if(project.hasProperty("rxjava2_version")) {
+        if (project.hasProperty("rxjava2_version")) {
             details.useVersion rxjava2_version
         }
     } else if (details.requested.group == 'org.slf4j') {
-        if(project.hasProperty("slf4j_version")) {
+        if (project.hasProperty("slf4j_version")) {
             details.useVersion slf4j_version
         }
     } else if (details.requested.group == "org.yaml" && details.requested.name == "snakeyaml") {
-        if(project.hasProperty("snakeyaml_version")) {
+        if (project.hasProperty("snakeyaml_version")) {
             details.useVersion snakeyaml_version
         }
     } else if (details.requested.group == 'org.springframework') {
-        if(project.hasProperty("spring_version")) {
+        if (project.hasProperty("spring_version")) {
             details.useVersion spring_version
         }
     } else if (details.requested.group == 'org.springframework.boot') {
-        if(project.hasProperty("spring_boot_version")) {
+        if (project.hasProperty("spring_boot_version")) {
             details.useVersion spring_boot_version
         }
     } else if (details.requested.group == 'org.springframework.data') {
-        if(project.hasProperty("spring_data_version")) {
+        if (project.hasProperty("spring_data_version")) {
             details.useVersion spring_data_version
         }
-    } else if(details.requested.group == 'org.springframework.security') {
-        if(details.requested.name == 'spring-security-jwt') {
-            if(project.hasProperty("spring_security_jwt_version")) {
+    } else if (details.requested.group == 'org.springframework.security') {
+        if (details.requested.name == 'spring-security-jwt') {
+            if (project.hasProperty("spring_security_jwt_version")) {
                 details.useVersion spring_security_jwt_version
             }
-        } else if(details.requested.name == 'spring-security-oauth2') {
-            if(project.hasProperty("spring_security_oauth2_version")) {
+        } else if (details.requested.name == 'spring-security-oauth2') {
+            if (project.hasProperty("spring_security_oauth2_version")) {
                 details.useVersion spring_security_oauth2_version
             }
         } else {
-            if(project.hasProperty("spring_security_version")) {
+            if (project.hasProperty("spring_security_version")) {
                 details.useVersion spring_security_version
             }
         }
     } else if (details.requested.group == 'org.springframework.session') {
-        if(project.hasProperty("spring_session_version")) {
+        if (project.hasProperty("spring_session_version")) {
             details.useVersion spring_session_version
         }
     } else if (details.requested.group == 'org.jvnet.staxex') {
-        if(project.hasProperty("staxex_version")) {
+        if (project.hasProperty("staxex_version")) {
             details.useVersion staxex_version
         }
     } else if (details.requested.group == "io.swagger") {
-        if(project.hasProperty("swagger_version")) {
+        if (project.hasProperty("swagger_version")) {
             details.useVersion swagger_version
         }
     } else if (details.requested.group == 'io.geewit.boot') {
-        if(details.requested.name == 'gw-boot-starter-jpa') {
-            if(project.hasProperty("gw_boot_starter_jpa_version")) {
+        if (details.requested.name == 'gw-boot-starter-jpa') {
+            if (project.hasProperty("gw_boot_starter_jpa_version")) {
                 details.useVersion gw_boot_starter_jpa_version
             }
         }
     } else if (details.requested.group == 'io.geewit.core') {
         if (details.requested.name == 'gw-core-exception') {
-            if(project.hasProperty("gw_core_exception_version")) {
+            if (project.hasProperty("gw_core_exception_version")) {
                 details.useVersion gw_core_exception_version
             }
         } else if (details.requested.name == 'gw-core-jackson') {
-            if(project.hasProperty("gw_core_jackson_version")) {
+            if (project.hasProperty("gw_core_jackson_version")) {
                 details.useVersion gw_core_jackson_version
             }
         } else if (details.requested.name == 'gw-core-okhttp') {
-            if(project.hasProperty("gw_core_okhttp_version")) {
+            if (project.hasProperty("gw_core_okhttp_version")) {
                 details.useVersion gw_core_okhttp_version
             }
-        } else if(details.requested.name == 'gw-core-utils') {
-            if(project.hasProperty("gw_core_utils_version")) {
+        } else if (details.requested.name == 'gw-core-utils') {
+            if (project.hasProperty("gw_core_utils_version")) {
                 details.useVersion gw_core_utils_version
             }
         }
     } else if (details.requested.group == 'io.geewit.data') {
         if (details.requested.name == 'gw-data-jpa-envers') {
-            if(project.hasProperty("gw_data_jpa_envers_version")) {
+            if (project.hasProperty("gw_data_jpa_envers_version")) {
                 details.useVersion gw_data_jpa_envers_version
             }
-        } else if(details.requested.name == 'gw-data-jpa-essential') {
-            if(project.hasProperty("gw_data_jpa_essential_version")) {
+        } else if (details.requested.name == 'gw-data-jpa-essential') {
+            if (project.hasProperty("gw_data_jpa_essential_version")) {
                 details.useVersion gw_data_jpa_essential_version
             }
         }
     } else if (details.requested.group == 'mysql' && details.requested.name == 'mysql-connector-java') {
-        if(project.hasProperty("mysql_version")) {
+        if (project.hasProperty("mysql_version")) {
             details.useVersion mysql_version
         }
     } else if (details.requested.group == 'org.jodd') {
-        if(project.hasProperty("jodd_version")) {
+        if (project.hasProperty("jodd_version")) {
             details.useVersion jodd_version
         }
     } else if (details.requested.group == 'org.json' && details.requested.name == 'json') {
-        if(project.hasProperty("json_version")) {
+        if (project.hasProperty("json_version")) {
             details.useVersion json_version
         }
     } else if (details.requested.group == 'io.netty') {
-        if(project.hasProperty("netty_version")) {
+        if (project.hasProperty("netty_version")) {
             details.useVersion netty_version
         }
-    } else if(details.requested.group == 'com.nimbusds') {
-        if(details.requested.name == 'nimbus-jose-jwt') {
-            if(project.hasProperty("nimbus_jose_jwt_version")) {
+    } else if (details.requested.group == 'com.nimbusds') {
+        if (details.requested.name == 'nimbus-jose-jwt') {
+            if (project.hasProperty("nimbus_jose_jwt_version")) {
                 details.useVersion nimbus_jose_jwt_version
             }
-        } else if(details.requested.name == 'oauth2-oidc-sdk') {
-            if(project.hasProperty("nimbus_oauth2_oidc_sdk_version")) {
+        } else if (details.requested.name == 'oauth2-oidc-sdk') {
+            if (project.hasProperty("nimbus_oauth2_oidc_sdk_version")) {
                 details.useVersion nimbus_oauth2_oidc_sdk_version
             }
         }
     } else if (details.requested.group == 'org.thymeleaf') {
-        if(project.hasProperty("thymeleaf_version")) {
+        if (project.hasProperty("thymeleaf_version")) {
             details.useVersion thymeleaf_version
         }
     } else if (details.requested.group == 'nz.net.ultraq.thymeleaf' && details.requested.name == 'thymeleaf-layout-dialect') {
-        if(project.hasProperty("thymeleaf_layout_dialect_version")) {
+        if (project.hasProperty("thymeleaf_layout_dialect_version")) {
             details.useVersion thymeleaf_layout_dialect_version
         }
     } else if (details.requested.group == 'io.undertow') {
-        if(project.hasProperty("undertow_version")) {
+        if (project.hasProperty("undertow_version")) {
             details.useVersion undertow_version
         }
     } else if (details.requested.group == 'org.unbescape') {
-        if(project.hasProperty("unbescape_version")) {
+        if (project.hasProperty("unbescape_version")) {
             details.useVersion unbescape_version
         }
     } else if (details.requested.group == 'org.wildfly.common') {
-        if(project.hasProperty("wildfly_common_version")) {
+        if (project.hasProperty("wildfly_common_version")) {
             details.useVersion wildfly_common_version
         }
     } else if (details.requested.group == 'org.wildfly.client') {
-        if(project.hasProperty("wildfly_client_version")) {
+        if (project.hasProperty("wildfly_client_version")) {
             details.useVersion wildfly_client_version
         }
     } else if (details.requested.group == 'com.sun.xml.fastinfoset') {
-        if(project.hasProperty("fastinfoset_version")) {
+        if (project.hasProperty("fastinfoset_version")) {
             details.useVersion fastinfoset_version
         }
     }
