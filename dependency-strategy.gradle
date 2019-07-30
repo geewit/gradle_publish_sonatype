@@ -89,6 +89,10 @@ def resolutionStrategy(DependencyResolveDetails details) {
         if (project.hasProperty("commons_lang_version")) {
             details.useVersion commons_lang_version
         }
+    } else if (details.requested.group == 'commons-logging' && details.requested.name == 'commons-logging') {
+        if (project.hasProperty("commons_logging_version")) {
+            details.useVersion commons_logging_version
+        }
     } else if (details.requested.group == 'org.apache.commons') {
         if (details.requested.name == 'commons-collections4') {
             if (project.hasProperty("commons_collections4_version")) {
