@@ -280,7 +280,7 @@ subprojects {
                     artifact sources
 
                     pom {
-                        name = artifactId
+                        name = artifactId(project)
                         description = POM_DESCRIPTION
                         url = POM_SCM_URL
                         developers {
