@@ -284,13 +284,6 @@ subprojects {
 
                     pom {
                         description = POM_DESCRIPTION
-                        developers {
-                            developer {
-                                id = POM_DEVELOPER_ID
-                                name = POM_DEVELOPER_NAME
-                                email = POM_DEVELOPER_EMAIL
-                            }
-                        }
                         scm {
                             url = POM_SCM_URL
                             connection = POM_SCM_CONNECTION
