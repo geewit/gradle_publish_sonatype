@@ -283,7 +283,6 @@ subprojects {
                     artifact sources
 
                     pom {
-                        name = thisArtifactId
                         description = POM_DESCRIPTION
                         url = POM_SCM_URL
                         developers {
