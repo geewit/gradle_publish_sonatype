@@ -7,7 +7,7 @@ def resolutionStrategy(DependencyResolveDetails details) {
                 details.useVersion javax_activation_api_version
             }
         }
-    } else if (details.requested.group == 'jakata.activation') {
+    } else if (details.requested.group == 'jakarta.activation') {
         if (project.hasProperty("javax_activation_api_version")) {
             details.useTarget(group: 'javax.activation', name: 'javax.activation-api', version: javax_activation_api_version)
         }
@@ -15,11 +15,11 @@ def resolutionStrategy(DependencyResolveDetails details) {
         if (project.hasProperty("javax_annotation_api_version")) {
             details.useVersion javax_annotation_api_version
         }
-    } else if (details.requested.group == 'jakata.annotation') {
+    } else if (details.requested.group == 'jakarta.annotation') {
         if (project.hasProperty("javax_annotation_api_version")) {
             details.useTarget(group: 'javax.annotation', name: 'javax.annotation-api', version: javax_annotation_api_version)
         }
-    } else if (details.requested.group == 'jakata.el') {
+    } else if (details.requested.group == 'jakarta.el') {
         if (project.hasProperty("javax_el_api_version")) {
             details.useTarget(group: 'javax.el', name: 'javax.el-api', version: javax_el_api_version)
         }
@@ -47,13 +47,18 @@ def resolutionStrategy(DependencyResolveDetails details) {
         if (project.hasProperty("javax_websocket_api_version")) {
             details.useVersion javax_websocket_api_version
         }
-    } else if (details.requested.group == 'jakata.ws.rs') {
+    } else if (details.requested.group == 'jakarta.ws.rs') {
         if (project.hasProperty("javax_ws_rs_api_version")) {
             details.useTarget(group: 'javax.ws.rs', name: 'javax.el-api', version: javax_ws_rs_api_version)
         }
     } else if (details.requested.group == 'javax.ws.rs') {
         if (project.hasProperty("javax_ws_rs_api_version")) {
             details.useVersion javax_ws_rs_api_version
+        }
+    } else if (details.requested.group == 'jakarta.xml.bind') {
+        if (project.hasProperty("jaxb_api_version")) {
+            details.useTarget(group: 'javax.xml.bind', name: 'jaxb-api', version: jaxb_api_version)
+            details.useVersion jaxb_api_version
         }
     } else if (details.requested.group == 'com.aliyun') {
         if (details.requested.name == 'aliyun-java-sdk-core') {
