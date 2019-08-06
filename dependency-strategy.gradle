@@ -58,7 +58,6 @@ def resolutionStrategy(DependencyResolveDetails details) {
     } else if (details.requested.group == 'jakarta.xml.bind') {
         if (project.hasProperty("jaxb_api_version")) {
             details.useTarget(group: 'javax.xml.bind', name: 'jaxb-api', version: jaxb_api_version)
-            details.useVersion jaxb_api_version
         }
     } else if (details.requested.group == 'com.aliyun') {
         if (details.requested.name == 'aliyun-java-sdk-core') {
