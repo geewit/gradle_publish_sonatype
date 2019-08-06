@@ -19,6 +19,10 @@ def resolutionStrategy(DependencyResolveDetails details) {
         if (project.hasProperty("javax_annotation_api_version")) {
             details.useTarget(group: 'javax.annotation', name: 'javax.annotation-api', version: javax_annotation_version)
         }
+    } else if (details.requested.group == 'jakata.el') {
+        if (project.hasProperty("javax_el_api_version")) {
+            details.useTarget(group: 'javax.el', name: 'javax.el-api', version: javax_el_api_version)
+        }
     } else if (details.requested.group == 'javax.persistence') {
         if (project.hasProperty("javax_persistence_api_version")) {
             details.useTarget(group: details.requested.group, name: 'javax.persistence-api', version: javax_persistence_api_version)
@@ -42,6 +46,14 @@ def resolutionStrategy(DependencyResolveDetails details) {
     } else if (details.requested.group == 'javax.websocket') {
         if (project.hasProperty("javax_websocket_api_version")) {
             details.useVersion javax_websocket_api_version
+        }
+    } else if (details.requested.group == 'jakata.ws.rs') {
+        if (project.hasProperty("javax_ws_rs_api_version")) {
+            details.useTarget(group: 'javax.ws.rs', name: 'javax.el-api', version: javax_ws_rs_api_version)
+        }
+    } else if (details.requested.group == 'javax.ws.rs') {
+        if (project.hasProperty("javax_ws_rs_api_version")) {
+            details.useVersion javax_ws_rs_api_version
         }
     } else if (details.requested.group == 'com.aliyun') {
         if (details.requested.name == 'aliyun-java-sdk-core') {
