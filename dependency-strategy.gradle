@@ -1,15 +1,15 @@
 def resolutionStrategy(DependencyResolveDetails details) {
     if (details.requested.group == 'javax.activation' || details.requested.group == 'com.sun.activation') {
-        if (project.hasProperty("javax_activation_version")) {
+        if (project.hasProperty("javax_activation_api_version")) {
             if (details.requested.name == 'activation') {
-                details.useTarget(group: details.requested.group, name: 'javax.activation-api', version: javax_activation_version)
+                details.useTarget(group: details.requested.group, name: 'javax.activation-api', version: javax_activation_api_version)
             } else {
-                details.useVersion javax_activation_version
+                details.useVersion javax_activation_api_version
             }
         }
     } else if (details.requested.group == 'jakata.activation') {
         if (project.hasProperty("javax_activation_api_version")) {
-            details.useTarget(group: 'javax.activation', name: 'javax.activation-api', version: javax_activation_version)
+            details.useTarget(group: 'javax.activation', name: 'javax.activation-api', version: javax_activation_api_version)
         }
     } else if (details.requested.group == 'javax.annotation') {
         if (project.hasProperty("javax_annotation_api_version")) {
@@ -17,7 +17,7 @@ def resolutionStrategy(DependencyResolveDetails details) {
         }
     } else if (details.requested.group == 'jakata.annotation') {
         if (project.hasProperty("javax_annotation_api_version")) {
-            details.useTarget(group: 'javax.annotation', name: 'javax.annotation-api', version: javax_annotation_version)
+            details.useTarget(group: 'javax.annotation', name: 'javax.annotation-api', version: javax_annotation_api_version)
         }
     } else if (details.requested.group == 'jakata.el') {
         if (project.hasProperty("javax_el_api_version")) {
