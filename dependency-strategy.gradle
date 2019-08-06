@@ -215,6 +215,10 @@ def resolutionStrategy(DependencyResolveDetails details) {
         if (project.hasProperty("icu_version")) {
             details.useVersion icu_version
         }
+    } else if (details.requested.group == 'org.jacoco') {
+        if (project.hasProperty("jacoco_version")) {
+            details.useVersion jacoco_version
+        }
     } else if (details.requested.group.startsWith('com.fasterxml.jackson')) {
         if (project.hasProperty("jackson_version")) {
             details.useVersion jackson_version
