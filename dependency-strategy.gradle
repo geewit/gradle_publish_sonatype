@@ -7,9 +7,17 @@ def resolutionStrategy(DependencyResolveDetails details) {
                 details.useVersion javax_activation_version
             }
         }
+    } else if (details.requested.group == 'jakata.activation') {
+        if (project.hasProperty("javax_activation_api_version")) {
+            details.useTarget(group: 'javax.activation', name: 'javax.activation-api', version: javax_activation_version)
+        }
     } else if (details.requested.group == 'javax.annotation') {
         if (project.hasProperty("javax_annotation_api_version")) {
             details.useVersion javax_annotation_api_version
+        }
+    } else if (details.requested.group == 'jakata.annotation') {
+        if (project.hasProperty("javax_annotation_api_version")) {
+            details.useTarget(group: 'javax.annotation', name: 'javax.annotation-api', version: javax_annotation_version)
         }
     } else if (details.requested.group == 'javax.persistence') {
         if (project.hasProperty("javax_persistence_api_version")) {

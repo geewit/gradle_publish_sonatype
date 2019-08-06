@@ -12,15 +12,28 @@ repositories {
     maven { url "http://repo1.maven.org/maven2" }
 }
 
-compileJava {
+tasks.withType(JavaCompile) {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
+
+    options*.compilerArgs << "-Xlint:unchecked" << "-Xlint:options"
+    options*.encoding = StandardCharsets.UTF_8.name()
 }
 
-compileTestJava {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+tasks.withType(Javadoc) {
+    options*.encoding = StandardCharsets.UTF_8.name()
 }
+
+//
+//compileJava {
+//    sourceCompatibility = JavaVersion.VERSION_1_8
+//    targetCompatibility = JavaVersion.VERSION_1_8
+//}
+//
+//compileTestJava {
+//    sourceCompatibility = JavaVersion.VERSION_1_8
+//    targetCompatibility = JavaVersion.VERSION_1_8
+//}
 
 //设置编码
 compileJava.options*.compilerArgs << "-Xlint:unchecked" << "-Xlint:options"
