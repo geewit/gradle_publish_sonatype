@@ -36,10 +36,10 @@ tasks.withType(Javadoc) {
 //}
 
 //设置编码
-compileJava.options*.compilerArgs << "-Xlint:unchecked" << "-Xlint:options"
-compileTestJava.options*.compilerArgs << "-Xlint:unchecked" << "-Xlint:options"
-
-[compileJava, compileTestJava, javadoc]*.options*.encoding = StandardCharsets.UTF_8.name()
+//compileJava.options*.compilerArgs << "-Xlint:unchecked" << "-Xlint:options"
+//compileTestJava.options*.compilerArgs << "-Xlint:unchecked" << "-Xlint:options"
+//
+//[compileJava, compileTestJava, javadoc]*.options*.encoding = StandardCharsets.UTF_8.name()
 
 def isSnapshotBuild() {
     return version.contains("SNAPSHOT")
