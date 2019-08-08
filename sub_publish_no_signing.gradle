@@ -231,21 +231,13 @@ subprojects {
             }
         }
 
-        compileJava {
+        tasks.withType(JavaCompile) {
             sourceCompatibility = JavaVersion.VERSION_1_8
             targetCompatibility = JavaVersion.VERSION_1_8
+
+            options*.compilerArgs << "-Xlint:unchecked" << "-Xlint:options"
+            options*.encoding = StandardCharsets.UTF_8.name()
         }
-
-        compileTestJava {
-            sourceCompatibility = JavaVersion.VERSION_1_8
-            targetCompatibility = JavaVersion.VERSION_1_8
-        }
-
-        compileJava.options*.compilerArgs << "-Xlint:unchecked" << "-Xlint:options"
-
-        compileTestJava.options*.compilerArgs << "-Xlint:unchecked" << "-Xlint:options"
-
-        [compileJava, compileTestJava, javadoc]*.options*.encoding = StandardCharsets.UTF_8.name()
 
         tasks.withType(Javadoc) {
             options*.encoding = StandardCharsets.UTF_8.name()
