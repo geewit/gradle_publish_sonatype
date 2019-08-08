@@ -24,22 +24,10 @@ tasks.withType(Javadoc) {
     options*.encoding = StandardCharsets.UTF_8.name()
 }
 
-//
-//compileJava {
-//    sourceCompatibility = JavaVersion.VERSION_1_8
-//    targetCompatibility = JavaVersion.VERSION_1_8
-//}
-//
-//compileTestJava {
-//    sourceCompatibility = JavaVersion.VERSION_1_8
-//    targetCompatibility = JavaVersion.VERSION_1_8
-//}
-
-//设置编码
-//compileJava.options*.compilerArgs << "-Xlint:unchecked" << "-Xlint:options"
-//compileTestJava.options*.compilerArgs << "-Xlint:unchecked" << "-Xlint:options"
-//
-//[compileJava, compileTestJava, javadoc]*.options*.encoding = StandardCharsets.UTF_8.name()
+task sources(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
 
 def isSnapshotBuild() {
     return version.contains("SNAPSHOT")
