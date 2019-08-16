@@ -1,3 +1,4 @@
+
 def buildFullProjectName(File rootDir, File dir) {
     if(dir == null || !dir.exists() || !dir.isDirectory()) {
         return ""
@@ -25,30 +26,18 @@ rootDir.traverse(
     if (dir) {
         def fullProjectName = buildFullProjectName(rootDir, dir)
         if(!fullProjectName.isEmpty()) {
-            println "fullProjectName: ${fullProjectName}"
+            println "include ${fullProjectName}"
             include fullProjectName //register the project path using : notation
+            def project = project(fullProjectName)
+            if(project.parent == null || project.parent.projectDir == rootDir) {
+                println "project(${fullProjectName}).projectDir = new File(settingsDir, ${project.name})"
+                project.projectDir = new File(settingsDir, project.name)
+            } else {
+                println "project(${fullProjectName}).projectDir = new File(project(${project.parent.name}).projectDir, ${project.name})"
+                project.projectDir = new File(project.parent.projectDir, project.name)
+            }
+
         }
     }
 }
 
-rootProject.children.each { project ->
-    setSubprojectBuildFile(project)
-}
-
-void setSubprojectBuildFile(def project) {
-    if(file("${project.projectDir}/build.gradle").exists() || file("${project.projectDir}/settings.gradle").exists() || file("${project.projectDir}/package.json").exists()) {
-        println "------project: ${project.name}"
-        if(project.parent != null) {
-            println "------project.parent.name: ${project.parent.name}"
-            project.projectDir = new File(project.parent.projectDir, project.name)
-        } else {
-            project.projectDir = new File(project.settingsDir, project.name)
-        }
-
-        project.buildFileName = "build.gradle"
-        project.children.each { subproject ->
-            println "------subproject: ${subproject.name}"
-            setSubprojectBuildFile(subproject)
-        }
-    }
-}
