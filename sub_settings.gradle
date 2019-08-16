@@ -38,8 +38,13 @@ rootProject.children.each { project ->
 void setSubprojectBuildFile(def project) {
     if(file("${project.projectDir}/build.gradle").exists() || file("${project.projectDir}/settings.gradle").exists() || file("${project.projectDir}/package.json").exists()) {
         println "------project: ${project.name}"
-        println "------parent.name: ${parent.name}"
-        project.projectDir = new File(parent.projectDir, project.name)
+        if(project.parent != null) {
+            println "------project.parent.name: ${project.parent.name}"
+            project.projectDir = new File(project.parent.projectDir, project.name)
+        } else {
+            project.projectDir = new File(project.settingsDir, project.name)
+        }
+
         project.buildFileName = "build.gradle"
         project.children.each { subproject ->
             println "------subproject: ${subproject.name}"
