@@ -99,6 +99,8 @@ allprojects {
     }
     Properties props = new Properties()
     def versionFile = rootProject.file('version.properties')
+    println "rootProject: ${rootProject.name}"
+
     if(versionFile.exists()) {
         props.load(versionFile.newReader())
         props.each { prop ->
