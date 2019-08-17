@@ -318,7 +318,7 @@ subprojects {
             repositories {
                 maven {
                     name = 'sonatypeRepository'
-                    url = getRepositoryUrl()
+                    url = getRepositoryUrl(project)
                     credentials {
                         username = getRepositoryUsername()
                         password = getRepositoryPassword()
@@ -338,6 +338,7 @@ def getRepositoryUrl(Project project) {
 }
 
 def isSnapshotBuild(Project project) {
+    println "project.version : ${project.version}"
     return project.version.endsWith('SNAPSHOT')
 }
 
