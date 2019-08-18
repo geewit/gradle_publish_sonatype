@@ -242,24 +242,24 @@ subprojects {
             options*.encoding = StandardCharsets.UTF_8.name()
         }
 
-        tasks.withType(Javadoc) {
-            options*.encoding = StandardCharsets.UTF_8.name()
-        }
+//        tasks.withType(Javadoc) {
+//            options*.encoding = StandardCharsets.UTF_8.name()
+//        }
 
         task sources(type: Jar) {
             classifier = 'sources'
             from sourceSets.main.allSource
         }
 
-        task javadocs(type: Jar, dependsOn: javadoc) {
-            classifier = 'javadoc'
-            from javadoc.destinationDir
-        }
+//        task javadocs(type: Jar, dependsOn: javadoc) {
+//            classifier = 'javadoc'
+//            from javadoc.destinationDir
+//        }
 
         artifacts {
             archives jar
             archives sources
-            archives javadocs
+//            archives javadocs
         }
 
         repositories {
@@ -288,7 +288,7 @@ subprojects {
                     version "${version}"
                     println "artifact: ${thisGroupId}:${thisArtifactId}:${version}"
                     from components.java
-                    artifact javadocs
+//                    artifact javadocs
                     artifact sources
 
                     pom {
