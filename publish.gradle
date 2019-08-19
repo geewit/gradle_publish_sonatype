@@ -29,6 +29,17 @@ task sources(type: Jar) {
     from sourceSets.main.allSource
 }
 
+task javadocs(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives jar
+    archives javadocs
+    archives sources
+}
+
 def isSnapshotBuild() {
     return version.contains("SNAPSHOT")
 }
@@ -74,25 +85,6 @@ def getRepositoryPassword() {
     println "password:" + password
     return password
 }
-
-
-
-task javadocs(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
-
-task sources(type: Jar) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
-
-artifacts {
-    archives jar
-    archives javadocs
-    archives sources
-}
-
 
 // https://docs.gradle.org/current/dsl/org.gradle.api.publish.maven.MavenPublication.html
 publishing {
