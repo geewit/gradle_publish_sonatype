@@ -23,6 +23,10 @@ def resolutionStrategy(DependencyResolveDetails details) {
         if (project.hasProperty("javax_el_api_version")) {
             details.useTarget(group: 'javax.el', name: 'javax.el-api', version: javax_el_api_version)
         }
+    } else if (details.requested.group == 'javax.cache') {
+        if (project.hasProperty("javax_cache_version")) {
+            details.useVersion javax_cache_version
+        }
     } else if (details.requested.group == 'javax.persistence') {
         if (project.hasProperty("javax_persistence_api_version")) {
             details.useTarget(group: details.requested.group, name: 'javax.persistence-api', version: javax_persistence_api_version)
