@@ -408,6 +408,10 @@ def resolutionStrategy(DependencyResolveDetails details) {
             if (project.hasProperty("gw_core_utils_version")) {
                 details.useVersion gw_core_utils_version
             }
+        } else if (details.requested.group.startsWith('io.geewit.utils')) {
+            if (project.hasProperty("gw_utils_version")) {
+                details.useVersion gw_utils_version
+            }
         }
     } else if (details.requested.group == 'io.geewit.data') {
         if (details.requested.name == 'gw-data-jpa-envers') {
