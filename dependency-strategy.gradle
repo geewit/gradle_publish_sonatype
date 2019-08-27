@@ -414,7 +414,7 @@ def resolutionStrategy(DependencyResolveDetails details) {
             }
         } else if (details.requested.group.startsWith('io.geewit.utils')) {
             if (project.hasProperty("gw_utils_version")) {
-                details.useVersion gw_utils_version
+                details.useTarget(group: details.requested.group, name: details.requested.name, version: gw_utils_version)
             }
         }
     } else if (details.requested.group == 'io.geewit.data') {
