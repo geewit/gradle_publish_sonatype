@@ -372,6 +372,10 @@ def resolutionStrategy(DependencyResolveDetails details) {
             if (project.hasProperty("spring_security_oauth2_version")) {
                 details.useVersion spring_security_oauth2_version
             }
+        } else if (details.requested.name == 'spring-security-rsa') {
+            if (project.hasProperty("spring_security_rsa_version")) {
+                details.useVersion spring_security_rsa_version
+            }
         } else {
             if (project.hasProperty("spring_security_version")) {
                 details.useVersion spring_security_version
