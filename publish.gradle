@@ -8,8 +8,22 @@ buildDir = 'target'
 
 repositories {
     mavenLocal()
+    maven {
+        url getReleaseRepositoryUrl()
+        credentials {
+            username = getRepositoryUsername()
+            password = getRepositoryPassword()
+        }
+    }
+    maven {
+        url getSnapshotRepositoryUrl()
+        credentials {
+            username = getRepositoryUsername()
+            password = getRepositoryPassword()
+        }
+    }
+    maven { url "http://repo.maven.apache.org/maven2" }
     maven { url "https://maven.aliyun.com/repository/central" }
-    maven { url "http://repo1.maven.org/maven2" }
 }
 
 tasks.withType(JavaCompile) {
@@ -124,7 +138,7 @@ publishing {
     }
     repositories {
         maven {
-            name = 'sonatypeRepository'
+            name = 'releaseRepository'
             url = getRepositoryUrl()
             credentials {
                 username = getRepositoryUsername()

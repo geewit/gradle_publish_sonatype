@@ -167,9 +167,6 @@ subprojects {
 
         repositories {
             mavenLocal()
-//            mavenCentral()
-            // maven { url "https://maven.aliyun.com/repository/central" }
-            maven { url "http://repo1.maven.org/maven2" }
             maven {
                 url getReleaseRepositoryUrl()
                 credentials {
@@ -184,6 +181,8 @@ subprojects {
                     password = getRepositoryPassword()
                 }
             }
+            maven { url "http://repo.maven.apache.org/maven2" }
+            maven { url "https://maven.aliyun.com/repository/central" }
         }
 
         configurations {
@@ -255,20 +254,6 @@ subprojects {
             archives sources
         }
 
-        repositories {
-            mavenLocal()
-            maven { url "https://maven.aliyun.com/repository/central" }
-            maven { url "http://repo1.maven.org/maven2" }
-            maven {
-                name = 'nexusRepository'
-                url = getRepositoryUrl(project)
-                credentials {
-                    username = getRepositoryUsername()
-                    password = getRepositoryPassword()
-                }
-            }
-        }
-
         // https://docs.gradle.org/current/dsl/org.gradle.api.publish.maven.MavenPublication.html
         publishing {
             publications {
@@ -290,7 +275,7 @@ subprojects {
             }
             repositories {
                 maven {
-                    name = 'nexusRepository'
+                    name = 'releaseRepository'
                     url = getRepositoryUrl(project)
                     credentials {
                         username = getRepositoryUsername()
