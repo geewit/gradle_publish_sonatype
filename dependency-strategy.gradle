@@ -343,6 +343,10 @@ def resolutionStrategy(DependencyResolveDetails details) {
         if (project.hasProperty("reactor_version")) {
             details.useVersion reactor_version
         }
+    } else if (details.requested.group == 'org.reactivestreams') {
+        if (project.hasProperty("reactive_streams_version")) {
+            details.useVersion reactive_streams_version
+        }
     } else if (details.requested.group == 'io.reactivex.rxjava2') {
         if (project.hasProperty("rxjava2_version")) {
             details.useVersion rxjava2_version
