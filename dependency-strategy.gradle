@@ -339,9 +339,11 @@ def resolutionStrategy(DependencyResolveDetails details) {
         if (project.hasProperty("prometheus_version")) {
             details.useVersion prometheus_version
         }
-    } else if (details.requested.group == 'io.projectreactor' && details.requested.name == 'reactor-core') {
-        if (project.hasProperty("reactor_version")) {
-            details.useVersion reactor_version
+    } else if (details.requested.group == 'io.projectreactor') {
+        if(details.requested.name == 'reactor-core') {
+            if (project.hasProperty("reactor_version")) {
+                details.useVersion reactor_version
+            }
         }
     } else if (details.requested.group == 'org.reactivestreams') {
         if (project.hasProperty("reactive_streams_version")) {

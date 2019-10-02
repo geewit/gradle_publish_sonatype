@@ -36,7 +36,6 @@ rootDir.traverse(
                 println "project(${fullProjectName}).projectDir = new File(project(${project.parent.name}).projectDir, ${project.name})"
                 project.projectDir = new File(project.parent.projectDir, project.name)
             }
-
         }
     }
 }

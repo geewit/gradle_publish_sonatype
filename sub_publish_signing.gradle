@@ -115,7 +115,7 @@ subprojects {
         repositories {
             mavenLocal()
             maven { url "https://maven.aliyun.com/repository/gradle-plugin" }
-            maven { url "http://repo1.maven.org/maven2" }
+            maven { url "http://repo.maven.apache.org/maven2" }
         }
     }
     println "subproject.name = ${it.name}"
