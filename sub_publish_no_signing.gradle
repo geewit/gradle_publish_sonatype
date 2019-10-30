@@ -111,7 +111,7 @@ allprojects {
         }
     }
     def excludeArtifacts = []
-    def excludeFile = rootProject.file('exclude.json')
+    def excludeFile = rootProject.file('gradle-exclude.json')
     if(excludeFile.exists()) {
         excludeArtifacts = new JsonSlurper().parseText(excludeFile.text)
         project.ext.set('excludeArtifacts', excludeArtifacts)
