@@ -114,11 +114,11 @@ allprojects {
     def excludeFile = rootProject.file('gradle-exclude.json')
     if(excludeFile.exists()) {
         excludeArtifacts = new JsonSlurper().parseText(excludeFile.text)
-        project.ext.set('excludeArtifacts', excludeArtifacts)
         excludeArtifacts.each { item ->
             println "${item.group}: ${item.module}"
         }
     }
+    project.ext.set('excludeArtifacts', excludeArtifacts)
 }
 
 subprojects {
