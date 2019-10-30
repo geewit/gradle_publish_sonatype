@@ -1,3 +1,5 @@
+import groovy.json.JsonSlurper
+
 import java.nio.charset.StandardCharsets
 
 
@@ -108,6 +110,15 @@ allprojects {
             project.ext.set(prop.key, prop.value)
         }
     }
+    def excludeArtifacts = []
+    def excludeFile = rootProject.file('exclude.json')
+    if(excludeFile.exists()) {
+        excludeArtifacts = new JsonSlurper().parseText(excludeFile.text)
+        project.ext.set('excludeArtifacts', excludeArtifacts)
+        excludeArtifacts.each { item ->
+            println "${item.group}: ${item.module}"
+        }
+    }
 }
 
 subprojects {
@@ -206,6 +217,10 @@ subprojects {
                 config.exclude group: "org.slf4j", module:"slf4j-log4j12"
                 if (profile != 'development') {
                     config.exclude group: "org.springframework.boot", module:"spring-boot-devtools"
+                }
+                def excludeArtifacts = project.ext.get('excludeArtifacts')
+                excludeArtifacts.each { item ->
+                    config.exclude group: item.group, module: item.module
                 }
                 resolutionStrategy.eachDependency { details ->
                     resolutionStrategy(details)
