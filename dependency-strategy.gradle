@@ -7,6 +7,10 @@ def resolutionStrategy(DependencyResolveDetails details) {
                 details.useVersion javax_activation_api_version
             }
         }
+    } else if (details.requested.group == 'com.google.auto.service' && details.requested.name == 'auto-service') {
+        if (project.hasProperty("auto_service_version")) {
+            details.useVersion auto_service_version
+        }
     } else if (details.requested.group == 'jakarta.activation') {
         if (project.hasProperty("javax_activation_api_version")) {
             details.useTarget(group: 'javax.activation', name: 'javax.activation-api', version: javax_activation_api_version)
