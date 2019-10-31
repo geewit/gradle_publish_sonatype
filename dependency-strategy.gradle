@@ -410,7 +410,7 @@ def resolutionStrategy(DependencyResolveDetails details) {
             }
         }
     } else if (details.requested.group == 'io.github.openfeign') {
-        if(project.hasProperty("openfeign_version")) {
+        if (project.hasProperty("openfeign_version")) {
             details.useVersion openfeign_version
         }
     } else if (details.requested.group == 'io.geewit.core') {
