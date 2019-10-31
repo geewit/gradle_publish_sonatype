@@ -409,6 +409,10 @@ def resolutionStrategy(DependencyResolveDetails details) {
                 details.useVersion gw_boot_starter_jpa_version
             }
         }
+    } else if (details.requested.group == 'io.github.openfeign') {
+        if(project.hasProperty("openfeign_version")) {
+            details.useVersion openfeign_version
+        }
     } else if (details.requested.group == 'io.geewit.core') {
         if (details.requested.name == 'gw-core-exception') {
             if (project.hasProperty("gw_core_exception_version")) {
