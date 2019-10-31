@@ -115,7 +115,7 @@ allprojects {
     def excludeFile = rootProject.file('gradle-exclude.json')
     if(excludeFile.exists()) {
         excludeArtifacts = new JsonSlurper().parseText(excludeFile.text)
-        excludeArtifacts.each { item ->
+        excludeArtifacts?.each { item ->
             println "${item.group}: ${item.module}"
         }
     }
@@ -220,8 +220,8 @@ subprojects {
                 if (profile != 'development') {
                     config.exclude group: "org.springframework.boot", module:"spring-boot-devtools"
                 }
-                def excludeArtifacts = project.ext.get('excludeArtifacts')
-                excludeArtifacts.each { item ->
+                def excludeArtifacts = project.ext?.get('excludeArtifacts')
+                excludeArtifacts?.each { item ->
                     config.exclude group: item.group, module: item.module
                 }
                 resolutionStrategy.eachDependency { details ->
