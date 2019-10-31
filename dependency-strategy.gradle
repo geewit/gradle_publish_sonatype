@@ -8,8 +8,12 @@ def resolutionStrategy(DependencyResolveDetails details) {
             }
         }
     } else if (details.requested.group == 'com.google.auto.service' && details.requested.name == 'auto-service') {
-        if (project.hasProperty("auto_service_version")) {
-            details.useVersion auto_service_version
+        if (project.hasProperty("google_auto_service_version")) {
+            details.useVersion google_auto_service_version
+        }
+    } else if (details.requested.group == 'com.google.auto' && details.requested.name == 'auto-common') {
+        if (project.hasProperty("google_auto_common_version")) {
+            details.useVersion google_auto_common_version
         }
     } else if (details.requested.group == 'jakarta.activation') {
         if (project.hasProperty("javax_activation_api_version")) {
@@ -326,6 +330,10 @@ def resolutionStrategy(DependencyResolveDetails details) {
     } else if (details.requested.group == 'mysql' && details.requested.name == "mysql-connector-java") {
         if (project.hasProperty("mysql_version")) {
             details.useVersion mysql_version
+        }
+    } else if (details.requested.group == 'com.netflix.archaius') {
+        if (project.hasProperty("netflix_archaius_version")) {
+            details.useVersion netflix_archaius_version
         }
     } else if (details.requested.group == 'org.objenesis') {
         if (project.hasProperty("objenesis_version")) {
