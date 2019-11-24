@@ -31,8 +31,7 @@ rootDir.traverse(
             include fullProjectName //register the project path using : notation
             def project = project(fullProjectName)
             if(project.parent == null || project.parent.projectDir == rootDir) {
-                println "settingsDir = ${settingsDir}"
-                println "project(${fullProjectName}).projectDir = new File(settingsDir, ${project.name})"
+                println "project(${fullProjectName}).projectDir = new File(${settingsDir}, ${project.name})"
                 project.projectDir = new File(settingsDir, project.name)
             } else {
                 println "project.parent.projectDir = ${project.parent.projectDir}"
