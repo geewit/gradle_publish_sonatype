@@ -27,6 +27,7 @@ rootDir.traverse(
     if (dir) {
         def fullProjectName = buildFullProjectName(rootDir, dir)
         if(!fullProjectName.isEmpty()) {
+            println "dir : ${dir}"
             println "include ${fullProjectName}"
             include fullProjectName //register the project path using : notation
             def project = project(fullProjectName)
