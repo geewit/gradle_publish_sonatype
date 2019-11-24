@@ -30,7 +30,16 @@ rootDir.traverse(
             println "dir : ${dir}"
             println "include ${fullProjectName}"
             include fullProjectName //register the project path using : notation
+            def project = project(fullProjectName)
             project.projectDir = dir
+//            if(project.parent == null || project.parent.projectDir == rootDir) {
+//                println "project(${fullProjectName}).projectDir = new File(${settingsDir}, ${project.name})"
+//                project.projectDir = new File(settingsDir, project.name)
+//            } else {
+//                println "project.parent.projectDir = ${project.parent.projectDir}"
+//                println "project(${fullProjectName}).projectDir = new File(${project.parent.projectDir}, ${project.name})"
+//                project.projectDir = new File(project.parent.projectDir, project.name)
+//            }
         }
     }
 }
