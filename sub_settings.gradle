@@ -13,6 +13,7 @@ def buildFullProjectName(File rootDir, File dir) {
     if(dir.parentFile != null && dir.parentFile.exists()) {
         fullProjectName = buildFullProjectName(rootDir, dir.parentFile) + ":${fullProjectName}"
     }
+    println "fullProjectName = ${fullProjectName}"
     return fullProjectName
 }
 
