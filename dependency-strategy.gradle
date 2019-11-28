@@ -357,6 +357,12 @@ def resolutionStrategy(DependencyResolveDetails details) {
                 details.useVersion reactor_version
             }
         }
+    }  else if (details.requested.group == 'io.projectreactor.addons') {
+        if(details.requested.name == 'reactor-extra') {
+            if (project.hasProperty("reactor_extra_version")) {
+                details.useVersion reactor_extra_version
+            }
+        }
     } else if (details.requested.group == 'org.reactivestreams') {
         if (project.hasProperty("reactive_streams_version")) {
             details.useVersion reactive_streams_version
