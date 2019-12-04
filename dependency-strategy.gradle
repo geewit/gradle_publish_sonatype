@@ -323,6 +323,10 @@ def resolutionStrategy(DependencyResolveDetails details) {
         if (project.hasProperty("log4j2_version")) {
             details.useVersion log4j2_version
         }
+    } else if (details.requested.group == 'org.projectlombok') {
+        if (project.hasProperty("lombok_version")) {
+            details.useVersion lombok_version
+        }
     } else if (details.requested.group == 'org.mapstruct') {
         if (project.hasProperty("mapstruct_version")) {
             details.useVersion mapstruct_version
