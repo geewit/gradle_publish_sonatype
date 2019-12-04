@@ -361,10 +361,16 @@ def resolutionStrategy(DependencyResolveDetails details) {
                 details.useVersion reactor_version
             }
         }
-    }  else if (details.requested.group == 'io.projectreactor.addons') {
+    } else if (details.requested.group == 'io.projectreactor.addons') {
         if(details.requested.name == 'reactor-extra') {
             if (project.hasProperty("reactor_extra_version")) {
                 details.useVersion reactor_extra_version
+            }
+        }
+    } else if (details.requested.group == 'io.projectreactor.netty') {
+        if(details.requested.name == 'reactor-netty') {
+            if (project.hasProperty("reactor_netty_version")) {
+                details.useVersion reactor_netty_version
             }
         }
     } else if (details.requested.group == 'org.reactivestreams') {
