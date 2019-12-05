@@ -24,25 +24,44 @@ ext {
 }
 
 def groupId(Project project) {
+    println "project.name = ${project.name}"
     def prj = project.parent
-
     def groupId
     if(project.hasProperty("groupId")) {
         groupId = project.property("groupId")
         println "project.groupId = ${groupId}"
     } else {
         println "project has not groupId"
-        groupId = project.group
+        groupId = rootProject.group
         println "groupId = ${groupId}"
-        while (groupId != null && prj != null) {
-            println "prj.name = ${prj.name}"
-            println "prj.depth = ${prj.depth}"
+        if(project.parent != null) {
+            def deepth = 1
+            println "project.name = ${project.name}"
+            def group_suffix = ""
+            while (prj != null) {
+                println "deepth = ${deepth}"
+                if(prj.parent != null) {
+                    if(group_suffix.length() > 0) {
+                        group_suffix = prj.name + "." + group_suffix
+                    } else {
+                        group_suffix = prj.name
+                    }
+                }
+                println "group_suffix = ${group_suffix}"
+                prj = prj.parent
+                deepth++
+            }
+            if(group_suffix.length() > 0) {
+                groupId = groupId + "." + group_suffix
+            }
+        } else {
+            println "project.parent == null"
             groupId = project.group
             println "groupId = ${groupId}"
-            prj = prj.parent
         }
     }
     println "--------- final groupId = ${groupId}"
+    project.group(groupId)
     return groupId
 }
 
