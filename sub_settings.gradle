@@ -32,7 +32,6 @@ rootDir.traverse(
             include fullProjectName //register the project path using : notation
             def project = project(fullProjectName)
             project.projectDir = dir
-            println "project.group : ${project.group}"
         }
     }
 }
