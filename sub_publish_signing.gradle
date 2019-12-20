@@ -356,6 +356,7 @@ subprojects {
 
         tasks.withType(Javadoc) {
             options*.encoding = StandardCharsets.UTF_8.name()
+            options.addStringOption('Xdoclint:none', '-quiet')
         }
 
         artifacts {
