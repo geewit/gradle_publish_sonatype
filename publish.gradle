@@ -8,6 +8,8 @@ buildDir = 'target'
 
 repositories {
     mavenLocal()
+    maven { url "http://repo.maven.apache.org/maven2" }
+    maven { url "https://maven.aliyun.com/repository/central" }
     maven {
         url getReleaseRepositoryUrl()
         credentials {
@@ -22,8 +24,6 @@ repositories {
             password = getRepositoryPassword()
         }
     }
-    maven { url "http://repo.maven.apache.org/maven2" }
-    maven { url "https://maven.aliyun.com/repository/central" }
 }
 
 tasks.withType(JavaCompile) {
