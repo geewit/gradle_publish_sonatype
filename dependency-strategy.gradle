@@ -458,6 +458,10 @@ def resolutionStrategy(DependencyResolveDetails details) {
             if (project.hasProperty("gw_core_utils_version")) {
                 details.useVersion gw_core_utils_version
             }
+        } else if (details.requested.name == 'gw-snowflake') {
+            if (project.hasProperty("gw_snowflake_version")) {
+                details.useVersion gw_snowflake_version
+            }
         }
     } else if (details.requested.group.startsWith('io.geewit.utils')) {
         if (project.hasProperty("gw_utils_version")) {
