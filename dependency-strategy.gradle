@@ -172,6 +172,10 @@ def resolutionStrategy(DependencyResolveDetails details) {
             if (project.hasProperty("druid_version")) {
                 details.useVersion druid_version
             }
+        } else if (details.requested.name == 'transmittable-thread-local') {
+            if (project.hasProperty("transmittable_thread_local_version")) {
+                details.useVersion transmittable_thread_local_version
+            }
         }
     } else if (details.requested.group == 'net.sf.ehcache') {
         if (project.hasProperty("ehcache_version")) {
