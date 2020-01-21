@@ -311,6 +311,16 @@ def resolutionStrategy(DependencyResolveDetails details) {
         if (project.hasProperty("json_smart_version")) {
             details.useVersion json_smart_version
         }
+    } else if (details.requested.group == 'org.jetbrains.kotlin') {
+        if (project.hasProperty("jetbrains_kotlin_version")) {
+            details.useVersion jetbrains_kotlin_version
+        }
+    } else if (details.requested.group == 'org.jetbrains') {
+        if (details.requested.name == 'annotations') {
+            if (project.hasProperty("jetbrains_annotations_version")) {
+                details.useVersion jetbrains_annotations_version
+            }
+        }
     } else if (details.requested.group == 'com.google.j2objc') {
         if (project.hasProperty("j2objc_version")) {
             details.useVersion j2objc_version
