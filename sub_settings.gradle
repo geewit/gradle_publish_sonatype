@@ -29,7 +29,7 @@ rootDir.traverse(
         if(!fullProjectName.isEmpty()) {
             println "include '${fullProjectName}'"
             include fullProjectName //register the project path using : notation
-            println "project(${fullProjectName}).projectDir : ${dir}"
+            println "project('${fullProjectName}').projectDir = ${dir}"
             def project = project(fullProjectName)
             project.projectDir = dir
         }
