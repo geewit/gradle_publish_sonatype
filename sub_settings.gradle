@@ -32,7 +32,8 @@ rootDir.traverse(
             println "project('${fullProjectName}').projectDir = ${dir}"
             def project = project(fullProjectName)
             println "project('${fullProjectName}').name = ${project.name}"
-//            def projectName = project.property("artifactId")
+            def projectName = project.property("artifactId")
+            project.name = projectName
             project.projectDir = dir
         }
     }
