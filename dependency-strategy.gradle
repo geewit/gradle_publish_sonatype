@@ -85,7 +85,7 @@ def resolutionStrategy(DependencyResolveDetails details) {
         if (project.hasProperty("antlr4_version")) {
             details.useVersion antlr4_version
         }
-    } else if (details.requested.group == 'org.ow2.asm' && details.requested.name == 'asm') {
+    } else if (details.requested.group == 'org.ow2.asm') {
         if (project.hasProperty("asm_version")) {
             details.useVersion asm_version
         }
