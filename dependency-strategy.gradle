@@ -97,6 +97,10 @@ def resolutionStrategy(DependencyResolveDetails details) {
         if (project.hasProperty("bytebuddy_version")) {
             details.useVersion bytebuddy_version
         }
+    } else if (details.requested.group == 'cglib') {
+        if (project.hasProperty("cglib_version")) {
+            details.useVersion cglib_version
+        }
     } else if (details.requested.group == 'org.checkerframework') {
         if (project.hasProperty("checker_version")) {
             details.useVersion checker_version
