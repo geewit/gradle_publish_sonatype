@@ -369,11 +369,11 @@ subprojects {
                     version "${version}"
                     println "artifact: ${thisGroupId}:${thisArtifactId}:${version}"
                     from components.java
-                    def publishSources = hasProperty('PUBLISH_SOURCE') ? findProperty('PUBLISH_SOURCE') : true
-                    println "publishSources: ${publishSources}"
-                    if(publishSources) {
-                        artifact sources
-                    }
+//                    def publishSources = hasProperty('PUBLISH_SOURCE') ? findProperty('PUBLISH_SOURCE') : true
+//                    println "publishSources: ${publishSources}"
+//                    if(publishSources) {
+//                        artifact sources
+//                    }
 
                     pom {
                         description = POM_DESCRIPTION
