@@ -367,6 +367,14 @@ subprojects {
             }
         }
 
+        tasks.whenTaskAdded { task ->
+            if (task.name.contains('sources') || task.name.contains('javadoc')) {
+                if(!publishSources) {
+                    task.enabled = false
+                }
+            }
+        }
+
         // https://docs.gradle.org/current/dsl/org.gradle.api.publish.maven.MavenPublication.html
         publishing {
             publications {
