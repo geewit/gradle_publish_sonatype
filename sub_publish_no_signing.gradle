@@ -345,7 +345,7 @@ subprojects {
         def publishSources = true
         if(rootProject.ext.has('PUBLISH_SOURCE')) {
             println "rootProject.ext.get('PUBLISH_SOURCE'): " + rootProject.ext.get('PUBLISH_SOURCE')
-            publishSources = rootProject.ext.get('PUBLISH_SOURCE') as Boolean
+            publishSources = rootProject.ext.get('PUBLISH_SOURCE').toBoolean()
         }
         println "publishSources: ${publishSources}"
 
