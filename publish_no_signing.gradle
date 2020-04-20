@@ -141,7 +141,7 @@ publishing {
             artifactId project.name
             version "${version}"
             from components.java
-            def publishSources = hasProperty(PUBLISH_SOURCE) ? getProperty(PUBLISH_SOURCE) : "true"
+            def publishSources = hasProperty('PUBLISH_SOURCE') ? findProperty('PUBLISH_SOURCE') : "true"
             println "publishSources: ${publishSources}"
             if(publishSources) {
                 artifact sources
