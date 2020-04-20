@@ -354,7 +354,10 @@ subprojects {
 
         artifacts {
             archives jar
-            archives sources
+            def publishSources = hasProperty(PUBLISH_SOURCE) ? getProperty(PUBLISH_SOURCE) : "true"
+            if(publishSources) {
+                artifact sources
+            }
         }
 
         // https://docs.gradle.org/current/dsl/org.gradle.api.publish.maven.MavenPublication.html

@@ -137,7 +137,10 @@ publishing {
             artifactId project.name
             version "${version}"
             from components.java
-            artifact sources
+            def publishSources = hasProperty(PUBLISH_SOURCE) ? getProperty(PUBLISH_SOURCE) : "true"
+            if(publishSources) {
+                artifact sources
+            }
 
             pom {
                 name = POM_ARTIFACT_ID
