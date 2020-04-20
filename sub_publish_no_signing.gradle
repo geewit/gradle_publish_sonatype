@@ -387,8 +387,9 @@ subprojects {
                     version "${version}"
                     println "artifact: ${thisGroupId}:${thisArtifactId}:${version}"
                     from components.java
-                    println "publishSources: ${publishSources}"
+                    println "publishing.publishSources: ${publishSources}"
                     if(publishSources) {
+                        println "publishing.artifact sources"
                         artifact sources
                     }
 
