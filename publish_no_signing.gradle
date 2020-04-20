@@ -80,7 +80,11 @@ task sources(type: Jar) {
 
 artifacts {
     archives jar
-    archives sources
+    def publishSources = hasProperty(PUBLISH_SOURCE) ? getProperty(PUBLISH_SOURCE) : "true"
+    println "publishSources: ${publishSources}"
+    if(publishSources) {
+        artifact sources
+    }
 }
 
 def getRepositoryUrl() {
@@ -138,6 +142,7 @@ publishing {
             version "${version}"
             from components.java
             def publishSources = hasProperty(PUBLISH_SOURCE) ? getProperty(PUBLISH_SOURCE) : "true"
+            println "publishSources: ${publishSources}"
             if(publishSources) {
                 artifact sources
             }
