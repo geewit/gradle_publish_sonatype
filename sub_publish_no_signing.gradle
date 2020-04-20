@@ -334,6 +334,8 @@ subprojects {
             }
         }
 
+
+
         tasks.withType(JavaCompile) {
             sourceCompatibility = JavaVersion.VERSION_1_8
             targetCompatibility = JavaVersion.VERSION_1_8
@@ -347,17 +349,17 @@ subprojects {
             options.addStringOption('Xdoclint:none', '-quiet')
         }
 
-        task sources(type: Jar) {
-            classifier = 'sources'
-            from sourceSets.main.allSource
-        }
+        def publishSources = hasProperty('PUBLISH_SOURCE') ? getProperty('PUBLISH_SOURCE') : true
+        println "publishSources: ${publishSources}"
+        if(publishSources) {
+            tasks.withType(Javadoc) {
+                options*.encoding = StandardCharsets.UTF_8.name()
+                options.addStringOption('Xdoclint:none', '-quiet')
+            }
 
-        artifacts {
-            archives jar
-            def publishSources = hasProperty('PUBLISH_SOURCE') ? getProperty('PUBLISH_SOURCE') : true
-            println "publishSources: ${publishSources}"
-            if(publishSources) {
-                archives sources
+            task sources(type: Jar) {
+                classifier = 'sources'
+                from sourceSets.main.allSource
             }
         }
 
@@ -373,7 +375,6 @@ subprojects {
                     version "${version}"
                     println "artifact: ${thisGroupId}:${thisArtifactId}:${version}"
                     from components.java
-                    def publishSources = hasProperty('PUBLISH_SOURCE') ? getProperty('PUBLISH_SOURCE') : true
                     println "publishSources: ${publishSources}"
                     if(publishSources) {
                         artifact sources
