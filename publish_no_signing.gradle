@@ -80,7 +80,7 @@ task sources(type: Jar) {
 
 artifacts {
     archives jar
-    def publishSources = hasProperty(PUBLISH_SOURCE) ? getProperty(PUBLISH_SOURCE) : "true"
+    def publishSources = hasProperty('PUBLISH_SOURCE') ? getProperty('PUBLISH_SOURCE') : true
     println "publishSources: ${publishSources}"
     if(publishSources) {
         archives sources
