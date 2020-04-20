@@ -345,7 +345,7 @@ subprojects {
         def publishSources = true
         if(rootProject.ext.has('PUBLISH_SOURCE')) {
             println "rootProject.ext.get('PUBLISH_SOURCE'): " + rootProject.ext.get('PUBLISH_SOURCE')
-            publishSources = rootProject.ext.get('PUBLISH_SOURCE')
+            publishSources = rootProject.ext.get('PUBLISH_SOURCE') as Boolean
         }
         println "publishSources: ${publishSources}"
 
@@ -364,14 +364,6 @@ subprojects {
                 from sourceSets.main.allSource
             } else {
                 enabled = false
-            }
-        }
-
-        tasks.whenTaskAdded { task ->
-            if (task.name.contains('sources') || task.name.contains('javadoc')) {
-                if(!publishSources) {
-                    task.enabled = false
-                }
             }
         }
 
