@@ -354,10 +354,7 @@ subprojects {
 
         artifacts {
             archives jar
-            def publishSources = hasProperty(PUBLISH_SOURCE) ? getProperty(PUBLISH_SOURCE) : "true"
-            if(publishSources) {
-                artifact sources
-            }
+            archives sources
         }
 
         // https://docs.gradle.org/current/dsl/org.gradle.api.publish.maven.MavenPublication.html
@@ -372,7 +369,10 @@ subprojects {
                     version "${version}"
                     println "artifact: ${thisGroupId}:${thisArtifactId}:${version}"
                     from components.java
-                    artifact sources
+                    def publishSources = hasProperty(PUBLISH_SOURCE) ? getProperty(PUBLISH_SOURCE) : "true"
+                    if(publishSources) {
+                        artifact sources
+                    }
 
                     pom {
                         description = POM_DESCRIPTION
