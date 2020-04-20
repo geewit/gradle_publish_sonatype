@@ -68,7 +68,11 @@ tasks.withType(JavaCompile) {
     options*.encoding = StandardCharsets.UTF_8.name()
 }
 
-def publishSources = hasProperty('PUBLISH_SOURCE') ? getProperty('PUBLISH_SOURCE') : true
+def publishSources = true
+if(rootProject.ext.has('PUBLISH_SOURCE')) {
+    println "rootProject.ext.get('PUBLISH_SOURCE'): " + rootProject.ext.get('PUBLISH_SOURCE')
+    return rootProject.ext.get('PUBLISH_SOURCE')
+}
 println "publishSources: ${publishSources}"
 if(publishSources) {
     tasks.withType(Javadoc) {
