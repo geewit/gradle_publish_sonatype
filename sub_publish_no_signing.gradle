@@ -348,15 +348,22 @@ subprojects {
             publishSources = rootProject.ext.get('PUBLISH_SOURCE')
         }
         println "publishSources: ${publishSources}"
-        if(publishSources) {
-            tasks.withType(Javadoc) {
+
+        tasks.withType(Javadoc) {
+            if(publishSources) {
                 options*.encoding = StandardCharsets.UTF_8.name()
                 options.addStringOption('Xdoclint:none', '-quiet')
+            } else {
+                enabled = false
             }
+        }
 
-            task sources(type: Jar) {
+        task sources(type: Jar) {
+            if(publishSources) {
                 classifier = 'sources'
                 from sourceSets.main.allSource
+            } else {
+                enabled = false
             }
         }
 
