@@ -71,7 +71,7 @@ tasks.withType(JavaCompile) {
 def publishSources = true
 if(rootProject.ext.has('PUBLISH_SOURCE')) {
     println "rootProject.ext.get('PUBLISH_SOURCE'): " + rootProject.ext.get('PUBLISH_SOURCE')
-    return rootProject.ext.get('PUBLISH_SOURCE')
+    publishSources = rootProject.ext.get('PUBLISH_SOURCE')
 }
 println "publishSources: ${publishSources}"
 if(publishSources) {

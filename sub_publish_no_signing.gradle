@@ -334,8 +334,6 @@ subprojects {
             }
         }
 
-
-
         tasks.withType(JavaCompile) {
             sourceCompatibility = JavaVersion.VERSION_1_8
             targetCompatibility = JavaVersion.VERSION_1_8
@@ -344,15 +342,10 @@ subprojects {
             options*.encoding = StandardCharsets.UTF_8.name()
         }
 
-        tasks.withType(Javadoc) {
-            options*.encoding = StandardCharsets.UTF_8.name()
-            options.addStringOption('Xdoclint:none', '-quiet')
-        }
-
         def publishSources = true
         if(rootProject.ext.has('PUBLISH_SOURCE')) {
             println "rootProject.ext.get('PUBLISH_SOURCE'): " + rootProject.ext.get('PUBLISH_SOURCE')
-            return rootProject.ext.get('PUBLISH_SOURCE')
+            publishSources = rootProject.ext.get('PUBLISH_SOURCE')
         }
         println "publishSources: ${publishSources}"
         if(publishSources) {
