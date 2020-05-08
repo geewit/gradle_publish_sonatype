@@ -80,7 +80,7 @@ def resolutionStrategy(DependencyResolveDetails details) {
     } else if (details.requested.group == 'javax.validation') {
         if (project.hasProperty("jakarta_validation_api_version")) {
             details.useTarget(group: 'jakarta.validation', name: 'jakarta.validation-api', version: jakarta_validation_api_version)
-        } else if (project.hasProperty("javax_transaction_api_version")) {
+        } else if (project.hasProperty("javax_validation_api_version")) {
             details.useTarget(group: details.requested.group, name: 'javax.validation-api', version: javax_validation_api_version)
         }
     } else if (details.requested.group == 'jakarta.websocket') {
