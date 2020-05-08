@@ -120,22 +120,22 @@ def resolutionStrategy(DependencyResolveDetails details) {
     } else if (details.requested.group == 'javax.json' && details.requested.name == 'javax.json-api') {
         if (project.hasProperty("jakarta_json_api_version")) {
             details.useTarget(group: 'jakarta.json', name: 'jakarta.json-api', version: jakarta_json_api_version)
-        } else if (project.hasProperty("javax_json_version")) {
-            details.useVersion javax_json_version
+        } else if (project.hasProperty("javax_json_api_version")) {
+            details.useVersion javax_json_api_version
         }
     } else if (details.requested.group == 'org.glassfish' && details.requested.name == 'javax.json') {
-        if (project.hasProperty("javax_json_version")) {
-            details.useVersion javax_json_version
+        if (project.hasProperty("javax_json_api_version")) {
+            details.useVersion javax_json_api_version
         }
     } else if (details.requested.group == 'jakarta.mail') {
         if (project.hasProperty("jakarta_mail_version")) {
             details.useVersion jakarta_mail_version
         }
     } else if (details.requested.group == 'javax.mail' || details.requested.group == 'com.sun.mail') {
-        if (project.hasProperty("jakarta_mail_version")) {
-            details.useTarget(group: 'jakarta.mail', name: 'jakarta.mail-api', version: jakarta_mail_version)
-        } else if (project.hasProperty("javax_mail_version")) {
-            details.useVersion javax_mail_version
+        if (project.hasProperty("jakarta_mail_api_version")) {
+            details.useTarget(group: 'jakarta.mail', name: 'jakarta.mail-api', version: jakarta_mail_api_version)
+        } else if (project.hasProperty("javax_mail_api_version")) {
+            details.useVersion javax_mail_api_version
         }
     } else if (details.requested.group == 'com.aliyun') {
         if (details.requested.name == 'aliyun-java-sdk-core') {
