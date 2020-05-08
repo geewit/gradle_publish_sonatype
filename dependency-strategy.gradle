@@ -35,10 +35,17 @@ def resolutionStrategy(DependencyResolveDetails details) {
         if (project.hasProperty("javax_cache_version")) {
             details.useVersion javax_cache_version
         }
+    } else if (details.requested.group == 'jakarta.persistence') {
+        if (project.hasProperty("jakarta_persistence_api_version")) {
+            details.useVersion jakarta_persistence_api_version
+        }
     } else if (details.requested.group == 'javax.persistence') {
-        if (project.hasProperty("javax_persistence_api_version")) {
+        if (project.hasProperty("jakarta_persistence_api_version")) {
+            details.useTarget(group: 'jakarta.persistence', name: 'javax.persistence-api', version: jakarta_persistence_api_version)
+        } else if (project.hasProperty("javax_persistence_api_version")) {
             details.useTarget(group: details.requested.group, name: 'javax.persistence-api', version: javax_persistence_api_version)
         }
+
     } else if (details.requested.group == 'javax.servlet') {
         if (project.hasProperty("javax_servlet_api_version")) {
             details.useVersion javax_servlet_api_version
