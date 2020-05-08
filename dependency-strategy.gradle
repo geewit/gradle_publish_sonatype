@@ -104,14 +104,14 @@ def resolutionStrategy(DependencyResolveDetails details) {
             details.useTarget(group: details.requested.group, name: 'javax.ws.rs-api', version: javax_ws_rs_api_version)
         }
     } else if (details.requested.group == 'jakarta.xml.bind') {
-        if (project.hasProperty("jakarta_xml_bind_version")) {
-            details.useVersion jakarta_xml_bind_version
+        if (project.hasProperty("jakarta_xml_bind_api_version")) {
+            details.useVersion jakarta_xml_bind_api_version
         }
     } else if (details.requested.group == 'javax.xml.bind') {
-        if (project.hasProperty("jakarta_xml_bind_version")) {
-            details.useTarget(group: 'jakarta.xml.bind', name: 'jakarta.xml.bind-api', version: jakarta_xml_bind_version)
-        } else if (project.hasProperty("javax_xml_bind_version")) {
-            details.useVersion javax_xml_bind_version
+        if (project.hasProperty("jakarta_xml_bind_api_version")) {
+            details.useTarget(group: 'jakarta.xml.bind', name: 'jakarta.xml.bind-api', version: jakarta_xml_bind_api_version)
+        } else if (project.hasProperty("javax_xml_bind_api_version")) {
+            details.useVersion javax_xml_bind_api_version
         }
     } else if (details.requested.group == 'jakarta.json') {
         if (project.hasProperty("jakarta_json_api_version")) {
