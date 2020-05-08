@@ -1,39 +1,43 @@
 def resolutionStrategy(DependencyResolveDetails details) {
-    if (details.requested.group == 'javax.activation' || details.requested.group == 'com.sun.activation') {
-        if (project.hasProperty("javax_activation_api_version")) {
+    if (details.requested.group == 'jakarta.annotation') {
+        if (project.hasProperty("jakarta_annotation_api_version")) {
+            details.useVersion jakarta_annotation_api_version
+        }
+    } else if (details.requested.group == 'javax.activation' || details.requested.group == 'com.sun.activation') {
+        if (project.hasProperty("jakarta_activation_api_version")) {
+            details.useTarget(group: 'jakarta.activation', name: 'jakarta.activation-api', version: jakarta_activation_api_version)
+        } else if (project.hasProperty("javax_activation_api_version")) {
             if (details.requested.name == 'activation') {
                 details.useTarget(group: details.requested.group, name: 'javax.activation-api', version: javax_activation_api_version)
             } else {
                 details.useVersion javax_activation_api_version
             }
         }
-    } else if (details.requested.group == 'com.google.auto.service' && details.requested.name == 'auto-service') {
-        if (project.hasProperty("google_auto_service_version")) {
-            details.useVersion google_auto_service_version
-        }
-    } else if (details.requested.group == 'com.google.auto' && details.requested.name == 'auto-common') {
-        if (project.hasProperty("google_auto_common_version")) {
-            details.useVersion google_auto_common_version
-        }
-    } else if (details.requested.group == 'jakarta.activation') {
-        if (project.hasProperty("javax_activation_api_version")) {
-            details.useTarget(group: 'javax.activation', name: 'javax.activation-api', version: javax_activation_api_version)
-        }
     } else if (details.requested.group == 'javax.annotation') {
-        if (project.hasProperty("javax_annotation_api_version")) {
+        if (project.hasProperty("jakarta_annotation_api_version")) {
+            details.useTarget(group: 'jakarta.annotation', name: 'jakarta.persistence-api', version: jakarta_annotation_api_version)
+        } else if (project.hasProperty("javax_annotation_api_version")) {
             details.useVersion javax_annotation_api_version
         }
-    } else if (details.requested.group == 'jakarta.annotation') {
-        if (project.hasProperty("javax_annotation_api_version")) {
-            details.useTarget(group: 'javax.annotation', name: 'javax.annotation-api', version: javax_annotation_api_version)
-        }
     } else if (details.requested.group == 'jakarta.el') {
-        if (project.hasProperty("javax_el_api_version")) {
-            details.useTarget(group: 'javax.el', name: 'javax.el-api', version: javax_el_api_version)
+        if (project.hasProperty("jakarta_el_api_version")) {
+            details.useVersion jakarta_el_api_version
+        }
+    } else if (details.requested.group == 'javax.el') {
+        if (project.hasProperty("jakarta_el_api_version")) {
+            details.useTarget(group: 'jakarta.el', name: 'jakarta.el-api', version: jakarta_el_api_version)
+        } else if (project.hasProperty("javax_el_api_version")) {
+            details.useVersion javax_el_api_version
+        }
+    } else if (details.requested.group == 'jakarta.cache') {
+        if (project.hasProperty("jakarta_cache_api_version")) {
+            details.useVersion jakarta_cache_api_version
         }
     } else if (details.requested.group == 'javax.cache') {
-        if (project.hasProperty("javax_cache_version")) {
-            details.useVersion javax_cache_version
+        if (project.hasProperty("jakarta_cache_api_version")) {
+            details.useTarget(group: 'jakarta.cache', name: 'jakarta.cache-api', version: jakarta_cache_api_version)
+        } else if (project.hasProperty("javax_cache_api_version")) {
+            details.useVersion javax_cache_api_version
         }
     } else if (details.requested.group == 'jakarta.persistence') {
         if (project.hasProperty("jakarta_persistence_api_version")) {
@@ -41,42 +45,73 @@ def resolutionStrategy(DependencyResolveDetails details) {
         }
     } else if (details.requested.group == 'javax.persistence') {
         if (project.hasProperty("jakarta_persistence_api_version")) {
-            details.useTarget(group: 'jakarta.persistence', name: 'javax.persistence-api', version: jakarta_persistence_api_version)
+            details.useTarget(group: 'jakarta.persistence', name: 'jakarta.persistence-api', version: jakarta_persistence_api_version)
         } else if (project.hasProperty("javax_persistence_api_version")) {
-            details.useTarget(group: details.requested.group, name: 'javax.persistence-api', version: javax_persistence_api_version)
+            details.useVersion javax_persistence_api_version
         }
-
+    } else if (details.requested.group == 'jakarta.servlet') {
+        if (project.hasProperty("jakarta_servlet_api_version")) {
+            details.useVersion jakarta_servlet_api_version
+        }
     } else if (details.requested.group == 'javax.servlet') {
-        if (project.hasProperty("javax_servlet_api_version")) {
+        if (project.hasProperty("jakarta_servlet_api_version")) {
+            details.useTarget(group: 'jakarta.servlet', name: 'jakarta.servlet-api', version: jakarta_servlet_api_version)
+        } else if (project.hasProperty("javax_servlet_api_version")) {
             details.useVersion javax_servlet_api_version
         }
+    } else if (details.requested.group == 'jakarta.transaction') {
+        if (project.hasProperty("jakarta_transaction_api_version")) {
+            details.useVersion jakarta_transaction_api_version
+        }
     } else if (details.requested.group == 'javax.transaction') {
-        if (project.hasProperty("javax_transaction_api_version")) {
-            if (details.requested.name == 'jta') {
-                details.useTarget(group: details.requested.group, name: 'javax.transaction-api', version: javax_transaction_api_version)
-            } else {
-                details.useVersion javax_transaction_api_version
+        if (project.hasProperty("jakarta_transaction_api_version")) {
+            details.useTarget(group: 'jakarta.transaction', name: 'jakarta.transaction-api', version: jakarta_transaction_api_version)
+        } else if (details.requested.name == 'jta') {
+            if (project.hasProperty("jakarta_transaction_api_version")) {
+                details.useTarget(group: 'jakarta.transaction', name: 'jakarta.transaction-api', version: jakarta_transaction_api_version)
+            } else if (project.hasProperty("javax_transaction_api_version")) {
+                details.useTarget(group: details.requested.grou, name: 'javax.transaction-api', version: javax_transaction_api_version)
             }
         }
+    } else if (details.requested.group == 'jakarta.validation') {
+        if (project.hasProperty("jakarta_validation_api_version")) {
+            details.useVersion jakarta_validation_api_version
+        }
     } else if (details.requested.group == 'javax.validation') {
-        if (project.hasProperty("javax_validation_api_version")) {
-            details.useVersion javax_validation_api_version
+        if (project.hasProperty("jakarta_validation_api_version")) {
+            details.useTarget(group: 'jakarta.validation', name: 'jakarta.validation-api', version: jakarta_validation_api_version)
+        } else if (project.hasProperty("javax_transaction_api_version")) {
+            details.useTarget(group: details.requested.group, name: 'javax.validation-api', version: javax_validation_api_version)
+        }
+    } else if (details.requested.group == 'jakarta.websocket') {
+        if (project.hasProperty("jakarta_websocket_api_version")) {
+            details.useVersion jakarta_websocket_api_version
         }
     } else if (details.requested.group == 'javax.websocket') {
-        if (project.hasProperty("javax_websocket_api_version")) {
+        if (project.hasProperty("jakarta_websocket_api_version")) {
+            details.useTarget(group: 'jakarta.websocket', name: 'jakarta.websocket-api', version: jakarta_websocket_api_version)
+        } else if (project.hasProperty("javax_websocket_api_version")) {
             details.useVersion javax_websocket_api_version
         }
     } else if (details.requested.group == 'jakarta.ws.rs') {
-        if (project.hasProperty("javax_ws_rs_api_version")) {
-            details.useTarget(group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: javax_ws_rs_api_version)
+        if (project.hasProperty("jakarta_ws_rs_api_version")) {
+            details.useVersion jakarta_ws_rs_api_version
         }
     } else if (details.requested.group == 'javax.ws.rs') {
-        if (project.hasProperty("javax_ws_rs_api_version")) {
-            details.useVersion javax_ws_rs_api_version
+        if (project.hasProperty("jakarta_ws_rs_api_version")) {
+            details.useTarget(group: 'jakarta.ws.rs', name: 'jakarta.ws.rs-api', version: jakarta_ws_rs_api_version)
+        } else if (project.hasProperty("javax_ws_rs_api_version")) {
+            details.useTarget(group: details.requested.group, name: 'javax.ws.rs-api', version: javax_ws_rs_api_version)
         }
     } else if (details.requested.group == 'jakarta.xml.bind') {
-        if (project.hasProperty("jaxb_api_version")) {
-            details.useTarget(group: 'javax.xml.bind', name: 'jaxb-api', version: jaxb_api_version)
+        if (project.hasProperty("jakarta_xml_bind_version")) {
+            details.useVersion jakarta_xml_bind_version
+        }
+    } else if(details.requested.group == 'javax.xml.bind') {
+        if(project.hasProperty("jakarta_xml_bind_version")) {
+            details.useTarget(group: 'jakarta.xml.bind', name: 'jakarta.xml.bind-api', version: jakarta_xml_bind_version)
+        } else if(project.hasProperty("javax_xml_bind_version")) {
+            details.useVersion javax_xml_bind_version
         }
     } else if (details.requested.group == 'com.aliyun') {
         if (details.requested.name == 'aliyun-java-sdk-core') {
@@ -191,6 +226,14 @@ def resolutionStrategy(DependencyResolveDetails details) {
     } else if (details.requested.group == 'net.sf.ehcache') {
         if (project.hasProperty("ehcache_version")) {
             details.useVersion ehcache_version
+        }
+    } else if (details.requested.group == 'com.google.auto.service' && details.requested.name == 'auto-service') {
+        if (project.hasProperty("google_auto_service_version")) {
+            details.useVersion google_auto_service_version
+        }
+    } else if (details.requested.group == 'com.google.auto' && details.requested.name == 'auto-common') {
+        if (project.hasProperty("google_auto_common_version")) {
+            details.useVersion google_auto_common_version
         }
     } else if (details.requested.group == 'com.google.errorprone') {
         if (project.hasProperty("errorprone_version")) {
