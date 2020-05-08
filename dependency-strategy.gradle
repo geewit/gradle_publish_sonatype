@@ -107,11 +107,35 @@ def resolutionStrategy(DependencyResolveDetails details) {
         if (project.hasProperty("jakarta_xml_bind_version")) {
             details.useVersion jakarta_xml_bind_version
         }
-    } else if(details.requested.group == 'javax.xml.bind') {
-        if(project.hasProperty("jakarta_xml_bind_version")) {
+    } else if (details.requested.group == 'javax.xml.bind') {
+        if (project.hasProperty("jakarta_xml_bind_version")) {
             details.useTarget(group: 'jakarta.xml.bind', name: 'jakarta.xml.bind-api', version: jakarta_xml_bind_version)
-        } else if(project.hasProperty("javax_xml_bind_version")) {
+        } else if (project.hasProperty("javax_xml_bind_version")) {
             details.useVersion javax_xml_bind_version
+        }
+    } else if (details.requested.group == 'jakarta.json') {
+        if (project.hasProperty("jakarta_json_api_version")) {
+            details.useVersion jakarta_json_api_version
+        }
+    } else if (details.requested.group == 'javax.json' && details.requested.name == 'javax.json-api') {
+        if (project.hasProperty("jakarta_json_api_version")) {
+            details.useTarget(group: 'jakarta.json', name: 'jakarta.json-api', version: jakarta_json_api_version)
+        } else if (project.hasProperty("javax_json_version")) {
+            details.useVersion javax_json_version
+        }
+    } else if (details.requested.group == 'org.glassfish' && details.requested.name == 'javax.json') {
+        if (project.hasProperty("javax_json_version")) {
+            details.useVersion javax_json_version
+        }
+    } else if (details.requested.group == 'jakarta.mail') {
+        if (project.hasProperty("jakarta_mail_version")) {
+            details.useVersion jakarta_mail_version
+        }
+    } else if (details.requested.group == 'javax.mail' || details.requested.group == 'com.sun.mail') {
+        if (project.hasProperty("jakarta_mail_version")) {
+            details.useTarget(group: 'jakarta.mail', name: 'jakarta.mail-api', version: jakarta_mail_version)
+        } else if (project.hasProperty("javax_mail_version")) {
+            details.useVersion javax_mail_version
         }
     } else if (details.requested.group == 'com.aliyun') {
         if (details.requested.name == 'aliyun-java-sdk-core') {
@@ -297,26 +321,6 @@ def resolutionStrategy(DependencyResolveDetails details) {
         if (project.hasProperty("javassist_version")) {
             details.useVersion javassist_version
         }
-    } else if (details.requested.group == 'javax.json' && details.requested.name == 'javax.json-api') {
-        if (project.hasProperty("javax_json_version")) {
-            details.useVersion javax_json_version
-        }
-    } else if (details.requested.group == 'org.glassfish' && details.requested.name == 'javax.json') {
-        if (project.hasProperty("javax_json_version")) {
-            details.useVersion javax_json_version
-        }
-    } else if (details.requested.group == 'javax.mail' || details.requested.group == 'com.sun.mail') {
-        if (project.hasProperty("javax_mail_version")) {
-            details.useVersion javax_mail_version
-        }
-    } else if (details.requested.group == 'javax.ws.rs' && details.requested.name == 'javax.ws.rs-api') {
-        if (project.hasProperty("javax_ws_rs_api_version")) {
-            details.useVersion javax_ws_rs_api_version
-        }
-    } else if (details.requested.group == 'javax.xml.bind') {
-        if (project.hasProperty("jaxb_api_version")) {
-            details.useVersion jaxb_api_version
-        }
     } else if (details.requested.group == 'com.sun.xml.bind') {
         if (details.requested.name == 'jaxb-core') {
             if (project.hasProperty("jaxb_core_version")) {
@@ -424,19 +428,19 @@ def resolutionStrategy(DependencyResolveDetails details) {
             details.useVersion prometheus_version
         }
     } else if (details.requested.group == 'io.projectreactor') {
-        if(details.requested.name == 'reactor-core') {
+        if (details.requested.name == 'reactor-core') {
             if (project.hasProperty("reactor_version")) {
                 details.useVersion reactor_version
             }
         }
     } else if (details.requested.group == 'io.projectreactor.addons') {
-        if(details.requested.name == 'reactor-extra') {
+        if (details.requested.name == 'reactor-extra') {
             if (project.hasProperty("reactor_extra_version")) {
                 details.useVersion reactor_extra_version
             }
         }
     } else if (details.requested.group == 'io.projectreactor.netty') {
-        if(details.requested.name == 'reactor-netty') {
+        if (details.requested.name == 'reactor-netty') {
             if (project.hasProperty("reactor_netty_version")) {
                 details.useVersion reactor_netty_version
             }
