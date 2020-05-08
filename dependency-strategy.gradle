@@ -534,6 +534,10 @@ def resolutionStrategy(DependencyResolveDetails details) {
             if (project.hasProperty("gw_core_utils_version")) {
                 details.useVersion gw_core_utils_version
             }
+        } else if (details.requested.name == 'gw-core-validator') {
+            if (project.hasProperty("gw_core_validator_version")) {
+                details.useVersion gw_core_validator_version
+            }
         } else if (details.requested.name == 'gw-snowflake') {
             if (project.hasProperty("gw_snowflake_version")) {
                 details.useVersion gw_snowflake_version
