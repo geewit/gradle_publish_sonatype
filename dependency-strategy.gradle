@@ -469,6 +469,10 @@ def resolutionStrategy(DependencyResolveDetails details) {
         if (project.hasProperty("spring_boot_version")) {
             details.useVersion spring_boot_version
         }
+    } else if (details.requested.group == 'org.springframework.cloud') {
+        if (project.hasProperty("spring_cloud_version")) {
+            details.useVersion spring_cloud_version
+        }
     } else if (details.requested.group == 'org.springframework.data') {
         if (project.hasProperty("spring_data_version")) {
             details.useVersion spring_data_version
