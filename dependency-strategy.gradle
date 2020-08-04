@@ -123,10 +123,19 @@ def resolutionStrategy(DependencyResolveDetails details) {
         } else if (project.hasProperty("javax_json_api_version")) {
             details.useVersion javax_json_api_version
         }
-    } else if (details.requested.group == 'org.glassfish' && details.requested.name == 'javax.json') {
-        if (project.hasProperty("javax_json_api_version")) {
-            details.useVersion javax_json_api_version
+    } else if (details.requested.group == 'org.glassfish') {
+        if(details.requested.name == 'javax.json') {
+            if (project.hasProperty("javax_json_api_version")) {
+                details.useVersion javax_json_api_version
+            } else if (project.hasProperty("jakarta_json_api_version")) {
+                details.useTarget(group: 'jakarta.json', name: 'jakarta.json-api', version: jakarta_json_api_version)
+            }
+        } else if(details.requested.name == 'jakarta.el') {
+            if (project.hasProperty("jakarta_el_version")) {
+                details.useTarget(group: 'jakarta.el', name: 'jakarta.el-api', version: jakarta_el_version)
+            }
         }
+
     } else if (details.requested.group == 'jakarta.mail') {
         if (project.hasProperty("jakarta_mail_version")) {
             details.useVersion jakarta_mail_version
