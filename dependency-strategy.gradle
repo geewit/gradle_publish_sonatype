@@ -304,6 +304,8 @@ def resolutionStrategy(DependencyResolveDetails details) {
             if (project.hasProperty("httpcore_version")) {
                 details.useVersion httpcore_version
             }
+        } else if (details.requested.name == 'httpasyncclient') {
+            details.useVersion httpasyncclient_version
         }
     } else if (details.requested.group == 'com.ibm.icu') {
         if (project.hasProperty("icu_version")) {
