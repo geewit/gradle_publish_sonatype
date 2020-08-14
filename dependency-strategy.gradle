@@ -426,6 +426,10 @@ def resolutionStrategy(DependencyResolveDetails details) {
         if (project.hasProperty("objenesis_version")) {
             details.useVersion objenesis_version
         }
+    } else if (details.requested.group == 'ognl') {
+        if (project.hasProperty("ognl_version")) {
+            details.useVersion ognl_version
+        }
     } else if (details.requested.group == 'com.squareup.okhttp3') {
         if (project.hasProperty("okhttp_version")) {
             details.useVersion okhttp_version
