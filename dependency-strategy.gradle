@@ -168,6 +168,10 @@ def resolutionStrategy(DependencyResolveDetails details) {
         if (project.hasProperty("aspectj_version")) {
             details.useVersion aspectj_version
         }
+    } else if (details.requested.group == 'org.bouncycastle') {
+        if (project.hasProperty("bouncycastle_version")) {
+            details.useVersion bouncycastle_version
+        }
     } else if (details.requested.group == 'net.bytebuddy') {
         if (project.hasProperty("bytebuddy_version")) {
             details.useVersion bytebuddy_version
