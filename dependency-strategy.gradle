@@ -169,8 +169,10 @@ def resolutionStrategy(DependencyResolveDetails details) {
             details.useVersion aspectj_version
         }
     } else if (details.requested.group == 'org.bouncycastle') {
-        if (project.hasProperty("bouncycastle_version")) {
-            details.useVersion bouncycastle_version
+        if (details.requested.name == 'bcpkix-jdk15on' || details.requested.name == 'bcprov-jdk15on') {
+            if (project.hasProperty("bouncycastle_version")) {
+                details.useVersion bouncycastle_version
+            }
         }
     } else if (details.requested.group == 'net.bytebuddy') {
         if (project.hasProperty("bytebuddy_version")) {
