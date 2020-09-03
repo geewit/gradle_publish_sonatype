@@ -160,6 +160,10 @@ def resolutionStrategy(DependencyResolveDetails details) {
         if (project.hasProperty("antlr4_version")) {
             details.useVersion antlr4_version
         }
+    } else if (details.requested.group == 'org.apiguardian') {
+        if (project.hasProperty("apiguardian_version")) {
+            details.useVersion apiguardian_version
+        }
     } else if (details.requested.group == 'org.ow2.asm') {
         if (project.hasProperty("asm_version")) {
             details.useVersion asm_version
@@ -399,6 +403,18 @@ def resolutionStrategy(DependencyResolveDetails details) {
             if (project.hasProperty("jetbrains_annotations_version")) {
                 details.useVersion jetbrains_annotations_version
             }
+        }
+    } else if (details.requested.group == 'org.junit.jupiter') {
+        if (project.hasProperty("junit_version") && junit_version.startsWith('5.')) {
+            details.useVersion junit_version
+        }
+    } else if (details.requested.group == 'org.junit.vintage') {
+        if (project.hasProperty("junit_version") && junit_version.startsWith('5.')) {
+            details.useVersion junit_version
+        }
+    } else if (details.requested.group == 'org.junit.platform') {
+        if (project.hasProperty("junit_platform_version")) {
+            details.useVersion junit_platform_version
         }
     } else if (details.requested.group == 'com.google.j2objc') {
         if (project.hasProperty("j2objc_version")) {
