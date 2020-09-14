@@ -628,6 +628,10 @@ def resolutionStrategy(DependencyResolveDetails details) {
                 details.useVersion nimbus_oauth2_oidc_sdk_version
             }
         }
+    } else if (details.requested.group == 'org.reflections') {
+        if (project.hasProperty("reflections_version")) {
+            details.useVersion reflections_version
+        }
     } else if (details.requested.group == 'org.thymeleaf') {
         if (project.hasProperty("thymeleaf_version")) {
             details.useVersion thymeleaf_version
