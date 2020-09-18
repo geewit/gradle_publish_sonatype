@@ -660,6 +660,10 @@ def resolutionStrategy(DependencyResolveDetails details) {
         if (project.hasProperty("fastinfoset_version")) {
             details.useVersion fastinfoset_version
         }
+    } else if (details.requested.group == 'com.sun.istack') {
+        if (project.hasProperty("istack_version")) {
+            details.useVersion istack_version
+        }
     }
 }
 
