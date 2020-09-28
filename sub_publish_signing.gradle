@@ -374,7 +374,7 @@ subprojects {
 
                     groupId thisGroupId
                     artifactId thisArtifactId
-                    version "${version}"
+                    version version
                     println "artifact: ${thisGroupId}:${thisArtifactId}:${version}"
                     from components.java
                     artifact javadocs

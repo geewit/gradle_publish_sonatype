@@ -107,7 +107,7 @@ publishing {
         maven(MavenPublication) {
             groupId project.group
             artifactId project.name
-            version "${version}"
+            version version
             from components.java
             artifact javadocs
             artifact sources
