@@ -266,6 +266,10 @@ def resolutionStrategy(DependencyResolveDetails details) {
                 details.useVersion transmittable_thread_local_version
             }
         }
+    } else if (details.requested.group == 'org.dom4j') {
+        if (project.hasProperty("dom4j_version")) {
+            details.useVersion dom4j_version
+        }
     } else if (details.requested.group == 'org.ehcache') {
         if (project.hasProperty("ehcache_version")) {
             details.useVersion ehcache_version
