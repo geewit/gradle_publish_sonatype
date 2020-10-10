@@ -394,6 +394,10 @@ def resolutionStrategy(DependencyResolveDetails details) {
                 details.useVersion jersey_version
             }
         }
+    } else if (details.requested.group == 'joda-time' && details.requested.name == 'joda-time') {
+        if (project.hasProperty("joda_time_version")) {
+            details.useVersion joda_time_version
+        }
     } else if (details.requested.group == 'net.minidev' && details.requested.name == 'json-smart') {
         if (project.hasProperty("json_smart_version")) {
             details.useVersion json_smart_version
