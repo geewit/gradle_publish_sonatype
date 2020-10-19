@@ -7,7 +7,6 @@ def isSkipProject(Project project) {
     def isSkipProject = !project.buildscript.sourceFile.exists()
     println "isSkipProject = ${isSkipProject}"
     return isSkipProject
-    // FileTree tree = project.fileTree(dir: project.projectDir, includes: ['build.gradle', 'settings.gradle'])
 }
 
 def isUIProject(Project project) {
@@ -170,7 +169,7 @@ def getRepositoryPassword() {
 }
 
 def getRepositoryUrl(Project project) {
-    return isSnapshotBuild(project) ? getSnapshotRepositoryUrl() : getReleaseRepositoryUrl()
+    return this.isSnapshotBuild(project) ? this.getSnapshotRepositoryUrl() : this.getReleaseRepositoryUrl()
 }
 
 def isSnapshotBuild(Project project) {
@@ -224,9 +223,9 @@ subprojects {
         println "profile = ${profile}"
     }
 
-    if(isSkipProject(it as Project) && !isUIProject(it as Project)) {
+    if(this.isSkipProject(it as Project) && !this.isUIProject(it as Project)) {
 
-    } else if(isUIProject(it as Project)) {
+    } else if(this.isUIProject(it as Project)) {
         task npm_install(type: Npm) {
             if (profile == 'production') {
                 doFirst {

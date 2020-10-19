@@ -1,3 +1,5 @@
+import groovy.io.FileType
+import groovy.io.FileVisitResult
 
 def buildFullProjectName(File rootDir, File dir) {
     if(dir == null || !dir.exists() || !dir.isDirectory()) {
@@ -11,21 +13,21 @@ def buildFullProjectName(File rootDir, File dir) {
     }
     def fullProjectName = dir.name
     if(dir.parentFile != null && dir.parentFile.exists()) {
-        fullProjectName = buildFullProjectName(rootDir, dir.parentFile) + ":${fullProjectName}"
+        fullProjectName = this.buildFullProjectName(rootDir, dir.parentFile) + ":${fullProjectName}"
     }
 //    println "fullProjectName = ${fullProjectName}"
     return fullProjectName
 }
 
 rootDir.traverse(
-        type: groovy.io.FileType.DIRECTORIES,
+        type: FileType.DIRECTORIES,
         preDir: {
             if (!file("${it}/build.gradle").exists() && !file("${it}/settings.gradle").exists() && !file("${it}/package.json").exists()) {
-                return groovy.io.FileVisitResult.SKIP_SUBTREE
+                return FileVisitResult.SKIP_SUBTREE
             }
         }) { dir ->
     if (dir) {
-        def fullProjectName = buildFullProjectName(rootDir, dir)
+        def fullProjectName = this.buildFullProjectName(rootDir, dir)
         if(!fullProjectName.isEmpty()) {
             println "include '${fullProjectName}'"
             include fullProjectName //register the project path using : notation
