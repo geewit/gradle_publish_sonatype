@@ -30,7 +30,11 @@ rootDir.traverse(
         def fullProjectName = this.buildFullProjectName(rootDir, dir)
         if(!fullProjectName.isEmpty()) {
             println "includeBuild '${fullProjectName}'"
-            includeBuild fullProjectName //register the project path using : notation
+            if (file("${dir}/build.gradle").exists()) {
+                includeBuild fullProjectName //register the project path using : notation
+            } else {
+                include fullProjectName //register the project path using : notation
+            }
             println "project('${fullProjectName}').projectDir = ${dir}"
             def project = project(fullProjectName)
             println "project('${fullProjectName}').name = ${project.name}"
