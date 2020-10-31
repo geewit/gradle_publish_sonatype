@@ -468,9 +468,9 @@ def resolutionStrategy(DependencyResolveDetails details) {
         if (project.hasProperty("okio_version")) {
             details.useVersion okio_version
         }
-    } else if (details.requested.group == 'io.micrometer' && details.requested.name == 'micrometer-registry-prometheus') {
-        if (project.hasProperty("prometheus_version")) {
-            details.useVersion prometheus_version
+    } else if (details.requested.group == 'io.micrometer') {
+        if (project.hasProperty("micrometer_version")) {
+            details.useVersion micrometer_version
         }
     } else if (details.requested.group == 'io.projectreactor') {
         if (details.requested.name == 'reactor-core') {
