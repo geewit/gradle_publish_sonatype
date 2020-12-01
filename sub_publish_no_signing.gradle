@@ -279,9 +279,14 @@ subprojects {
                     password = getRepositoryPassword()
                 }
             }
-            mavenCentral artifactUrls: ["https://maven.aliyun.com/repository/central", "https://repo.maven.apache.org/maven2"]
-//            maven { url "https://repo.maven.apache.org/maven2" }
-//            maven { url "https://maven.aliyun.com/repository/central" }
+            maven {
+                name "aliyun"
+                url "https://maven.aliyun.com/repository/central"
+            }
+            maven {
+                name "central"
+                url "https://repo.maven.apache.org/maven2"
+            }
         }
 
         configurations {
