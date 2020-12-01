@@ -265,8 +265,6 @@ subprojects {
 
         repositories {
             mavenLocal()
-            maven { url "https://repo.maven.apache.org/maven2" }
-            maven { url "https://maven.aliyun.com/repository/central" }
             maven {
                 url getReleaseRepositoryUrl()
                 credentials {
@@ -281,6 +279,8 @@ subprojects {
                     password = getRepositoryPassword()
                 }
             }
+            maven { url "https://maven.aliyun.com/repository/central" }
+            maven { url "https://repo.maven.apache.org/maven2" }
         }
 
         configurations {
