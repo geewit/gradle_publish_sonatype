@@ -156,9 +156,15 @@ def resolutionStrategy(DependencyResolveDetails details) {
         if (project.hasProperty("animal_sniffer_annotations_version")) {
             details.useVersion animal_sniffer_annotations_version
         }
-    } else if (details.requested.group == 'org.antlr' && details.requested.name.startsWith('antlr4')) {
-        if (project.hasProperty("antlr4_version")) {
-            details.useVersion antlr4_version
+    } else if (details.requested.group == 'org.antlr') {
+        if(details.requested.name.startsWith('antlr4')) {
+            if (project.hasProperty("antlr4_version")) {
+                details.useVersion antlr4_version
+            }
+        } else if (details.requested.name == 'ST4') {
+            if (project.hasProperty("ST4_version")) {
+                details.useVersion ST4_version
+            }
         }
     } else if (details.requested.group == 'org.apiguardian') {
         if (project.hasProperty("apiguardian_version")) {
