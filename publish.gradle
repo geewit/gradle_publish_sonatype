@@ -22,8 +22,9 @@ repositories {
             password = getRepositoryPassword()
         }
     }
-    maven { url "https://repo.maven.apache.org/maven2" }
-    maven { url "https://maven.aliyun.com/repository/central" }
+    mavenCentral artifactUrls: ["https://maven.aliyun.com/repository/central", "https://repo.maven.apache.org/maven2"]
+//    maven { url "https://repo.maven.apache.org/maven2" }
+//    maven { url "https://maven.aliyun.com/repository/central" }
 }
 
 tasks.withType(JavaCompile) {
