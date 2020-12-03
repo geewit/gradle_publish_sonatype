@@ -646,6 +646,10 @@ def resolutionStrategy(DependencyResolveDetails details) {
         if (project.hasProperty("reflections_version")) {
             details.useVersion reflections_version
         }
+    } else if (details.requested.group == 'io.springfox') {
+        if (project.hasProperty("springfox_version")) {
+            details.useVersion springfox_version
+        }
     } else if (details.requested.group == 'org.thymeleaf') {
         if (project.hasProperty("thymeleaf_version")) {
             details.useVersion thymeleaf_version
