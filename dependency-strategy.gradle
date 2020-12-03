@@ -500,7 +500,7 @@ def resolutionStrategy(DependencyResolveDetails details) {
         if (project.hasProperty("reactive_streams_version")) {
             details.useVersion reactive_streams_version
         }
-    } else if (details.requested.group == 'io.reactivex.rxjava') {
+    } else if (details.requested.group == 'io.reactivex' && details.requested.name == "rxjava") {
         if (project.hasProperty("rxjava_version")) {
             details.useVersion rxjava_version
         }
