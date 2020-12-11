@@ -686,6 +686,10 @@ def resolutionStrategy(DependencyResolveDetails details) {
         if (project.hasProperty("istack_version")) {
             details.useVersion istack_version
         }
+    } else if (details.requested.group == 'org.apache.xmlbeans') {
+        if (project.hasProperty("xmlbeans_version")) {
+            details.useVersion xmlbeans_version
+        }
     }
 }
 
