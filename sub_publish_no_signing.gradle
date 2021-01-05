@@ -255,7 +255,7 @@ subprojects {
                     config.exclude group: item.group, module: item.module
                 }
                 resolutionStrategy.eachDependency { details ->
-                    resolutionStrategy
+                    resolutionStrategy(details)
                 }
             }
         }
