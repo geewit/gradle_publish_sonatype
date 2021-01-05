@@ -41,8 +41,11 @@ tasks.withType(JavaCompile) {
 }
 
 tasks.withType(Javadoc) {
+    failOnError = false
+    options.windowTitle("${project.name} Javadoc ${project.version}")
     options*.encoding = StandardCharsets.UTF_8.name()
     options.addStringOption('Xdoclint:none', '-quiet')
+
 }
 
 task sources(type: Jar) {
