@@ -569,8 +569,10 @@ def resolutionStrategy(DependencyResolveDetails details) {
             }
         }
     } else if (details.requested.group == 'org.opensaml') {
-        if (project.hasProperty("opensaml_version")) {
-            details.useVersion opensaml_version
+        if (details.requested.name == 'opensaml') {
+            if (project.hasProperty("opensaml_version")) {
+                details.useVersion opensaml_version
+            }
         }
     } else if (details.requested.group == 'io.github.openfeign') {
         if (project.hasProperty("openfeign_version")) {
