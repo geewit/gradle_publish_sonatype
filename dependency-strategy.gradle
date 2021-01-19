@@ -568,6 +568,10 @@ def resolutionStrategy(DependencyResolveDetails details) {
                 details.useVersion gw_boot_starter_jpa_version
             }
         }
+    } else if (details.requested.group == 'org.opensaml') {
+        if (project.hasProperty("opensaml_version")) {
+            details.useVersion opensaml_version
+        }
     } else if (details.requested.group == 'io.github.openfeign') {
         if (project.hasProperty("openfeign_version")) {
             details.useVersion openfeign_version
