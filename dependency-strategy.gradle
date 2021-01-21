@@ -212,6 +212,10 @@ def resolutionStrategy(DependencyResolveDetails details) {
         if (project.hasProperty("commons_collections_version")) {
             details.useVersion commons_collections_version
         }
+    } else if (details.requested.group == 'commons-configuration' && details.requested.name == 'commons-configuration') {
+        if (project.hasProperty("commons_configuration_version")) {
+            details.useVersion commons_configuration_version
+        }
     } else if (details.requested.group == 'commons-io' && details.requested.name == 'commons-io') {
         if (project.hasProperty("commons_io_version")) {
             details.useVersion commons_io_version
