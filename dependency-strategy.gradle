@@ -482,6 +482,10 @@ def resolutionStrategy(DependencyResolveDetails details) {
         if (project.hasProperty("micrometer_version")) {
             details.useVersion micrometer_version
         }
+    } else if (details.requested.group == 'org.mockito') {
+        if (project.hasProperty("mockito_version")) {
+            details.useVersion mockito_version
+        }
     } else if (details.requested.group == 'io.projectreactor') {
         if (details.requested.name == 'reactor-core') {
             if (project.hasProperty("reactor_version")) {
