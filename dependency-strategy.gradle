@@ -621,7 +621,7 @@ def resolutionStrategy(DependencyResolveDetails details) {
             details.useVersion gw_utils_version
         }
     } else if (details.requested.group == 'io.geewit.data') {
-        if (details.requested.name == 'gw-data-jpa-envers') {
+        if (details.requested.name.startsWith('gw-data-jpa-envers')) {
             if (project.hasProperty("gw_data_jpa_envers_version")) {
                 details.useVersion gw_data_jpa_envers_version
             }
