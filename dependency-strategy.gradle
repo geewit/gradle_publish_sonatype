@@ -329,7 +329,7 @@ def resolutionStrategy(DependencyResolveDetails details) {
             details.useVersion hk2_version
         }
     } else if (details.requested.group == 'org.apache.httpcomponents') {
-        if (details.requested.name == 'httpclient') {
+        if (details.requested.name == 'httpclient' || details.requested.name == 'httpmime') {
             if (project.hasProperty("httpclient_version")) {
                 details.useVersion httpclient_version
             }
