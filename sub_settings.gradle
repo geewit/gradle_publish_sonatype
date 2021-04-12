@@ -43,3 +43,9 @@ rootDir.traverse(
     }
 }
 
+buildCache {
+    local {
+        directory = new File(rootDir, 'build-cache')
+        removeUnusedEntriesAfterDays = 30
+    }
+}
