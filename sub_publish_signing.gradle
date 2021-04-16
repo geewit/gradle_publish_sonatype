@@ -211,6 +211,7 @@ subprojects {
             mavenLocal()
             maven {
                 url getReleaseRepositoryUrl()
+                allowInsecureProtocol true
                 credentials {
                     username = getRepositoryUsername()
                     password = getRepositoryPassword()
@@ -218,6 +219,7 @@ subprojects {
             }
             maven {
                 url getSnapshotRepositoryUrl()
+                allowInsecureProtocol true
                 credentials {
                     username = getRepositoryUsername()
                     password = getRepositoryPassword()
