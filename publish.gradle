@@ -1,6 +1,6 @@
 import java.nio.charset.StandardCharsets
 
-apply plugin: 'java'
+apply plugin: 'java-library'
 apply plugin: 'maven-publish'
 apply plugin: 'signing'
 

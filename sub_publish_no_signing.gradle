@@ -199,7 +199,7 @@ subprojects {
     }
 
     if(!this.isSkipProject(it as Project)) {
-        apply plugin: 'java'
+        apply plugin: 'java-library'
         apply plugin: 'maven-publish'
         apply from: 'https://gitee.com/geewit/gradle_publish_sonatype/raw/master/dependency-strategy.gradle'
 
@@ -341,6 +341,7 @@ subprojects {
                 maven {
                     name = 'releaseRepository'
                     url = getRepositoryUrl(project)
+                    allowInsecureProtocol true
                     credentials {
                         username = getRepositoryUsername()
                         password = getRepositoryPassword()

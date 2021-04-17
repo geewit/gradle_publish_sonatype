@@ -202,7 +202,7 @@ subprojects {
     }
 
     if(!isSkipProject(it as Project)) {
-        apply plugin: 'java'
+        apply plugin: 'java-library'
         apply plugin: 'maven-publish'
         apply plugin: 'signing'
         apply from: 'https://gitee.com/geewit/gradle_publish_sonatype/raw/master/dependency-strategy.gradle'
