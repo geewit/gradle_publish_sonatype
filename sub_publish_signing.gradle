@@ -310,6 +310,10 @@ subprojects {
             options.addStringOption('Xdoclint:none', '-quiet')
         }
 
+        tasks.withType(Test).configureEach {
+            useJUnitPlatform()
+        }
+
         artifacts {
             archives jar
             archives sources
