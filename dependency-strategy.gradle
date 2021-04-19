@@ -356,6 +356,10 @@ def resolutionStrategy(DependencyResolveDetails details) {
         if (project.hasProperty("javassist_version")) {
             details.useVersion javassist_version
         }
+    } else if (details.requested.group == 'com.auth0' && details.requested.name == 'java-jwt') {
+        if (project.hasProperty("java_jwt_version")) {
+            details.useVersion java_jwt_version
+        }
     } else if (details.requested.group == 'com.sun.xml.bind') {
         if (details.requested.name == 'jaxb-core') {
             if (project.hasProperty("jaxb_core_version")) {
