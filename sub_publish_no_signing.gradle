@@ -316,7 +316,6 @@ subprojects {
             } else {
                 enabled = false
             }
-            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
         }
 
         tasks.withType(Copy) {
