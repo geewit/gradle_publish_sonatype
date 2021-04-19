@@ -303,6 +303,7 @@ subprojects {
             } else {
                 enabled = false
             }
+            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
         }
 
         task sources(type: Jar) {
@@ -312,6 +313,7 @@ subprojects {
             } else {
                 enabled = false
             }
+            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
         }
 
         tasks.withType(Copy) {

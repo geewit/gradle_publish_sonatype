@@ -50,17 +50,20 @@ tasks.withType(Javadoc) {
     options.windowTitle("${project.name} Javadoc ${project.version}")
     options*.encoding = StandardCharsets.UTF_8.name()
     options.addStringOption('Xdoclint:none', '-quiet')
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
 }
 
 task sources(type: Jar) {
     classifier = 'sources'
     from sourceSets.main.allSource
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 task javadocs(type: Jar, dependsOn: javadoc) {
     classifier = 'javadoc'
     from javadoc.destinationDir
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 tasks.withType(Copy) {
