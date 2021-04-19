@@ -94,6 +94,9 @@ if(publishSources) {
     }
 }
 
+tasks.withType(Copy) {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
 
 artifacts {
     archives jar

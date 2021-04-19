@@ -314,6 +314,10 @@ subprojects {
             }
         }
 
+        tasks.withType(Copy) {
+            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+        }
+
         // https://docs.gradle.org/current/dsl/org.gradle.api.publish.maven.MavenPublication.html
         publishing {
             publications {

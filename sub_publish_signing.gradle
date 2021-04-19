@@ -310,6 +310,10 @@ subprojects {
             options.addStringOption('Xdoclint:none', '-quiet')
         }
 
+        tasks.withType(Copy) {
+            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+        }
+
         artifacts {
             archives jar
             archives sources
