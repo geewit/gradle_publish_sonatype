@@ -331,6 +331,7 @@ subprojects {
                     version version
                     println "artifact: ${thisGroupId}:${thisArtifactId}:${version}"
                     from components.java
+                    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
                     println "publishing.publishSources: ${publishSources}"
                     if(publishSources) {
                         println "publishing.artifact sources"
