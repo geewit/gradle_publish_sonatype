@@ -570,12 +570,6 @@ def resolutionStrategy(DependencyResolveDetails details) {
         if (project.hasProperty("swagger_version")) {
             details.useVersion swagger_version
         }
-    } else if (details.requested.group == 'io.geewit.boot') {
-        if (details.requested.name == 'gw-boot-starter-jpa') {
-            if (project.hasProperty("gw_boot_starter_jpa_version")) {
-                details.useVersion gw_boot_starter_jpa_version
-            }
-        }
     } else if (details.requested.group == 'org.opensaml') {
         if (details.requested.name == 'opensaml') {
             if (project.hasProperty("opensaml_version")) {
@@ -585,6 +579,12 @@ def resolutionStrategy(DependencyResolveDetails details) {
     } else if (details.requested.group == 'io.github.openfeign') {
         if (project.hasProperty("openfeign_version")) {
             details.useVersion openfeign_version
+        }
+    } else if (details.requested.group == 'io.geewit.boot') {
+        if (details.requested.name == 'gw-boot-starter-jpa') {
+            if (project.hasProperty("gw_boot_starter_jpa_version")) {
+                details.useVersion gw_boot_starter_jpa_version
+            }
         }
     } else if (details.requested.group == 'io.geewit.core') {
         if (details.requested.name == 'gw-core-exception') {
