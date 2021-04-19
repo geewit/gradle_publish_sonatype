@@ -50,7 +50,6 @@ tasks.withType(Javadoc) {
     options.windowTitle("${project.name} Javadoc ${project.version}")
     options*.encoding = StandardCharsets.UTF_8.name()
     options.addStringOption('Xdoclint:none', '-quiet')
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
 }
 
