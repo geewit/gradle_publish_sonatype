@@ -40,9 +40,6 @@ tasks.withType(JavaCompile) {
 
     options*.compilerArgs << "-Xlint:unchecked" << "-Xlint:options"
     options*.encoding = StandardCharsets.UTF_8.name()
-    configureEach {
-        options.incremental = true
-    }
 }
 
 tasks.withType(Javadoc) {
