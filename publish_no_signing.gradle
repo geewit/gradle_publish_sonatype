@@ -74,6 +74,9 @@ tasks.withType(JavaCompile) {
 
     options*.compilerArgs << "-Xlint:unchecked" << "-Xlint:options"
     options*.encoding = StandardCharsets.UTF_8.name()
+    configureEach {
+        options.incremental = true
+    }
 }
 
 def publishSources = true
@@ -91,9 +94,17 @@ if(publishSources) {
     task sources(type: Jar) {
         classifier = 'sources'
         from sourceSets.main.allSource
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     }
 }
 
+tasks.withType(Jar) {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+tasks.withType(Copy) {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
 
 artifacts {
     archives jar
@@ -185,6 +196,7 @@ publishing {
         maven {
             name = 'releaseRepository'
             url = getRepositoryUrl()
+            allowInsecureProtocol true
             credentials {
                 username = getRepositoryUsername()
                 password = getRepositoryPassword()

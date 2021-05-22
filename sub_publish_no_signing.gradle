@@ -222,12 +222,12 @@ subprojects {
                 }
             }
             maven {
-                name "aliyun"
-                url "https://maven.aliyun.com/repository/central"
-            }
-            maven {
                 name "central"
                 url "https://repo.maven.apache.org/maven2"
+            }
+            maven {
+                name "aliyun"
+                url "https://maven.aliyun.com/repository/central"
             }
         }
 
@@ -305,6 +305,10 @@ subprojects {
             }
         }
 
+        tasks.withType(Jar) {
+            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+        }
+
         task sources(type: Jar) {
             if(publishSources) {
                 classifier = 'sources'
@@ -312,6 +316,11 @@ subprojects {
             } else {
                 enabled = false
             }
+            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+        }
+
+        tasks.withType(Copy) {
+            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
         }
 
         // https://docs.gradle.org/current/dsl/org.gradle.api.publish.maven.MavenPublication.html
