@@ -344,6 +344,10 @@ def resolutionStrategy(DependencyResolveDetails details) {
         if (project.hasProperty("icu_version")) {
             details.useVersion icu_version
         }
+    } else if (details.requested.group == 'cn.hutool') {
+        if (project.hasProperty("hutool_version")) {
+            details.useVersion hutool_version
+        }
     } else if (details.requested.group == 'org.jacoco') {
         if (project.hasProperty("jacoco_version")) {
             details.useVersion jacoco_version
