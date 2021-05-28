@@ -320,6 +320,10 @@ subprojects {
             duplicatesStrategy = DuplicatesStrategy.EXCLUDE
         }
 
+        tasks.withType(Test).configureEach {
+            useJUnitPlatform()
+        }
+
         artifacts {
             archives jar
             archives sources
