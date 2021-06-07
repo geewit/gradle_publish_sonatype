@@ -203,6 +203,12 @@ subprojects {
         apply plugin: 'maven-publish'
         apply from: 'https://gitee.com/geewit/gradle_publish_sonatype/raw/master/dependency-strategy.gradle'
 
+        def artifactExcludeFiles = []
+        def artifactExcludeFile = project.file('artifact-exclude.json')
+        if(artifactExcludeFile.exists()) {
+            artifactExcludeFiles = new JsonSlurper().parseText(artifactExcludeFile.text)
+        }
+
         repositories {
             mavenLocal()
             maven {
@@ -309,6 +315,15 @@ subprojects {
             duplicatesStrategy = DuplicatesStrategy.EXCLUDE
         }
 
+        task apiJar(type: Jar) {
+            baseName "publishing-api"
+            from sourceSets.main.output
+            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+            if(artifactExcludeFiles) {
+                exclude artifactExcludeFiles
+            }
+        }
+
         task sources(type: Jar) {
             if(publishSources) {
                 classifier = 'sources'
@@ -317,6 +332,9 @@ subprojects {
                 enabled = false
             }
             duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+            if(artifactExcludeFiles) {
+                exclude artifactExcludeFiles
+            }
         }
 
         tasks.withType(Copy) {
@@ -326,6 +344,24 @@ subprojects {
         // https://docs.gradle.org/current/dsl/org.gradle.api.publish.maven.MavenPublication.html
         publishing {
             publications {
+                api(MavenPublication) {
+                    def thisGroupId = groupId(project)
+                    def thisArtifactId = artifactId(project)
+                    groupId thisGroupId
+                    artifactId thisArtifactId
+                    version version
+                    println "artifact: ${thisGroupId}:${thisArtifactId}:${version}"
+                    artifact apiJar
+                    if(publishSources) {
+                        println "publishing.artifact sources"
+                        artifact sources
+                    }
+
+                    pom {
+                        description = POM_DESCRIPTION
+                    }
+                }
+
                 maven(MavenPublication) {
                     def thisGroupId = groupId(project)
                     def thisArtifactId = artifactId(project)
