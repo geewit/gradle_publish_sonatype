@@ -207,6 +207,12 @@ subprojects {
         apply plugin: 'signing'
         apply from: 'https://gitee.com/geewit/gradle_publish_sonatype/raw/master/dependency-strategy.gradle'
 
+        def artifactExcludeFiles = []
+        def artifactExcludeFile = project.file('publish-artifact-exclude.json')
+        if(artifactExcludeFile.exists()) {
+            artifactExcludeFiles = new JsonSlurper().parseText(artifactExcludeFile.text)
+        }
+
         repositories {
             mavenLocal()
             maven {
@@ -285,12 +291,6 @@ subprojects {
             }
         }
 
-        task sources(type: Jar) {
-            classifier = 'sources'
-            from sourceSets.main.allSource
-            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-        }
-
         task javadocs(type: Jar, dependsOn: javadoc) {
             classifier = 'javadoc'
             from javadoc.destinationDir
@@ -314,6 +314,28 @@ subprojects {
 
         tasks.withType(Jar) {
             duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+        }
+
+        task apiJar(type: Jar) {
+            baseName "publishing-api"
+            from sourceSets.main.output
+            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+            if(artifactExcludeFiles) {
+                exclude artifactExcludeFiles
+            }
+        }
+
+        task sources(type: Jar) {
+            if(publishSources) {
+                classifier = 'sources'
+                from sourceSets.main.allSource
+            } else {
+                enabled = false
+            }
+            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+            if(artifactExcludeFiles) {
+                exclude artifactExcludeFiles
+            }
         }
 
         tasks.withType(Copy) {
@@ -341,7 +363,7 @@ subprojects {
                     artifactId thisArtifactId
                     version version
                     println "artifact: ${thisGroupId}:${thisArtifactId}:${version}"
-                    from components.java
+                    artifact apiJar
                     artifact javadocs
                     artifact sources
 

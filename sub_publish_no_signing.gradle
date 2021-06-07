@@ -204,7 +204,7 @@ subprojects {
         apply from: 'https://gitee.com/geewit/gradle_publish_sonatype/raw/master/dependency-strategy.gradle'
 
         def artifactExcludeFiles = []
-        def artifactExcludeFile = project.file('artifact-exclude.json')
+        def artifactExcludeFile = project.file('publish-artifact-exclude.json')
         if(artifactExcludeFile.exists()) {
             artifactExcludeFiles = new JsonSlurper().parseText(artifactExcludeFile.text)
         }
