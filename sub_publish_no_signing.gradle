@@ -187,8 +187,8 @@ subprojects {
     buildscript {
         repositories {
             mavenLocal()
-            maven { url "https://repo.maven.apache.org/maven2" }
             maven { url "https://maven.aliyun.com/repository/gradle-plugin" }
+            maven { url "https://repo.maven.apache.org/maven2" }
         }
     }
     println "subproject.name = ${it.name}"
@@ -228,12 +228,12 @@ subprojects {
                 }
             }
             maven {
-                name "central"
-                url "https://repo.maven.apache.org/maven2"
-            }
-            maven {
                 name "aliyun"
                 url "https://maven.aliyun.com/repository/central"
+            }
+            maven {
+                name "central"
+                url "https://repo.maven.apache.org/maven2"
             }
         }
 
