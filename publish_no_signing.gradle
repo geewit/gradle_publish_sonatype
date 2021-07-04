@@ -1,3 +1,4 @@
+import groovy.json.JsonSlurper
 import java.nio.charset.StandardCharsets
 
 ext {
@@ -13,7 +14,7 @@ if(versionFile.exists()) {
     props.load(versionFile.newReader())
     props.each { prop ->
         println "${prop.key}: ${prop.value}"
-        project.ext.set(prop.key, prop.value)
+        rootProject.ext.set(prop.key, prop.value)
     }
 }
 def excludeArtifacts = []
