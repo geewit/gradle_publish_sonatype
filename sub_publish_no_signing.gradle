@@ -13,6 +13,26 @@ ext {
     isSkipProject = this.&isSkipProject
 }
 
+Properties props = new Properties()
+def versionFile = rootProject.file('version.properties')
+println "rootProject: ${rootProject.name}"
+
+if(versionFile.exists()) {
+    props.load(versionFile.newReader())
+    props.each { prop ->
+        println "${prop.key}: ${prop.value}"
+        project.ext.set(prop.key, prop.value)
+    }
+}
+def excludeArtifacts = []
+def excludeFile = rootProject.file('gradle-exclude.json')
+if(excludeFile.exists()) {
+    excludeArtifacts = new JsonSlurper().parseText(excludeFile.text)
+    excludeArtifacts?.each { item ->
+        println "exclude ${item.group}: ${item.module}"
+    }
+}
+
 def groupId(Project project) {
     println "project.name = ${project.name}"
     def prj = project.parent
@@ -56,26 +76,6 @@ def groupId(Project project) {
     println "--------- final groupId = ${groupId}"
     project.group(groupId)
     return groupId
-}
-
-Properties props = new Properties()
-def versionFile = rootProject.file('version.properties')
-println "rootProject: ${rootProject.name}"
-
-if(versionFile.exists()) {
-    props.load(versionFile.newReader())
-    props.each { prop ->
-        println "${prop.key}: ${prop.value}"
-        project.ext.set(prop.key, prop.value)
-    }
-}
-def excludeArtifacts = []
-def excludeFile = rootProject.file('gradle-exclude.json')
-if(excludeFile.exists()) {
-    excludeArtifacts = new JsonSlurper().parseText(excludeFile.text)
-    excludeArtifacts?.each { item ->
-        println "exclude ${item.group}: ${item.module}"
-    }
 }
 
 def artifactId(Project project) {

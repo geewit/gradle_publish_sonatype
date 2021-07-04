@@ -5,90 +5,6 @@ ext {
     println "profile = ${profile}"
 }
 
-
-apply plugin: 'java-library'
-apply plugin: 'maven-publish'
-apply from: 'https://gitee.com/geewit/gradle_publish_sonatype/raw/master/dependency-strategy.gradle'
-
-buildDir = 'target'
-
-repositories {
-    mavenLocal()
-    maven {
-        url getReleaseRepositoryUrl()
-        allowInsecureProtocol true
-        credentials {
-            username = getRepositoryUsername()
-            password = getRepositoryPassword()
-        }
-    }
-    maven {
-        url getSnapshotRepositoryUrl()
-        allowInsecureProtocol true
-        credentials {
-            username = getRepositoryUsername()
-            password = getRepositoryPassword()
-        }
-    }
-    maven {
-        name "aliyun"
-        url "https://maven.aliyun.com/repository/central"
-    }
-    maven {
-        name "central"
-        url "https://repo.maven.apache.org/maven2"
-    }
-}
-
-apply plugin: 'java-library'
-apply plugin: 'maven-publish'
-apply from: 'https://gitee.com/geewit/gradle_publish_sonatype/raw/master/dependency-strategy.gradle'
-
-def groupId(Project project) {
-    println "project.name = ${project.name}"
-    def prj = project.parent
-    def groupId = null
-    Properties projectProps = new Properties()
-    def projectPropsFile = project.file('gradle.properties')
-    if(projectPropsFile.exists()) {
-        projectProps.load(projectPropsFile.newReader())
-        groupId = projectProps.getProperty('group')
-    }
-    if(groupId == null) {
-        println "project has not groupId"
-        groupId = rootProject.group
-        println "groupId = ${groupId}"
-        if(project.parent != null) {
-            def deepth = 1
-            println "project.name = ${project.name}"
-            def group_suffix = ""
-            while (prj != null) {
-                println "deepth = ${deepth}"
-                if(prj.parent != null) {
-                    if(group_suffix.length() > 0) {
-                        group_suffix = prj.name + "." + group_suffix
-                    } else {
-                        group_suffix = prj.name
-                    }
-                }
-                println "group_suffix = ${group_suffix}"
-                prj = prj.parent
-                deepth++
-            }
-            if(group_suffix.length() > 0) {
-                groupId = groupId + "." + group_suffix
-            }
-        } else {
-            println "project.parent == null"
-            groupId = project.group
-            println "groupId = ${groupId}"
-        }
-    }
-    println "--------- final groupId = ${groupId}"
-    project.group(groupId)
-    return groupId
-}
-
 Properties props = new Properties()
 def versionFile = rootProject.file('version.properties')
 println "rootProject: ${rootProject.name}"
@@ -109,7 +25,86 @@ if(excludeFile.exists()) {
     }
 }
 
-def artifactId(Project project) {
+apply plugin: 'java-library'
+apply plugin: 'maven-publish'
+apply from: 'https://gitee.com/geewit/gradle_publish_sonatype/raw/master/dependency-strategy.gradle'
+
+buildDir = 'target'
+
+repositories {
+    mavenLocal()
+    maven {
+        url getReleaseRepositoryUrl()
+        allowInsecureProtocol true
+        credentials {
+            username = getRepositoryUsername()
+            password = getRepositoryPassword()
+        }
+    }
+    maven {
+        url getSnapshotRepositoryUrl(rootProject)
+        allowInsecureProtocol true
+        credentials {
+            username = getRepositoryUsername()
+            password = getRepositoryPassword()
+        }
+    }
+    maven {
+        name "aliyun"
+        url "https://maven.aliyun.com/repository/central"
+    }
+    maven {
+        name "central"
+        url "https://repo.maven.apache.org/maven2"
+    }
+}
+
+static def groupId(Project thisProject, Project rootProject) {
+    println "thisProject.name = ${thisProject.name}"
+    def prj = thisProject.parent
+    def groupId = null
+    Properties projectProps = new Properties()
+    def projectPropsFile = thisProject.file('gradle.properties')
+    if(projectPropsFile.exists()) {
+        projectProps.load(projectPropsFile.newReader())
+        groupId = projectProps.getProperty('group')
+    }
+    if(groupId == null) {
+        println "project has not groupId"
+        groupId = rootProject.group
+        println "groupId = ${groupId}"
+        if(thisProject.parent != null) {
+            def deepth = 1
+            println "thisProject.name = ${thisProject.name}"
+            def group_suffix = ""
+            while (prj != null) {
+                println "deepth = ${deepth}"
+                if(prj.parent != null) {
+                    if(group_suffix.length() > 0) {
+                        group_suffix = prj.name + "." + group_suffix
+                    } else {
+                        group_suffix = prj.name
+                    }
+                }
+                println "group_suffix = ${group_suffix}"
+                prj = prj.parent
+                deepth++
+            }
+            if(group_suffix.length() > 0) {
+                groupId = groupId + "." + group_suffix
+            }
+        } else {
+            println "thisProject.parent == null"
+            groupId = thisProject.group
+            println "groupId = ${groupId}"
+        }
+    }
+    println "--------- final groupId = ${groupId}"
+    thisProject.group(groupId)
+    return groupId
+}
+
+static def artifactId(Project project) {
     def prj = project.parent
 
     def artifactId
@@ -132,7 +127,7 @@ def artifactId(Project project) {
     return artifactId
 }
 
-def getReleaseRepositoryUrl() {
+def getReleaseRepositoryUrl(Project rootProject) {
     if(rootProject.ext.has('REPOSITORY_RELEASE_URL')) {
         println "rootProject.ext.get('REPOSITORY_RELEASE_URL'): " + rootProject.ext.get('REPOSITORY_RELEASE_URL')
         return rootProject.ext.get('REPOSITORY_RELEASE_URL')
@@ -147,7 +142,7 @@ def getReleaseRepositoryUrl() {
     return releaseRepositoryUrl
 }
 
-def getSnapshotRepositoryUrl() {
+static def getSnapshotRepositoryUrl(Project rootProject) {
     if(rootProject.ext.has('REPOSITORY_SNAPSHOT_URL')) {
         println "rootProject.ext.get('REPOSITORY_SNAPSHOT_URL'): " + rootProject.ext.get('REPOSITORY_SNAPSHOT_URL')
         return rootProject.ext.get('REPOSITORY_SNAPSHOT_URL')
@@ -162,7 +157,7 @@ def getSnapshotRepositoryUrl() {
     return snapshotRepositoryUrl
 }
 
-def getRepositoryUsername() {
+static def getRepositoryUsername(Project rootProject) {
     if(rootProject.ext.has('REPOSITORY_USERNAME')) {
         println "rootProject.ext.get('REPOSITORY_USERNAME'): " + rootProject.ext.get('REPOSITORY_USERNAME')
         return rootProject.ext.get('REPOSITORY_USERNAME')
@@ -176,7 +171,7 @@ def getRepositoryUsername() {
     return username
 }
 
-def getRepositoryPassword() {
+static def getRepositoryPassword(Project rootProject) {
     if(rootProject.ext.has('REPOSITORY_PASSWORD')) {
         println "rootProject.ext.get('REPOSITORY_PASSWORD'): " + rootProject.ext.get('REPOSITORY_PASSWORD')
         return rootProject.ext.get('REPOSITORY_PASSWORD')
@@ -190,14 +185,26 @@ def getRepositoryPassword() {
     return password
 }
 
-def getRepositoryUrl(Project project) {
-    return this.isSnapshotBuild(project) ? this.getSnapshotRepositoryUrl() : this.getReleaseRepositoryUrl()
+static def getRepositoryUrl(Project rootProject) {
+    return isSnapshotBuild(rootProject) ? getSnapshotRepositoryUrl(rootProject) : getReleaseRepositoryUrl(rootProject)
 }
 
-def isSnapshotBuild(Project project) {
-    return project.version.endsWith('SNAPSHOT')
+static def isSnapshotBuild(Project rootProject) {
+    return rootProject.version.endsWith('SNAPSHOT')
 }
 
+static def isPublishSources(Project rootProject) {
+    def publishSources = true
+    if(rootProject.ext.has('PUBLISH_SOURCE')) {
+        println "rootProject.ext.get('PUBLISH_SOURCE'): " + rootProject.ext.get('PUBLISH_SOURCE')
+        publishSources = rootProject.ext.get('PUBLISH_SOURCE').toBoolean()
+    }
+    return publishSources
+}
+
+
+def publishSources = isPublishSources(rootProject)
+println "publishSources: ${publishSources}"
 
 buildDir = 'target'
 apply plugin: "idea"
@@ -212,10 +219,6 @@ idea {
     }
 }
 
-apply plugin: 'java-library'
-apply plugin: 'maven-publish'
-apply from: 'https://gitee.com/geewit/gradle_publish_sonatype/raw/master/dependency-strategy.gradle'
-
 def artifactExcludeFiles = []
 def artifactExcludeFile = project.file('publish-artifact-exclude.json')
 if(artifactExcludeFile.exists()) {
@@ -225,19 +228,19 @@ if(artifactExcludeFile.exists()) {
 repositories {
     mavenLocal()
     maven {
-        url getReleaseRepositoryUrl()
+        url getReleaseRepositoryUrl(rootProject)
         allowInsecureProtocol true
         credentials {
-            username = getRepositoryUsername()
-            password = getRepositoryPassword()
+            username = getRepositoryUsername(rootProject)
+            password = getRepositoryPassword(rootProject)
         }
     }
     maven {
-        url getSnapshotRepositoryUrl()
+        url getSnapshotRepositoryUrl(rootProject)
         allowInsecureProtocol true
         credentials {
-            username = getRepositoryUsername()
-            password = getRepositoryPassword()
+            username = getRepositoryUsername(rootProject)
+            password = getRepositoryPassword(rootProject)
         }
     }
     maven {
@@ -249,6 +252,10 @@ repositories {
         url "https://repo.maven.apache.org/maven2"
     }
 }
+
+apply plugin: 'java-library'
+apply plugin: 'maven-publish'
+apply from: 'https://gitee.com/geewit/gradle_publish_sonatype/raw/master/dependency-strategy.gradle'
 
 configurations {
     all { config ->
@@ -308,13 +315,6 @@ tasks.withType(JavaCompile) {
     options*.encoding = StandardCharsets.UTF_8.name()
 }
 
-def publishSources = true
-if(rootProject.ext.has('PUBLISH_SOURCE')) {
-    println "rootProject.ext.get('PUBLISH_SOURCE'): " + rootProject.ext.get('PUBLISH_SOURCE')
-    publishSources = rootProject.ext.get('PUBLISH_SOURCE').toBoolean()
-}
-println "publishSources: ${publishSources}"
-
 tasks.withType(Javadoc) {
     if(publishSources) {
         options*.encoding = StandardCharsets.UTF_8.name()
@@ -358,7 +358,7 @@ tasks.withType(Copy) {
 publishing {
     publications {
         api(MavenPublication) {
-            def thisGroupId = groupId(project)
+            def thisGroupId = groupId(project, rootProject)
             def thisArtifactId = artifactId(project)
             groupId thisGroupId
             artifactId thisArtifactId
@@ -376,7 +376,7 @@ publishing {
         }
 
         maven(MavenPublication) {
-            def thisGroupId = groupId(project)
+            def thisGroupId = groupId(project, rootProject)
             def thisArtifactId = artifactId(project)
 
             groupId thisGroupId
@@ -395,14 +395,15 @@ publishing {
             }
         }
     }
+
     repositories {
         maven {
             name = 'releaseRepository'
-            url = getRepositoryUrl(project)
+            url = getRepositoryUrl(rootProject)
             allowInsecureProtocol true
             credentials {
-                username = getRepositoryUsername()
-                password = getRepositoryPassword()
+                username = getRepositoryUsername(rootProject)
+                password = getRepositoryPassword(rootProject)
             }
         }
     }
