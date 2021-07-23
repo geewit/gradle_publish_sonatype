@@ -321,7 +321,6 @@ subprojects {
             from sourceSets.main.output
             duplicatesStrategy = DuplicatesStrategy.EXCLUDE
             if(artifactExcludeFiles) {
-
                 exclude artifactExcludeFiles
             }
         }

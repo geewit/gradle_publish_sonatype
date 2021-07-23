@@ -211,6 +211,7 @@ subprojects {
         def artifactExcludeFile = project.file('publish-artifact-exclude.json')
         if(artifactExcludeFile.exists()) {
             artifactExcludeFiles = new JsonSlurper().parseText(artifactExcludeFile.text)
+            println "artifactExcludeFiles: ${artifactExcludeFiles}"
         }
 
         repositories {
