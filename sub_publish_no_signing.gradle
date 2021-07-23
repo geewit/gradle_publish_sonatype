@@ -207,6 +207,7 @@ subprojects {
         def artifactExcludeFile = project.file('publish-artifact-exclude.json')
         if(artifactExcludeFile.exists()) {
             artifactExcludeFiles = new JsonSlurper().parseText(artifactExcludeFile.text)
+            println "artifactExcludeFiles:" + artifactExcludeFiles
         }
 
         repositories {
@@ -320,6 +321,7 @@ subprojects {
             from sourceSets.main.output
             duplicatesStrategy = DuplicatesStrategy.EXCLUDE
             if(artifactExcludeFiles) {
+
                 exclude artifactExcludeFiles
             }
         }
