@@ -515,7 +515,7 @@ def resolutionStrategy(DependencyResolveDetails details) {
             }
         }
     } else if (details.requested.group == 'io.projectreactor.netty') {
-        if (details.requested.name == 'reactor-netty') {
+        if (details.requested.name.startsWith('reactor-netty')) {
             if (project.hasProperty("reactor_netty_version")) {
                 details.useVersion reactor_netty_version
             }
