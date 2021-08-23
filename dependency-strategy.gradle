@@ -204,7 +204,7 @@ def resolutionStrategy(DependencyResolveDetails details) {
         if (project.hasProperty("classmate_version")) {
             details.useVersion classmate_version
         }
-    } else if (details.requested.group == 'org.classgraph' && details.requested.name == 'classgraph') {
+    } else if (details.requested.group == 'io.github.classgraph' && details.requested.name == 'classgraph') {
         if (project.hasProperty("classgraph_version")) {
             details.useVersion classgraph_version
         }
