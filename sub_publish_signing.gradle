@@ -360,17 +360,18 @@ subprojects {
         publishing {
             publications {
                 maven(MavenPublication) {
-                    def thisGroupId = groupId(project)
-                    def thisArtifactId = artifactId(project)
+                    afterEvaluate {
+                        def thisGroupId = groupId(project)
+                        def thisArtifactId = artifactId(project)
 
-                    groupId thisGroupId
-                    artifactId thisArtifactId
-                    version version
-                    println "artifact: ${thisGroupId}:${thisArtifactId}:${version}"
-                    artifact apiJar
-                    artifact javadocs
-                    artifact sources
-
+                        groupId thisGroupId
+                        artifactId thisArtifactId
+                        version version
+                        println "artifact: ${thisGroupId}:${thisArtifactId}:${version}"
+                        artifact apiJar
+                        artifact javadocs
+                        artifact sources
+                    }
                     pom {
                         name = POM_ARTIFACT_ID
                         description = POM_DESCRIPTION
@@ -408,8 +409,24 @@ subprojects {
             }
         }
 
-        signing {
-            sign publishing.publications.maven
+        afterEvaluate {
+            signing {
+                required { !isSnapshotBuild(project) && gradle.taskGraph.hasTask("publish") }
+                sign publishing.publications.maven
+            }
         }
+
+        tasks.withType(Sign) {
+            onlyIf {
+                !isSnapshotBuild(project)
+            }
+        }
+    }
+
+    subprojects.each {
+        if (it.tasks.findByName('install') && it.tasks.findByName('publishToMavenLocal')) {
+            it.tasks.findByName('install').finalizedBy(it.tasks.findByName('publishToMavenLocal'))
+        }
+        evaluationDependsOn it.path
     }
 }

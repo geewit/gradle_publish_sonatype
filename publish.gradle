@@ -137,9 +137,12 @@ publishing {
             artifactId project.name
             version version
             from components.java
-            artifact javadocs
-            artifact sources
-
+            afterEvaluate {
+                def thisGroupId = groupId(project)
+                def thisArtifactId = artifactId(project)
+                artifact javadocs
+                artifact sources
+            }
             pom {
                 name = POM_ARTIFACT_ID
                 description = POM_DESCRIPTION
@@ -178,6 +181,15 @@ publishing {
     }
 }
 
-signing {
-    sign publishing.publications.maven
+afterEvaluate {
+    signing {
+        required { !isSnapshotBuild() && gradle.taskGraph.hasTask("publish") }
+        sign publishing.publications.maven
+    }
+}
+
+tasks.withType(Sign) {
+    onlyIf {
+        !isSnapshotBuild()
+    }
 }
