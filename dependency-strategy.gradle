@@ -666,6 +666,10 @@ def resolutionStrategy(DependencyResolveDetails details) {
         if (project.hasProperty("json_version")) {
             details.useVersion json_version
         }
+    } else if (details.requested.group == 'com.jayway.jsonpath' && details.requested.name == 'json-path') {
+        if (project.hasProperty("jsonpath_version")) {
+            details.useVersion jsonpath_version
+        }
     } else if (details.requested.group == 'io.netty') {
         if (project.hasProperty("netty_version")) {
             details.useVersion netty_version
