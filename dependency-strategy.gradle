@@ -507,7 +507,7 @@ def resolutionStrategy(DependencyResolveDetails details) {
             details.useVersion mockito_version
         }
     } else if (details.requested.group == 'io.prometheus') {
-        if (details.requested.name == 'simpleclient') {
+        if (details.requested.name.startsWith('simpleclient')) {
             if (project.hasProperty("prometheus_simpleclient_version")) {
                 details.useVersion prometheus_simpleclient_version
             }
