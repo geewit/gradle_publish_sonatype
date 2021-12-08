@@ -181,15 +181,6 @@ publishing {
     }
 }
 
-afterEvaluate {
-    signing {
-        required { !isSnapshotBuild() && gradle.taskGraph.hasTask("publish") }
-        sign publishing.publications.maven
-    }
-}
-
-tasks.withType(Sign) {
-    onlyIf {
-        !isSnapshotBuild()
-    }
+signing {
+    sign publishing.publications.maven
 }
