@@ -409,24 +409,8 @@ subprojects {
             }
         }
 
-        afterEvaluate {
-            signing {
-                required { !isSnapshotBuild(project) && gradle.taskGraph.hasTask("publish") }
-                sign publishing.publications.maven
-            }
+        signing {
+            sign publishing.publications.maven
         }
-
-        tasks.withType(Sign) {
-            onlyIf {
-                !isSnapshotBuild(project)
-            }
-        }
-    }
-
-    subprojects.each {
-        if (it.tasks.findByName('install') && it.tasks.findByName('publishToMavenLocal')) {
-            it.tasks.findByName('install').finalizedBy(it.tasks.findByName('publishToMavenLocal'))
-        }
-        evaluationDependsOn it.path
     }
 }
