@@ -42,19 +42,19 @@ buildDir = 'target'
 repositories {
     mavenLocal()
     maven {
-        url getReleaseRepositoryUrl()
+        url getReleaseRepositoryUrl(rootProject)
         allowInsecureProtocol true
         credentials {
-            username = getRepositoryUsername()
-            password = getRepositoryPassword()
+            username = getRepositoryUsername(rootProject)
+            password = getRepositoryPassword(rootProject)
         }
     }
     maven {
         url getSnapshotRepositoryUrl(rootProject)
         allowInsecureProtocol true
         credentials {
-            username = getRepositoryUsername()
-            password = getRepositoryPassword()
+            username = getRepositoryUsername(rootProject)
+            password = getRepositoryPassword(rootProject)
         }
     }
     maven {
@@ -135,7 +135,7 @@ static def artifactId(Project project) {
     return artifactId
 }
 
-def getReleaseRepositoryUrl(Project rootProject) {
+static def getReleaseRepositoryUrl(Project rootProject) {
     if(rootProject.ext.has('REPOSITORY_RELEASE_URL')) {
         println "rootProject.ext.get('REPOSITORY_RELEASE_URL'): " + rootProject.ext.get('REPOSITORY_RELEASE_URL')
         return rootProject.ext.get('REPOSITORY_RELEASE_URL')
