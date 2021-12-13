@@ -136,15 +136,15 @@ static def artifactId(Project project) {
     return artifactId
 }
 
-def getReleaseRepositoryUrl(Project rootProject) {
+static def getReleaseRepositoryUrl(Project rootProject) {
     if(rootProject.ext.has('REPOSITORY_RELEASE_URL')) {
         println "rootProject.ext.get('REPOSITORY_RELEASE_URL'): " + rootProject.ext.get('REPOSITORY_RELEASE_URL')
         return rootProject.ext.get('REPOSITORY_RELEASE_URL')
     }
     def property_default_key = 'REPOSITORY_RELEASE_URL'
     def property_key = 'REPOSITORY_RELEASE_URL_KEY'
-    def RELEASE_REPOSITORY_URL_KEY = hasProperty(property_key) ? getProperty(property_key) : property_default_key
-    def releaseRepositoryUrl = hasProperty(RELEASE_REPOSITORY_URL_KEY) ? getProperty(RELEASE_REPOSITORY_URL_KEY)
+    def RELEASE_REPOSITORY_URL_KEY = rootProject.hasProperty(property_key) ? rootProject.getProperty(property_key) : property_default_key
+    def releaseRepositoryUrl = rootProject.hasProperty(RELEASE_REPOSITORY_URL_KEY) ? rootProject.getProperty(RELEASE_REPOSITORY_URL_KEY)
             : "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
     println "releaseRepositoryUrl:" + releaseRepositoryUrl
     rootProject.ext.set('REPOSITORY_RELEASE_URL', releaseRepositoryUrl)
@@ -158,8 +158,8 @@ static def getSnapshotRepositoryUrl(Project rootProject) {
     }
     def property_default_key = 'REPOSITORY_SNAPSHOT_URL'
     def property_key = 'REPOSITORY_SNAPSHOT_URL_KEY'
-    def SNAPSHOT_REPOSITORY_URL_KEY = hasProperty(property_key) ? getProperty(property_key) : property_default_key
-    def snapshotRepositoryUrl =  hasProperty(SNAPSHOT_REPOSITORY_URL_KEY) ? getProperty(SNAPSHOT_REPOSITORY_URL_KEY)
+    def SNAPSHOT_REPOSITORY_URL_KEY = rootProject.hasProperty(property_key) ? rootProject.getProperty(property_key) : property_default_key
+    def snapshotRepositoryUrl =  rootProject.hasProperty(SNAPSHOT_REPOSITORY_URL_KEY) ? rootProject.getProperty(SNAPSHOT_REPOSITORY_URL_KEY)
             : "https://oss.sonatype.org/content/repositories/snapshots/"
     println "snapshotRepositoryUrl:" + snapshotRepositoryUrl
     rootProject.ext.set('REPOSITORY_SNAPSHOT_URL', snapshotRepositoryUrl)
@@ -173,8 +173,8 @@ static def getRepositoryUsername(Project rootProject) {
     }
     def property_default_key = 'REPOSITORY_USERNAME'
     def property_key = 'REPOSITORY_USERNAME_KEY'
-    def SONATYPE_USERNAME_KEY = hasProperty(property_key) ? getProperty(property_key) : property_default_key
-    def username = hasProperty(SONATYPE_USERNAME_KEY) ? getProperty(SONATYPE_USERNAME_KEY) : ""
+    def SONATYPE_USERNAME_KEY = rootProject.hasProperty(property_key) ? rootProject.getProperty(property_key) : property_default_key
+    def username = rootProject.hasProperty(SONATYPE_USERNAME_KEY) ? rootProject.getProperty(SONATYPE_USERNAME_KEY) : ""
     println "username: + $username"
     rootProject.ext.set('REPOSITORY_USERNAME', username)
     return username
@@ -187,8 +187,8 @@ static def getRepositoryPassword(Project rootProject) {
     }
     def property_default_key = 'REPOSITORY_PASSWORD'
     def property_key = 'REPOSITORY_PASSWORD_KEY'
-    def SONATYPE_PASSWORD_KEY = hasProperty(property_key) ? getProperty(property_key) : property_default_key
-    def password = hasProperty(SONATYPE_PASSWORD_KEY) ? getProperty(SONATYPE_PASSWORD_KEY) : ""
+    def SONATYPE_PASSWORD_KEY = rootProject.hasProperty(property_key) ? rootProject.getProperty(property_key) : property_default_key
+    def password = rootProject.hasProperty(SONATYPE_PASSWORD_KEY) ? rootProject.getProperty(SONATYPE_PASSWORD_KEY) : ""
     println "password:" + password
     rootProject.ext.set('REPOSITORY_PASSWORD', password)
     return password
@@ -316,27 +316,6 @@ sourceSets {
     }
 }
 
-tasks.withType(JavaCompile) {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
-
-    options*.compilerArgs << "-Xlint:unchecked" << "-Xlint:options"
-    options*.encoding = StandardCharsets.UTF_8.name()
-}
-
-tasks.withType(Javadoc) {
-    if(publishSources) {
-        options*.encoding = StandardCharsets.UTF_8.name()
-        options.addStringOption('Xdoclint:none', '-quiet')
-    } else {
-        enabled = false
-    }
-}
-
-tasks.withType(Jar) {
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-}
-
 task apiJar(type: Jar) {
     baseName "publishing-api"
     from sourceSets.main.output
@@ -359,8 +338,39 @@ task sources(type: Jar) {
     }
 }
 
+task javadocs(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+tasks.withType(JavaCompile) {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+
+    options*.compilerArgs << "-Xlint:unchecked" << "-Xlint:options"
+    options*.encoding = StandardCharsets.UTF_8.name()
+}
+
+tasks.withType(Jar) {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+tasks.withType(Javadoc) {
+    if(publishSources) {
+        options*.encoding = StandardCharsets.UTF_8.name()
+        options.addStringOption('Xdoclint:none', '-quiet')
+    } else {
+        enabled = false
+    }
+}
+
 tasks.withType(Copy) {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+tasks.withType(Test).configureEach {
+    useJUnitPlatform()
 }
 
 // https://docs.gradle.org/current/dsl/org.gradle.api.publish.maven.MavenPublication.html

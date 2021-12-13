@@ -42,21 +42,6 @@ repositories {
     }
 }
 
-tasks.withType(JavaCompile) {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
-
-    options*.compilerArgs << "-Xlint:unchecked" << "-Xlint:options"
-    options*.encoding = StandardCharsets.UTF_8.name()
-}
-
-tasks.withType(Javadoc) {
-    failOnError = false
-    options.windowTitle("${project.name} Javadoc ${project.version}")
-    options*.encoding = StandardCharsets.UTF_8.name()
-    options.addStringOption('Xdoclint:none', '-quiet')
-}
-
 task sources(type: Jar) {
     classifier = 'sources'
     from sourceSets.main.allSource
@@ -69,12 +54,31 @@ task javadocs(type: Jar, dependsOn: javadoc) {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
+tasks.withType(JavaCompile) {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+
+    options*.compilerArgs << "-Xlint:unchecked" << "-Xlint:options"
+    options*.encoding = StandardCharsets.UTF_8.name()
+}
+
 tasks.withType(Jar) {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
+tasks.withType(Javadoc) {
+    failOnError = false
+    options.windowTitle("${project.name} Javadoc ${project.version}")
+    options*.encoding = StandardCharsets.UTF_8.name()
+    options.addStringOption('Xdoclint:none', '-quiet')
+}
+
 tasks.withType(Copy) {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+tasks.withType(Test).configureEach {
+    useJUnitPlatform()
 }
 
 static def groupId(Project thisProject, Project rootProject) {
@@ -145,49 +149,59 @@ static def artifactId(Project project) {
     return artifactId
 }
 
-def isSnapshotBuild() {
-    return version.contains("SNAPSHOT")
+static def isSnapshotBuild(Project rootProject) {
+    return rootProject.version.contains("SNAPSHOT")
 }
 
-def getRepositoryUrl() {
-    return isSnapshotBuild() ? getSnapshotRepositoryUrl() : getReleaseRepositoryUrl()
+static def getRepositoryUrl(Project rootProject) {
+    return isSnapshotBuild(rootProject) ? getSnapshotRepositoryUrl(rootProject) : getReleaseRepositoryUrl(rootProject)
 }
 
-def getReleaseRepositoryUrl() {
+static def getReleaseRepositoryUrl(Project rootProject) {
     def property_default_key = 'REPOSITORY_SONATYP_ERELEASE_URL'
     def property_key = 'REPOSITORY_RELEASE_URL_KEY'
-    def RELEASE_REPOSITORY_URL_KEY = hasProperty(property_key) ? getProperty(property_key) : property_default_key
-    def releaseRepositoryUrl = hasProperty(RELEASE_REPOSITORY_URL_KEY) ? getProperty(RELEASE_REPOSITORY_URL_KEY)
+    def RELEASE_REPOSITORY_URL_KEY = rootProject.hasProperty(property_key) ? rootProject.getProperty(property_key) : property_default_key
+    def releaseRepositoryUrl = rootProject.hasProperty(RELEASE_REPOSITORY_URL_KEY) ? rootProject.getProperty(RELEASE_REPOSITORY_URL_KEY)
             : "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
     println "releaseRepositoryUrl:" + releaseRepositoryUrl
     return releaseRepositoryUrl
 }
 
-def getSnapshotRepositoryUrl() {
+static def getSnapshotRepositoryUrl(Project rootProject) {
     def property_default_key = 'REPOSITORY_SONATYP_SNAPSHOT_URL'
     def property_key = 'REPOSITORY_SNAPSHOT_URL_KEY'
-    def SNAPSHOT_REPOSITORY_URL_KEY = hasProperty(property_key) ? getProperty(property_key) : property_default_key
-    def snapshotRepositoryUrl =  hasProperty(SNAPSHOT_REPOSITORY_URL_KEY) ? getProperty(SNAPSHOT_REPOSITORY_URL_KEY)
+    def SNAPSHOT_REPOSITORY_URL_KEY = rootProject.hasProperty(property_key) ? rootProject.getProperty(property_key) : property_default_key
+    def snapshotRepositoryUrl =  rootProject.hasProperty(SNAPSHOT_REPOSITORY_URL_KEY) ? rootProject.getProperty(SNAPSHOT_REPOSITORY_URL_KEY)
             : "https://oss.sonatype.org/content/repositories/snapshots/"
     println "snapshotRepositoryUrl:" + snapshotRepositoryUrl
     return snapshotRepositoryUrl
 }
 
-def getRepositoryUsername() {
-    def property_default_key = 'SONATYPE_USERNAME'
+static def getRepositoryUsername(Project rootProject) {
+    if(rootProject.ext.has('REPOSITORY_USERNAME')) {
+        println "rootProject.ext.get('REPOSITORY_USERNAME'): " + rootProject.ext.get('REPOSITORY_USERNAME')
+        return rootProject.ext.get('REPOSITORY_USERNAME')
+    }
+    def property_default_key = 'REPOSITORY_USERNAME'
     def property_key = 'REPOSITORY_USERNAME_KEY'
-    def SONATYPE_USERNAME_KEY = hasProperty(property_key) ? getProperty(property_key) : property_default_key
-    def username = hasProperty(SONATYPE_USERNAME_KEY) ? getProperty(SONATYPE_USERNAME_KEY) : ""
-    println "username:" + username
+    def SONATYPE_USERNAME_KEY = rootProject.hasProperty(property_key) ? rootProject.getProperty(property_key) : property_default_key
+    def username = rootProject.hasProperty(SONATYPE_USERNAME_KEY) ? rootProject.getProperty(SONATYPE_USERNAME_KEY) : ""
+    println "username: + $username"
+    rootProject.ext.set('REPOSITORY_USERNAME', username)
     return username
 }
 
-def getRepositoryPassword() {
-    def property_default_key = 'SONATYPE_PASSWORD'
+static def getRepositoryPassword(Project rootProject) {
+    if(rootProject.ext.has('REPOSITORY_PASSWORD')) {
+        println "rootProject.ext.get('REPOSITORY_PASSWORD'): " + rootProject.ext.get('REPOSITORY_PASSWORD')
+        return rootProject.ext.get('REPOSITORY_PASSWORD')
+    }
+    def property_default_key = 'REPOSITORY_PASSWORD'
     def property_key = 'REPOSITORY_PASSWORD_KEY'
-    def SONATYPE_PASSWORD_KEY = hasProperty(property_key) ? getProperty(property_key) : property_default_key
-    def password = hasProperty(SONATYPE_PASSWORD_KEY) ? getProperty(SONATYPE_PASSWORD_KEY) : ""
+    def SONATYPE_PASSWORD_KEY = rootProject.hasProperty(property_key) ? rootProject.getProperty(property_key) : property_default_key
+    def password = rootProject.hasProperty(SONATYPE_PASSWORD_KEY) ? rootProject.getProperty(SONATYPE_PASSWORD_KEY) : ""
     println "password:" + password
+    rootProject.ext.set('REPOSITORY_PASSWORD', password)
     return password
 }
 
@@ -235,11 +249,11 @@ publishing {
     repositories {
         maven {
             name = 'releaseRepository'
-            url = getRepositoryUrl()
+            url = getRepositoryUrl(rootProject)
             allowInsecureProtocol true
             credentials {
-                username = getRepositoryUsername()
-                password = getRepositoryPassword()
+                username = getRepositoryUsername(rootProject)
+                password = getRepositoryPassword(rootProject)
             }
         }
     }

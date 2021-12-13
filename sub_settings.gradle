@@ -1,7 +1,7 @@
 import groovy.io.FileType
 import groovy.io.FileVisitResult
 
-def buildFullProjectName(File rootDir, File dir) {
+static def buildFullProjectName(File rootDir, File dir) {
     if(dir == null || !dir.exists() || !dir.isDirectory()) {
         return ""
     }
@@ -13,7 +13,7 @@ def buildFullProjectName(File rootDir, File dir) {
     }
     def fullProjectName = dir.name
     if(dir.parentFile != null && dir.parentFile.exists()) {
-        fullProjectName = this.buildFullProjectName(rootDir, dir.parentFile) + ":${fullProjectName}"
+        fullProjectName = buildFullProjectName(rootDir, dir.parentFile) + ":${fullProjectName}"
     }
 //    println "fullProjectName = ${fullProjectName}"
     return fullProjectName
@@ -27,7 +27,7 @@ rootDir.traverse(
             }
         }) { dir ->
     if (dir) {
-        def fullProjectName = this.buildFullProjectName(rootDir, dir)
+        def fullProjectName = buildFullProjectName(rootDir, dir)
         if(!fullProjectName.isEmpty()) {
             println "include '${fullProjectName}'"
             include fullProjectName //register the project path using : notation

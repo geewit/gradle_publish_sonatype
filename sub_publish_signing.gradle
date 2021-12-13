@@ -14,51 +14,6 @@ ext {
     isSkipProject = this.&isSkipProject
 }
 
-def groupId(Project project) {
-    println "project.name = ${project.name}"
-    def prj = project.parent
-    def groupId = null
-    Properties projectProps = new Properties()
-    def projectPropsFile = project.file('gradle.properties')
-    if(projectPropsFile.exists()) {
-        projectProps.load(projectPropsFile.newReader())
-        groupId = projectProps.getProperty('group')
-    }
-    if(groupId == null) {
-        println "project has not groupId"
-        groupId = rootProject.group
-        println "groupId = ${groupId}"
-        if(project.parent != null) {
-            def deepth = 1
-            println "project.name = ${project.name}"
-            def group_suffix = ""
-            while (prj != null) {
-                println "deepth = ${deepth}"
-                if(prj.parent != null) {
-                    if(group_suffix.length() > 0) {
-                        group_suffix = prj.name + "." + group_suffix
-                    } else {
-                        group_suffix = prj.name
-                    }
-                }
-                println "group_suffix = ${group_suffix}"
-                prj = prj.parent
-                deepth++
-            }
-            if(group_suffix.length() > 0) {
-                groupId = groupId + "." + group_suffix
-            }
-        } else {
-            println "project.parent == null"
-            groupId = project.group
-            println "groupId = ${groupId}"
-        }
-    }
-    println "--------- final groupId = ${groupId}"
-    project.group(groupId)
-    return groupId
-}
-
 Properties props = new Properties()
 def versionFile = rootProject.file('version.properties')
 println "rootProject: ${rootProject.name}"
@@ -79,7 +34,52 @@ if(excludeFile.exists()) {
     }
 }
 
-def artifactId(Project project) {
+static def groupId(Project thisProject, Project rootProject) {
+    println "thisProject.name = ${thisProject.name}"
+    def prj = thisProject.parent
+    def groupId = null
+    Properties projectProps = new Properties()
+    def projectPropsFile = thisProject.file('gradle.properties')
+    if(projectPropsFile.exists()) {
+        projectProps.load(projectPropsFile.newReader())
+        groupId = projectProps.getProperty('group')
+    }
+    if(groupId == null) {
+        println "project has not groupId"
+        groupId = rootProject.group
+        println "groupId = ${groupId}"
+        if(thisProject.parent != null) {
+            def deepth = 1
+            println "thisProject.name = ${thisProject.name}"
+            def group_suffix = ""
+            while (prj != null) {
+                println "deepth = ${deepth}"
+                if(prj.parent != null) {
+                    if(group_suffix.length() > 0) {
+                        group_suffix = prj.name + "." + group_suffix
+                    } else {
+                        group_suffix = prj.name
+                    }
+                }
+                println "group_suffix = ${group_suffix}"
+                prj = prj.parent
+                deepth++
+            }
+            if(group_suffix.length() > 0) {
+                groupId = groupId + "." + group_suffix
+            }
+        } else {
+            println "thisProject.parent == null"
+            groupId = thisProject.group
+            println "groupId = ${groupId}"
+        }
+    }
+    println "--------- final groupId = ${groupId}"
+    thisProject.group(groupId)
+    return groupId
+}
+
+static def artifactId(Project project) {
     def prj = project.parent
 
     def artifactId
@@ -102,70 +102,70 @@ def artifactId(Project project) {
     return artifactId
 }
 
-def getReleaseRepositoryUrl() {
+static def getReleaseRepositoryUrl(Project rootProject) {
     if(rootProject.ext.has('REPOSITORY_RELEASE_URL')) {
         println "rootProject.ext.get('REPOSITORY_RELEASE_URL'): " + rootProject.ext.get('REPOSITORY_RELEASE_URL')
         return rootProject.ext.get('REPOSITORY_RELEASE_URL')
     }
     def property_default_key = 'REPOSITORY_RELEASE_URL'
     def property_key = 'REPOSITORY_RELEASE_URL_KEY'
-    def RELEASE_REPOSITORY_URL_KEY = hasProperty(property_key) ? getProperty(property_key) : property_default_key
-    def releaseRepositoryUrl = hasProperty(RELEASE_REPOSITORY_URL_KEY) ? getProperty(RELEASE_REPOSITORY_URL_KEY)
+    def RELEASE_REPOSITORY_URL_KEY = rootProject.hasProperty(property_key) ? rootProject.getProperty(property_key) : property_default_key
+    def releaseRepositoryUrl = rootProject.hasProperty(RELEASE_REPOSITORY_URL_KEY) ? rootProject.getProperty(RELEASE_REPOSITORY_URL_KEY)
             : "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
     println "releaseRepositoryUrl:" + releaseRepositoryUrl
     rootProject.ext.set('REPOSITORY_RELEASE_URL', releaseRepositoryUrl)
     return releaseRepositoryUrl
 }
 
-def getSnapshotRepositoryUrl() {
+static def getSnapshotRepositoryUrl(Project rootProject) {
     if(rootProject.ext.has('REPOSITORY_SNAPSHOT_URL')) {
         println "rootProject.ext.get('REPOSITORY_SNAPSHOT_URL'): " + rootProject.ext.get('REPOSITORY_SNAPSHOT_URL')
         return rootProject.ext.get('REPOSITORY_SNAPSHOT_URL')
     }
     def property_default_key = 'REPOSITORY_SNAPSHOT_URL'
     def property_key = 'REPOSITORY_SNAPSHOT_URL_KEY'
-    def SNAPSHOT_REPOSITORY_URL_KEY = hasProperty(property_key) ? getProperty(property_key) : property_default_key
-    def snapshotRepositoryUrl =  hasProperty(SNAPSHOT_REPOSITORY_URL_KEY) ? getProperty(SNAPSHOT_REPOSITORY_URL_KEY)
+    def SNAPSHOT_REPOSITORY_URL_KEY = rootProject.hasProperty(property_key) ? rootProject.getProperty(property_key) : property_default_key
+    def snapshotRepositoryUrl =  rootProject.hasProperty(SNAPSHOT_REPOSITORY_URL_KEY) ? rootProject.getProperty(SNAPSHOT_REPOSITORY_URL_KEY)
             : "https://oss.sonatype.org/content/repositories/snapshots/"
     println "snapshotRepositoryUrl:" + snapshotRepositoryUrl
     rootProject.ext.set('REPOSITORY_SNAPSHOT_URL', snapshotRepositoryUrl)
     return snapshotRepositoryUrl
 }
 
-def getRepositoryUsername() {
+static def getRepositoryUsername(Project rootProject) {
     if(rootProject.ext.has('REPOSITORY_USERNAME')) {
         println "rootProject.ext.get('REPOSITORY_USERNAME'): " + rootProject.ext.get('REPOSITORY_USERNAME')
         return rootProject.ext.get('REPOSITORY_USERNAME')
     }
     def property_default_key = 'REPOSITORY_USERNAME'
     def property_key = 'REPOSITORY_USERNAME_KEY'
-    def SONATYPE_USERNAME_KEY = hasProperty(property_key) ? getProperty(property_key) : property_default_key
-    def username = hasProperty(SONATYPE_USERNAME_KEY) ? getProperty(SONATYPE_USERNAME_KEY) : ""
+    def SONATYPE_USERNAME_KEY = rootProject.hasProperty(property_key) ? rootProject.getProperty(property_key) : property_default_key
+    def username = rootProject.hasProperty(SONATYPE_USERNAME_KEY) ? rootProject.getProperty(SONATYPE_USERNAME_KEY) : ""
     println "username: + $username"
     rootProject.ext.set('REPOSITORY_USERNAME', username)
     return username
 }
 
-def getRepositoryPassword() {
+static def getRepositoryPassword(Project rootProject) {
     if(rootProject.ext.has('REPOSITORY_PASSWORD')) {
         println "rootProject.ext.get('REPOSITORY_PASSWORD'): " + rootProject.ext.get('REPOSITORY_PASSWORD')
         return rootProject.ext.get('REPOSITORY_PASSWORD')
     }
     def property_default_key = 'REPOSITORY_PASSWORD'
     def property_key = 'REPOSITORY_PASSWORD_KEY'
-    def SONATYPE_PASSWORD_KEY = hasProperty(property_key) ? getProperty(property_key) : property_default_key
-    def password = hasProperty(SONATYPE_PASSWORD_KEY) ? getProperty(SONATYPE_PASSWORD_KEY) : ""
+    def SONATYPE_PASSWORD_KEY = rootProject.hasProperty(property_key) ? rootProject.getProperty(property_key) : property_default_key
+    def password = rootProject.hasProperty(SONATYPE_PASSWORD_KEY) ? rootProject.getProperty(SONATYPE_PASSWORD_KEY) : ""
     println "password:" + password
     rootProject.ext.set('REPOSITORY_PASSWORD', password)
     return password
 }
 
-def getRepositoryUrl(Project project) {
-    return isSnapshotBuild(project) ? getSnapshotRepositoryUrl() : getReleaseRepositoryUrl()
+static def getRepositoryUrl(Project rootProject) {
+    return isSnapshotBuild(rootProject) ? getSnapshotRepositoryUrl(rootProject) : getReleaseRepositoryUrl(rootProject)
 }
 
-def isSnapshotBuild(Project project) {
-    return project.version.endsWith('SNAPSHOT')
+static def isSnapshotBuild(Project rootProject) {
+    return rootProject.version.endsWith('SNAPSHOT')
 }
 
 
@@ -214,22 +214,29 @@ subprojects {
             println "artifactExcludeFiles: ${artifactExcludeFiles}"
         }
 
+        def publishSources = true
+        if(rootProject.ext.has('PUBLISH_SOURCE')) {
+            println "rootProject.ext.get('PUBLISH_SOURCE'): " + rootProject.ext.get('PUBLISH_SOURCE')
+            publishSources = rootProject.ext.get('PUBLISH_SOURCE').toBoolean()
+        }
+        println "publishSources: ${publishSources}"
+
         repositories {
             mavenLocal()
             maven {
-                url getReleaseRepositoryUrl()
+                url getReleaseRepositoryUrl(rootProject)
                 allowInsecureProtocol true
                 credentials {
-                    username = getRepositoryUsername()
-                    password = getRepositoryPassword()
+                    username = getRepositoryUsername(rootProject)
+                    password = getRepositoryPassword(rootProject)
                 }
             }
             maven {
-                url getSnapshotRepositoryUrl()
+                url getSnapshotRepositoryUrl(rootProject)
                 allowInsecureProtocol true
                 credentials {
-                    username = getRepositoryUsername()
-                    password = getRepositoryPassword()
+                    username = getRepositoryUsername(rootProject)
+                    password = getRepositoryPassword(rootProject)
                 }
             }
             maven {
@@ -292,6 +299,24 @@ subprojects {
             }
         }
 
+        task apiJar(type: Jar) {
+            baseName "publishing-api"
+            from sourceSets.main.output
+            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+            if(artifactExcludeFiles) {
+                exclude artifactExcludeFiles
+            }
+        }
+
+        task sources(type: Jar) {
+            classifier = 'sources'
+            from sourceSets.main.allSource
+            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+            if(artifactExcludeFiles) {
+                exclude artifactExcludeFiles
+            }
+        }
+
         task javadocs(type: Jar, dependsOn: javadoc) {
             classifier = 'javadoc'
             from javadoc.destinationDir
@@ -306,40 +331,15 @@ subprojects {
             options*.encoding = StandardCharsets.UTF_8.name()
         }
 
+        tasks.withType(Jar) {
+            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+        }
+
         tasks.withType(Javadoc) {
             failOnError = false
             options.windowTitle("${project.name} Javadoc ${project.version}")
             options*.encoding = StandardCharsets.UTF_8.name()
             options.addStringOption('Xdoclint:none', '-quiet')
-        }
-
-        tasks.withType(Jar) {
-            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-        }
-
-        task apiJar(type: Jar) {
-            baseName "publishing-api"
-            from sourceSets.main.output
-            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-            if(artifactExcludeFiles) {
-                exclude artifactExcludeFiles
-            }
-        }
-
-        def publishSources = true
-        if(rootProject.ext.has('PUBLISH_SOURCE')) {
-            println "rootProject.ext.get('PUBLISH_SOURCE'): " + rootProject.ext.get('PUBLISH_SOURCE')
-            publishSources = rootProject.ext.get('PUBLISH_SOURCE').toBoolean()
-        }
-        println "publishSources: ${publishSources}"
-
-        task sources(type: Jar) {
-            classifier = 'sources'
-            from sourceSets.main.allSource
-            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-            if(artifactExcludeFiles) {
-                exclude artifactExcludeFiles
-            }
         }
 
         tasks.withType(Copy) {
@@ -361,7 +361,7 @@ subprojects {
             publications {
                 maven(MavenPublication) {
                     afterEvaluate {
-                        def thisGroupId = groupId(project)
+                        def thisGroupId = groupId(project, rootProject)
                         def thisArtifactId = artifactId(project)
 
                         groupId thisGroupId
@@ -400,10 +400,10 @@ subprojects {
             repositories {
                 maven {
                     name = 'releaseRepository'
-                    url = getRepositoryUrl(project)
+                    url = getRepositoryUrl(rootProject)
                     credentials {
-                        username = getRepositoryUsername()
-                        password = getRepositoryPassword()
+                        username = getRepositoryUsername(rootProject)
+                        password = getRepositoryPassword(rootProject)
                     }
                 }
             }
