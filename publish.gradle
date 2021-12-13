@@ -196,7 +196,7 @@ publishing {
     publications {
         maven(MavenPublication) {
             afterEvaluate {
-                def thisGroupId = groupId(project)
+                def thisGroupId = groupId(project, rootProject)
                 def thisArtifactId = artifactId(project)
 
                 groupId thisGroupId
