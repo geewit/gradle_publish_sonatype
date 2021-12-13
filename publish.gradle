@@ -77,10 +77,72 @@ tasks.withType(Copy) {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
-artifacts {
-    archives jar
-    archives javadocs
-    archives sources
+static def groupId(Project thisProject, Project rootProject) {
+    println "thisProject.name = ${thisProject.name}"
+    def prj = thisProject.parent
+    def groupId = null
+    Properties projectProps = new Properties()
+    def projectPropsFile = thisProject.file('gradle.properties')
+    if(projectPropsFile.exists()) {
+        projectProps.load(projectPropsFile.newReader())
+        groupId = projectProps.getProperty('group')
+    }
+    if(groupId == null) {
+        println "project has not groupId"
+        groupId = rootProject.group
+        println "groupId = ${groupId}"
+        if(thisProject.parent != null) {
+            def deepth = 1
+            println "thisProject.name = ${thisProject.name}"
+            def group_suffix = ""
+            while (prj != null) {
+                println "deepth = ${deepth}"
+                if(prj.parent != null) {
+                    if(group_suffix.length() > 0) {
+                        group_suffix = prj.name + "." + group_suffix
+                    } else {
+                        group_suffix = prj.name
+                    }
+                }
+                println "group_suffix = ${group_suffix}"
+                prj = prj.parent
+                deepth++
+            }
+            if(group_suffix.length() > 0) {
+                groupId = groupId + "." + group_suffix
+            }
+        } else {
+            println "thisProject.parent == null"
+            groupId = thisProject.group
+            println "groupId = ${groupId}"
+        }
+    }
+    println "--------- final groupId = ${groupId}"
+    thisProject.group(groupId)
+    return groupId
+}
+
+static def artifactId(Project project) {
+    def prj = project.parent
+
+    def artifactId
+    if(project.hasProperty("artifactId")) {
+        artifactId = project.property("artifactId")
+        println "project.artifactId = ${artifactId}"
+    } else {
+        println "project has not artifactId"
+        artifactId = project.name
+        println "artifactId = ${artifactId}"
+        while (prj != null) {
+            println "prj.name = ${prj.name}"
+            println "prj.depth = ${prj.depth}"
+            artifactId = "${prj.name}-${artifactId}"
+            println "artifactId = ${artifactId}"
+            prj = prj.parent
+        }
+    }
+    println "--------- final artifactId = ${artifactId}"
+    return artifactId
 }
 
 def isSnapshotBuild() {
@@ -133,13 +195,15 @@ def getRepositoryPassword() {
 publishing {
     publications {
         maven(MavenPublication) {
-            groupId project.group
-            artifactId project.name
-            version version
-            from components.java
             afterEvaluate {
                 def thisGroupId = groupId(project)
                 def thisArtifactId = artifactId(project)
+
+                groupId thisGroupId
+                artifactId thisArtifactId
+                version version
+                println "artifact: ${thisGroupId}:${thisArtifactId}:${version}"
+                artifact jar
                 artifact javadocs
                 artifact sources
             }
