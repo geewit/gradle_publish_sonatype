@@ -43,19 +43,19 @@ buildDir = 'target'
 repositories {
     mavenLocal()
     maven {
-        url getReleaseRepositoryUrl()
+        url getReleaseRepositoryUrl(rootProject)
         allowInsecureProtocol true
         credentials {
-            username = getRepositoryUsername()
-            password = getRepositoryPassword()
+            username = getRepositoryUsername(rootProject)
+            password = getRepositoryPassword(rootProject)
         }
     }
     maven {
         url getSnapshotRepositoryUrl(rootProject)
         allowInsecureProtocol true
         credentials {
-            username = getRepositoryUsername()
-            password = getRepositoryPassword()
+            username = getRepositoryUsername(rootProject)
+            password = getRepositoryPassword(rootProject)
         }
     }
     maven {
