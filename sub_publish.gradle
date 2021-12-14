@@ -1,9 +1,11 @@
 import groovy.json.JsonSlurper
 import java.nio.charset.StandardCharsets
 
+logger.info("rootProject: ${rootProject.name}")
+
 def isSkipProject(Project project) {
     def isSkipProject = !project.buildscript.sourceFile.exists()
-    println "isSkipProject = ${isSkipProject}"
+    logger.info("isSkipProject: ${isSkipProject}")
     return isSkipProject
 }
 
@@ -13,13 +15,11 @@ ext {
 
 Properties props = new Properties()
 def versionFile = rootProject.file('version.properties')
-println "rootProject: ${rootProject.name}"
-
 if(versionFile.exists()) {
-    props.load(versionFile.newReader())
+    props.load(versionFile.newReader() as Reader)
     props.each { prop ->
-        println "${prop.key}: ${prop.value}"
-        project.ext.set(prop.key, prop.value)
+        logger.info("${prop.key}: ${prop.value}")
+        rootProject.ext.set(prop.key, prop.value)
     }
 }
 def excludeArtifacts = []
@@ -27,7 +27,7 @@ def excludeFile = rootProject.file('gradle-exclude.json')
 if(excludeFile.exists()) {
     excludeArtifacts = new JsonSlurper().parseText(excludeFile.text)
     excludeArtifacts?.each { item ->
-        println "exclude ${item.group}: ${item.module}"
+        logger.info("exclude ${item.group}: ${item.module}")
     }
 }
 
@@ -35,19 +35,19 @@ def need_publish = false
 if (rootProject.hasProperty('io.geewit.gradle.need_publish')) {
     need_publish = 'true'.equalsIgnoreCase(rootProject.getProperties().get('io.geewit.gradle.need_publish').toString())
 }
-println "need_publish: ${need_publish}"
+logger.info("need_publish: ${need_publish}")
 
 def publish_need_sign = false
 if (rootProject.hasProperty('io.geewit.gradle.publish_need_sign')) {
     publish_need_sign = 'true'.equalsIgnoreCase(rootProject.getProperties().get('io.geewit.gradle.publish_need_sign').toString())
 }
-println "publish_need_sign: ${publish_need_sign}"
+logger.info("publish_need_sign: ${publish_need_sign}")
 
 def java_version = JavaVersion.VERSION_1_8
 if (rootProject.hasProperty('io.geewit.gradle.java_version')) {
     java_version = JavaVersion.toVersion(rootProject.getProperties().get('io.geewit.gradle.java_version'))
 }
-println "java_version: ${java_version}"
+logger.info("java_version: ${java_version}")
 
 static def groupId(Project thisProject, Project rootProject) {
     println "thisProject.name = ${thisProject.name}"
@@ -328,7 +328,7 @@ subprojects {
         }
 
         task sources(type: Jar) {
-            classifier = 'sources'
+            archiveClassifier.set('sources')
             from sourceSets.main.allSource
             duplicatesStrategy = DuplicatesStrategy.EXCLUDE
             if(artifactExcludeFiles) {
@@ -337,7 +337,7 @@ subprojects {
         }
 
         task javadocs(type: Jar, dependsOn: javadoc) {
-            classifier = 'javadoc'
+            archiveClassifier.set('javadoc')
             from javadoc.destinationDir
             duplicatesStrategy = DuplicatesStrategy.EXCLUDE
         }

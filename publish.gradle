@@ -1,19 +1,18 @@
 import groovy.json.JsonSlurper
 import java.nio.charset.StandardCharsets
 
+logger.info("rootProject: ${rootProject.name}")
 ext {
     profile = System.getProperty("profile") ?: "development"
-    println "profile = ${profile}"
+    logger.info("profile = ${profile}")
 }
 
 Properties props = new Properties()
 def versionFile = rootProject.file('version.properties')
-println "rootProject: ${rootProject.name}"
-
 if(versionFile.exists()) {
-    props.load(versionFile.newReader())
+    props.load(versionFile.newReader() as Reader)
     props.each { prop ->
-        println "${prop.key}: ${prop.value}"
+        logger.info("${prop.key}: ${prop.value}")
         rootProject.ext.set(prop.key, prop.value)
     }
 }
@@ -22,7 +21,7 @@ def excludeFile = rootProject.file('gradle-exclude.json')
 if(excludeFile.exists()) {
     excludeArtifacts = new JsonSlurper().parseText(excludeFile.text)
     excludeArtifacts?.each { item ->
-        println "exclude ${item.group}: ${item.module}"
+        logger.info("exclude ${item.group}: ${item.module}")
     }
 }
 
@@ -30,19 +29,19 @@ def need_publish = false
 if (rootProject.hasProperty('io.geewit.gradle.need_publish')) {
     need_publish = 'true'.equalsIgnoreCase(rootProject.getProperties().get('io.geewit.gradle.need_publish').toString())
 }
-println "need_publish: ${need_publish}"
+logger.info("need_publish: ${need_publish}")
 
 def publish_need_sign = false
 if (rootProject.hasProperty('io.geewit.gradle.publish_need_sign')) {
     publish_need_sign = 'true'.equalsIgnoreCase(rootProject.getProperties().get('io.geewit.gradle.publish_need_sign').toString())
 }
-println "publish_need_sign: ${publish_need_sign}"
+logger.info("publish_need_sign: ${publish_need_sign}")
 
 def java_version = JavaVersion.VERSION_1_8
 if (rootProject.hasProperty('io.geewit.gradle.java_version')) {
     java_version = JavaVersion.toVersion(rootProject.getProperties().get('io.geewit.gradle.java_version'))
 }
-println "java_version: ${java_version}"
+logger.info("java_version: ${java_version}")
 
 buildscript {
     repositories {
@@ -91,13 +90,13 @@ repositories {
 }
 
 task sources(type: Jar) {
-    classifier = 'sources'
+    archiveClassifier.set('sources')
     from sourceSets.main.allSource
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 task javadocs(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
+    archiveClassifier.set('javadoc')
     from javadoc.destinationDir
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
@@ -136,7 +135,7 @@ static def groupId(Project thisProject, Project rootProject) {
     Properties projectProps = new Properties()
     def projectPropsFile = thisProject.file('gradle.properties')
     if(projectPropsFile.exists()) {
-        projectProps.load(projectPropsFile.newReader())
+        projectProps.load(projectPropsFile.newReader() as Reader)
         groupId = projectProps.getProperty('group')
     }
     if(groupId == null) {
@@ -211,7 +210,7 @@ static def getReleaseRepositoryUrl(Project rootProject) {
     def RELEASE_REPOSITORY_URL_KEY = rootProject.hasProperty(property_key) ? rootProject.getProperty(property_key) : property_default_key
     def releaseRepositoryUrl = rootProject.hasProperty(RELEASE_REPOSITORY_URL_KEY) ? rootProject.getProperty(RELEASE_REPOSITORY_URL_KEY)
             : "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
-    println "releaseRepositoryUrl:" + releaseRepositoryUrl
+    println "releaseRepositoryUrl: $releaseRepositoryUrl"
     return releaseRepositoryUrl
 }
 
@@ -221,7 +220,7 @@ static def getSnapshotRepositoryUrl(Project rootProject) {
     def SNAPSHOT_REPOSITORY_URL_KEY = rootProject.hasProperty(property_key) ? rootProject.getProperty(property_key) : property_default_key
     def snapshotRepositoryUrl =  rootProject.hasProperty(SNAPSHOT_REPOSITORY_URL_KEY) ? rootProject.getProperty(SNAPSHOT_REPOSITORY_URL_KEY)
             : "https://oss.sonatype.org/content/repositories/snapshots/"
-    println "snapshotRepositoryUrl:" + snapshotRepositoryUrl
+    println "snapshotRepositoryUrl: $snapshotRepositoryUrl"
     return snapshotRepositoryUrl
 }
 
@@ -264,11 +263,11 @@ if (need_publish) {
                     groupId thisGroupId
                     artifactId thisArtifactId
                     version version
-                    println "api artifact: ${thisGroupId}:${thisArtifactId}:${version}"
+                    logger.debug("api artifact: ${thisGroupId}:${thisArtifactId}:${version}")
                     artifact apiJar
                     artifact javadocs
                     if(publishSources) {
-                        println "publishing.artifact sources"
+                        logger.debug('publishing.artifact sources')
                         artifact sources
                     }
                 }
@@ -283,9 +282,9 @@ if (need_publish) {
                     groupId thisGroupId
                     artifactId thisArtifactId
                     version version
-                    println "artifact: ${thisGroupId}:${thisArtifactId}:${version}"
+                    logger.debug("artifact: ${thisGroupId}:${thisArtifactId}:${version}")
                     from components.java
-                    println "publishing.publishSources: ${publishSources}"
+                    logger.debug("publishing.publishSources: ${publishSources}")
                     if(publishSources) {
                         println "publishing.artifact sources"
                         artifact sources
