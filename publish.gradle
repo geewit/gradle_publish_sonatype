@@ -128,7 +128,7 @@ tasks.withType(Test).configureEach {
     useJUnitPlatform()
 }
 
-static def groupId(Project thisProject, Project rootProject) {
+static def generateGroupId(Project thisProject, Project rootProject) {
     println "thisProject.name = ${thisProject.name}"
     def prj = thisProject.parent
     def groupId = null
@@ -173,7 +173,7 @@ static def groupId(Project thisProject, Project rootProject) {
     return groupId
 }
 
-static def artifactId(Project project) {
+static def generateArtifactId(Project project) {
     def prj = project.parent
 
     def artifactId
@@ -258,8 +258,8 @@ if (need_publish) {
         publications {
             api(MavenPublication) {
                 afterEvaluate {
-                    def thisGroupId = groupId(project, rootProject)
-                    def thisArtifactId = artifactId(project)
+                    def thisGroupId = generateGroupId(project, rootProject)
+                    def thisArtifactId = generateArtifactId(project)
                     groupId thisGroupId
                     artifactId thisArtifactId
                     version version
@@ -277,8 +277,8 @@ if (need_publish) {
             }
             maven(MavenPublication) {
                 afterEvaluate {
-                    def thisGroupId = groupId(project, rootProject)
-                    def thisArtifactId = artifactId(project)
+                    def thisGroupId = generateGroupId(project, rootProject)
+                    def thisArtifactId = generateArtifactId(project)
                     groupId thisGroupId
                     artifactId thisArtifactId
                     version version
@@ -286,7 +286,7 @@ if (need_publish) {
                     from components.java
                     logger.debug("publishing.publishSources: ${publishSources}")
                     if(publishSources) {
-                        println "publishing.artifact sources"
+                        logger.debug("publishing.artifact sources")
                         artifact sources
                     }
                 }

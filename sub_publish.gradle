@@ -49,7 +49,7 @@ if (rootProject.hasProperty('io.geewit.gradle.java_version')) {
 }
 logger.info("java_version: ${java_version}")
 
-static def groupId(Project thisProject, Project rootProject) {
+static def generateGroupId(Project thisProject, Project rootProject) {
     println "thisProject.name = ${thisProject.name}"
     def prj = thisProject.parent
     def groupId = null
@@ -94,7 +94,7 @@ static def groupId(Project thisProject, Project rootProject) {
     return groupId
 }
 
-static def artifactId(Project project) {
+static def generateArtifactId(Project project) {
     def prj = project.parent
 
     def artifactId
@@ -230,15 +230,15 @@ subprojects {
         def artifactExcludeFile = project.file('publish-artifact-exclude.json')
         if(artifactExcludeFile.exists()) {
             artifactExcludeFiles = new JsonSlurper().parseText(artifactExcludeFile.text)
-            println "artifactExcludeFiles: ${artifactExcludeFiles}"
+            logger.info("artifactExcludeFiles: ${artifactExcludeFiles}")
         }
 
         def publishSources = true
         if(rootProject.ext.has('PUBLISH_SOURCE')) {
-            println "rootProject.ext.get('PUBLISH_SOURCE'): " + rootProject.ext.get('PUBLISH_SOURCE')
+            logger.debug("rootProject.ext.get('PUBLISH_SOURCE'): {}", rootProject.ext.get('PUBLISH_SOURCE'))
             publishSources = rootProject.ext.get('PUBLISH_SOURCE').toBoolean()
         }
-        println "publishSources: ${publishSources}"
+        logger.info("publishSources: ${publishSources}")
 
         repositories {
             mavenLocal()
@@ -294,7 +294,7 @@ subprojects {
                     config.exclude group: item.group, module: item.module
                 }
                 resolutionStrategy.eachDependency { details ->
-                    resolutionStrategy(details)
+                    resolutionStrategy(details as DependencyResolveDetails)
                 }
             }
         }
@@ -375,16 +375,16 @@ subprojects {
                 publications {
                     api(MavenPublication) {
                         afterEvaluate {
-                            def thisGroupId = groupId(project, rootProject)
-                            def thisArtifactId = artifactId(project)
+                            def thisGroupId = generateGroupId(project, rootProject)
+                            def thisArtifactId = generateArtifactId(project)
                             groupId thisGroupId
                             artifactId thisArtifactId
                             version version
-                            println "api artifact: ${thisGroupId}:${thisArtifactId}:${version}"
+                            logger.debug("api: ${thisGroupId}:${thisArtifactId}:${version}")
                             artifact apiJar
                             artifact javadocs
                             if(publishSources) {
-                                println "publishing.artifact sources"
+                                logger.debug("publishing.artifact sources")
                                 artifact sources
                             }
                         }
@@ -394,16 +394,16 @@ subprojects {
                     }
                     maven(MavenPublication) {
                         afterEvaluate {
-                            def thisGroupId = groupId(project, rootProject)
-                            def thisArtifactId = artifactId(project)
+                            def thisGroupId = generateGroupId(project, rootProject)
+                            def thisArtifactId = generateArtifactId(project)
                             groupId thisGroupId
                             artifactId thisArtifactId
                             version version
-                            println "artifact: ${thisGroupId}:${thisArtifactId}:${version}"
+                            logger.debug("artifact: ${thisGroupId}:${thisArtifactId}:${version}")
                             from components.java
-                            println "publishing.publishSources: ${publishSources}"
+                            logger.debug("publishing.publishSources: ${publishSources}")
                             if(publishSources) {
-                                println "publishing.artifact sources"
+                                logger.debug("publishing.artifact sources")
                                 artifact sources
                             }
                         }
