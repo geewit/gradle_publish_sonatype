@@ -59,6 +59,22 @@ if (need_publish) {
     }
 }
 
+apply from: 'https://gitee.com/geewit/gradle_publish_sonatype/raw/master/dependency-strategy.gradle'
+
+def artifactExcludeFiles = []
+def artifactExcludeFile = project.file('publish-artifact-exclude.json')
+if(artifactExcludeFile.exists()) {
+    artifactExcludeFiles = new JsonSlurper().parseText(artifactExcludeFile.text)
+    logger.info("artifactExcludeFiles: ${artifactExcludeFiles}")
+}
+
+def publishSources = true
+if(rootProject.ext.has('PUBLISH_SOURCE')) {
+    logger.debug("rootProject.ext.get('PUBLISH_SOURCE'): {}", rootProject.ext.get('PUBLISH_SOURCE'))
+    publishSources = rootProject.ext.get('PUBLISH_SOURCE').toBoolean()
+}
+logger.info("publishSources: ${publishSources}")
+
 buildDir = 'target'
 
 repositories {
@@ -86,6 +102,56 @@ repositories {
     maven {
         name "central"
         url "https://repo.maven.apache.org/maven2"
+    }
+}
+
+configurations {
+    all { config ->
+        config.exclude group: "org.apache.geronimo.specs"
+        config.exclude group: "org.jboss.spec.javax.annotation"
+        config.exclude group: "org.jboss.spec.javax.servlet"
+        config.exclude group: "org.jboss.spec.javax.transaction"
+        config.exclude group: "org.jboss.spec.javax.websocket"
+        config.exclude group: "org.hibernate.javax.persistence"
+        config.exclude group: "org.springframework.boot", module:"spring-boot-starter-logging"
+        config.exclude group: "org.springframework.boot", module:"spring-boot-starter-tomcat"
+        config.exclude group: "org.apache.tomcat", module:"tomcat-jdbc"
+        config.exclude group: "org.apache.tomcat.embed"
+        config.exclude group: "org.glassfish.hk2", module:"osgi-resource-locator"
+        config.exclude group: "org.glassfish.hk2.external", module:"javax.inject"
+        config.exclude group: "com.vaadin.external.google"
+        config.exclude group: "com.zaxxer"
+        config.exclude group: "org.codehaus.jackson"
+        config.exclude group: "org.codehaus.jettison"
+        config.exclude group: "org.slf4j", module:"slf4j-log4j12"
+        if (profile != 'development') {
+            config.exclude group: "org.springframework.boot", module:"spring-boot-devtools"
+        }
+        excludeArtifacts?.each { item ->
+            config.exclude group: item.group, module: item.module
+        }
+        resolutionStrategy.eachDependency { details ->
+            resolutionStrategy(details as DependencyResolveDetails)
+        }
+    }
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/main/java']
+        }
+        resources {
+            srcDirs = ['src/main/resources']
+        }
+    }
+    test {
+        java {
+            srcDirs = ['src/test/java']
+        }
+        resources {
+            srcDirs = ['src/test/resources']
+        }
     }
 }
 
