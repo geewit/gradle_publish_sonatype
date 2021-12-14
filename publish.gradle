@@ -27,19 +27,20 @@ if(excludeFile.exists()) {
 }
 
 def need_publish = false
-if (rootProject.hasProperty('geewit.gradle.need_publish')) {
-    need_publish = 'true'.equalsIgnoreCase(rootProject.getProperties().get('geewit.gradle.need_publish').toString())
+if (rootProject.hasProperty('io.geewit.gradle.need_publish')) {
+    need_publish = 'true'.equalsIgnoreCase(rootProject.getProperties().get('io.geewit.gradle.need_publish').toString())
 }
-
+println "need_publish: ${need_publish}"
 
 def publish_need_sign = false
-if (rootProject.hasProperty('geewit.gradle.publish_need_sign')) {
-    publish_need_sign = 'true'.equalsIgnoreCase(rootProject.getProperties().get('geewit.gradle.publish_need_sign').toString())
+if (rootProject.hasProperty('io.geewit.gradle.publish_need_sign')) {
+    publish_need_sign = 'true'.equalsIgnoreCase(rootProject.getProperties().get('io.geewit.gradle.publish_need_sign').toString())
 }
+println "publish_need_sign: ${publish_need_sign}"
 
 def java_version = JavaVersion.VERSION_1_8
-if (rootProject.hasProperty('geewit.gradle.java_version')) {
-    java_version = JavaVersion.toVersion(rootProject.getProperties().get('geewit.gradle.java_version'))
+if (rootProject.hasProperty('io.geewit.gradle.java_version')) {
+    java_version = JavaVersion.toVersion(rootProject.getProperties().get('io.geewit.gradle.java_version'))
 }
 println "java_version: ${java_version}"
 
@@ -54,9 +55,9 @@ buildscript {
 apply plugin: 'java-library'
 if (need_publish) {
     apply plugin: 'maven-publish'
-}
-if (publish_need_sign) {
-    apply plugin: 'signing'
+    if (publish_need_sign) {
+        apply plugin: 'signing'
+    }
 }
 
 buildDir = 'target'

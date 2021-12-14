@@ -31,15 +31,21 @@ if(excludeFile.exists()) {
     }
 }
 
+def need_publish = false
+if (rootProject.hasProperty('io.geewit.gradle.need_publish')) {
+    need_publish = 'true'.equalsIgnoreCase(rootProject.getProperties().get('io.geewit.gradle.need_publish').toString())
+}
+println "need_publish: ${need_publish}"
+
 def publish_need_sign = false
-if (rootProject.hasProperty('geewit.gradle.publish_need_sign')) {
-    publish_need_sign = 'true'.equalsIgnoreCase(rootProject.getProperties().get('geewit.gradle.publish_need_sign').toString())
+if (rootProject.hasProperty('io.geewit.gradle.publish_need_sign')) {
+    publish_need_sign = 'true'.equalsIgnoreCase(rootProject.getProperties().get('io.geewit.gradle.publish_need_sign').toString())
 }
 println "publish_need_sign: ${publish_need_sign}"
 
 def java_version = JavaVersion.VERSION_1_8
-if (rootProject.hasProperty('geewit.gradle.java_version')) {
-    java_version = JavaVersion.toVersion(rootProject.getProperties().get('geewit.gradle.java_version'))
+if (rootProject.hasProperty('io.geewit.gradle.java_version')) {
+    java_version = JavaVersion.toVersion(rootProject.getProperties().get('io.geewit.gradle.java_version'))
 }
 println "java_version: ${java_version}"
 
@@ -121,7 +127,7 @@ static def getReleaseRepositoryUrl(Project rootProject) {
     def RELEASE_REPOSITORY_URL_KEY = rootProject.hasProperty(property_key) ? rootProject.getProperty(property_key) : property_default_key
     def releaseRepositoryUrl = rootProject.hasProperty(RELEASE_REPOSITORY_URL_KEY) ? rootProject.getProperty(RELEASE_REPOSITORY_URL_KEY)
             : "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
-    println "releaseRepositoryUrl:" + releaseRepositoryUrl
+    println "releaseRepositoryUrl: ${releaseRepositoryUrl}"
     rootProject.ext.set('REPOSITORY_RELEASE_URL', releaseRepositoryUrl)
     return releaseRepositoryUrl
 }
@@ -136,7 +142,7 @@ static def getSnapshotRepositoryUrl(Project rootProject) {
     def SNAPSHOT_REPOSITORY_URL_KEY = rootProject.hasProperty(property_key) ? rootProject.getProperty(property_key) : property_default_key
     def snapshotRepositoryUrl =  rootProject.hasProperty(SNAPSHOT_REPOSITORY_URL_KEY) ? rootProject.getProperty(SNAPSHOT_REPOSITORY_URL_KEY)
             : "https://oss.sonatype.org/content/repositories/snapshots/"
-    println "snapshotRepositoryUrl:" + snapshotRepositoryUrl
+    println "snapshotRepositoryUrl: ${snapshotRepositoryUrl}"
     rootProject.ext.set('REPOSITORY_SNAPSHOT_URL', snapshotRepositoryUrl)
     return snapshotRepositoryUrl
 }
@@ -211,10 +217,13 @@ subprojects {
 
     if(!isSkipProject(it as Project)) {
         apply plugin: 'java-library'
-        apply plugin: 'maven-publish'
-        if (publish_need_sign) {
-            apply plugin: 'signing'
+        if (need_publish) {
+            apply plugin: 'maven-publish'
+            if (publish_need_sign) {
+                apply plugin: 'signing'
+            }
         }
+
         apply from: 'https://gitee.com/geewit/gradle_publish_sonatype/raw/master/dependency-strategy.gradle'
 
         def artifactExcludeFiles = []
@@ -360,68 +369,65 @@ subprojects {
             useJUnitPlatform()
         }
 
-        artifacts {
-            archives jar
-            archives sources
-            archives javadocs
-        }
-
         // https://docs.gradle.org/current/dsl/org.gradle.api.publish.maven.MavenPublication.html
-        publishing {
-            publications {
-                api(MavenPublication) {
-                    afterEvaluate {
-                        def thisGroupId = groupId(project, rootProject)
-                        def thisArtifactId = artifactId(project)
-                        groupId thisGroupId
-                        artifactId thisArtifactId
-                        version version
-                        println "api artifact: ${thisGroupId}:${thisArtifactId}:${version}"
-                        artifact apiJar
-                        artifact javadocs
-                        if(publishSources) {
-                            println "publishing.artifact sources"
-                            artifact sources
+        if (need_publish) {
+            publishing {
+                publications {
+                    api(MavenPublication) {
+                        afterEvaluate {
+                            def thisGroupId = groupId(project, rootProject)
+                            def thisArtifactId = artifactId(project)
+                            groupId thisGroupId
+                            artifactId thisArtifactId
+                            version version
+                            println "api artifact: ${thisGroupId}:${thisArtifactId}:${version}"
+                            artifact apiJar
+                            artifact javadocs
+                            if(publishSources) {
+                                println "publishing.artifact sources"
+                                artifact sources
+                            }
+                        }
+                        pom {
+                            description = POM_DESCRIPTION
                         }
                     }
-                    pom {
-                        description = POM_DESCRIPTION
+                    maven(MavenPublication) {
+                        afterEvaluate {
+                            def thisGroupId = groupId(project, rootProject)
+                            def thisArtifactId = artifactId(project)
+                            groupId thisGroupId
+                            artifactId thisArtifactId
+                            version version
+                            println "artifact: ${thisGroupId}:${thisArtifactId}:${version}"
+                            from components.java
+                            println "publishing.publishSources: ${publishSources}"
+                            if(publishSources) {
+                                println "publishing.artifact sources"
+                                artifact sources
+                            }
+                        }
+                        pom {
+                            description = POM_DESCRIPTION
+                        }
                     }
                 }
-                maven(MavenPublication) {
-                    afterEvaluate {
-                        def thisGroupId = groupId(project, rootProject)
-                        def thisArtifactId = artifactId(project)
-                        groupId thisGroupId
-                        artifactId thisArtifactId
-                        version version
-                        println "artifact: ${thisGroupId}:${thisArtifactId}:${version}"
-                        from components.java
-                        println "publishing.publishSources: ${publishSources}"
-                        if(publishSources) {
-                            println "publishing.artifact sources"
-                            artifact sources
+                repositories {
+                    maven {
+                        name = 'releaseRepository'
+                        url = getRepositoryUrl(rootProject)
+                        credentials {
+                            username = getRepositoryUsername(rootProject)
+                            password = getRepositoryPassword(rootProject)
                         }
-                    }
-                    pom {
-                        description = POM_DESCRIPTION
                     }
                 }
             }
-            repositories {
-                maven {
-                    name = 'releaseRepository'
-                    url = getRepositoryUrl(rootProject)
-                    credentials {
-                        username = getRepositoryUsername(rootProject)
-                        password = getRepositoryPassword(rootProject)
-                    }
+
+            if (publish_need_sign) {
+                signing {
+                    sign publishing.publications.maven
                 }
-            }
-        }
-        if (publish_need_sign) {
-            signing {
-                sign publishing.publications.maven
             }
         }
     }
