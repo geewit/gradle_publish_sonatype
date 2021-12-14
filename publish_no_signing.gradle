@@ -26,45 +26,16 @@ if(excludeFile.exists()) {
     }
 }
 
+def publish_need_sign = false
+if (rootProject.hasProperty('publish_need_sign')) {
+    publish_need_sign = 'true'.equalsIgnoreCase(rootProject.getProperties().get('publish_need_sign').toString())
+}
+
 buildscript {
     repositories {
         mavenLocal()
         maven { url "https://maven.aliyun.com/repository/gradle-plugin" }
         maven { url "https://repo.maven.apache.org/maven2" }
-    }
-}
-
-apply plugin: 'java-library'
-apply plugin: 'maven-publish'
-apply from: 'https://gitee.com/geewit/gradle_publish_sonatype/raw/master/dependency-strategy.gradle'
-
-buildDir = 'target'
-
-repositories {
-    mavenLocal()
-    maven {
-        url getReleaseRepositoryUrl(rootProject)
-        allowInsecureProtocol true
-        credentials {
-            username = getRepositoryUsername(rootProject)
-            password = getRepositoryPassword(rootProject)
-        }
-    }
-    maven {
-        url getSnapshotRepositoryUrl(rootProject)
-        allowInsecureProtocol true
-        credentials {
-            username = getRepositoryUsername(rootProject)
-            password = getRepositoryPassword(rootProject)
-        }
-    }
-    maven {
-        name "aliyun"
-        url "https://maven.aliyun.com/repository/central"
-    }
-    maven {
-        name "central"
-        url "https://repo.maven.apache.org/maven2"
     }
 }
 

@@ -1,4 +1,35 @@
+import groovy.json.JsonSlurper
 import java.nio.charset.StandardCharsets
+
+ext {
+    profile = System.getProperty("profile") ?: "development"
+    println "profile = ${profile}"
+}
+
+Properties props = new Properties()
+def versionFile = rootProject.file('version.properties')
+println "rootProject: ${rootProject.name}"
+
+if(versionFile.exists()) {
+    props.load(versionFile.newReader())
+    props.each { prop ->
+        println "${prop.key}: ${prop.value}"
+        rootProject.ext.set(prop.key, prop.value)
+    }
+}
+def excludeArtifacts = []
+def excludeFile = rootProject.file('gradle-exclude.json')
+if(excludeFile.exists()) {
+    excludeArtifacts = new JsonSlurper().parseText(excludeFile.text)
+    excludeArtifacts?.each { item ->
+        println "exclude ${item.group}: ${item.module}"
+    }
+}
+
+def publish_need_sign = false
+if (rootProject.hasProperty('publish_need_sign')) {
+    publish_need_sign = 'true'.equalsIgnoreCase(rootProject.getProperties().get('publish_need_sign').toString())
+}
 
 buildscript {
     repositories {
@@ -10,26 +41,28 @@ buildscript {
 
 apply plugin: 'java-library'
 apply plugin: 'maven-publish'
-apply plugin: 'signing'
+if (publish_need_sign) {
+    apply plugin: 'signing'
+}
 
 buildDir = 'target'
 
 repositories {
     mavenLocal()
     maven {
-        url getReleaseRepositoryUrl()
+        url getReleaseRepositoryUrl(rootProject)
         allowInsecureProtocol true
         credentials {
-            username = getRepositoryUsername()
-            password = getRepositoryPassword()
+            username = getRepositoryUsername(rootProject)
+            password = getRepositoryPassword(rootProject)
         }
     }
     maven {
-        url getSnapshotRepositoryUrl()
+        url getSnapshotRepositoryUrl(rootProject)
         allowInsecureProtocol true
         credentials {
-            username = getRepositoryUsername()
-            password = getRepositoryPassword()
+            username = getRepositoryUsername(rootProject)
+            password = getRepositoryPassword(rootProject)
         }
     }
     maven {
@@ -258,7 +291,8 @@ publishing {
         }
     }
 }
-
-signing {
-    sign publishing.publications.maven
+if (publish_need_sign) {
+    signing {
+        sign publishing.publications.maven
+    }
 }

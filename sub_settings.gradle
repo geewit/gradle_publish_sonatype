@@ -22,7 +22,7 @@ static def buildFullProjectName(File rootDir, File dir) {
 rootDir.traverse(
         type: FileType.DIRECTORIES,
         preDir: {
-            if (!file("${it}/build.gradle").exists() && !file("${it}/settings.gradle").exists() && !file("${it}/package.json").exists()) {
+            if (!new File("${it}/build.gradle").exists() && !new File("${it}/settings.gradle").exists() && !new File("${it}/package.json").exists()) {
                 return FileVisitResult.SKIP_SUBTREE
             }
         }) { dir ->
