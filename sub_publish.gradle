@@ -56,7 +56,7 @@ static def groupId(Project thisProject, Project rootProject) {
     Properties projectProps = new Properties()
     def projectPropsFile = thisProject.file('gradle.properties')
     if(projectPropsFile.exists()) {
-        projectProps.load(projectPropsFile.newReader())
+        projectProps.load(projectPropsFile.newReader() as Reader)
         groupId = projectProps.getProperty('group')
     }
     if(groupId == null) {
