@@ -26,9 +26,15 @@ if(excludeFile.exists()) {
     }
 }
 
+def need_publish = false
+if (rootProject.hasProperty('geewit.gradle.need_publish')) {
+    need_publish = 'true'.equalsIgnoreCase(rootProject.getProperties().get('geewit.gradle.need_publish').toString())
+}
+
+
 def publish_need_sign = false
-if (rootProject.hasProperty('publish_need_sign')) {
-    publish_need_sign = 'true'.equalsIgnoreCase(rootProject.getProperties().get('publish_need_sign').toString())
+if (rootProject.hasProperty('geewit.gradle.publish_need_sign')) {
+    publish_need_sign = 'true'.equalsIgnoreCase(rootProject.getProperties().get('geewit.gradle.publish_need_sign').toString())
 }
 
 def java_version = JavaVersion.VERSION_1_8
@@ -46,7 +52,9 @@ buildscript {
 }
 
 apply plugin: 'java-library'
-apply plugin: 'maven-publish'
+if (need_publish) {
+    apply plugin: 'maven-publish'
+}
 if (publish_need_sign) {
     apply plugin: 'signing'
 }
@@ -245,82 +253,85 @@ static def getRepositoryPassword(Project rootProject) {
 }
 
 // https://docs.gradle.org/current/dsl/org.gradle.api.publish.maven.MavenPublication.html
-publishing {
-    publications {
-        api(MavenPublication) {
-            afterEvaluate {
-                def thisGroupId = groupId(project, rootProject)
-                def thisArtifactId = artifactId(project)
-                groupId thisGroupId
-                artifactId thisArtifactId
-                version version
-                println "api artifact: ${thisGroupId}:${thisArtifactId}:${version}"
-                artifact apiJar
-                artifact javadocs
-                if(publishSources) {
-                    println "publishing.artifact sources"
-                    artifact sources
+if (need_publish) {
+    publishing {
+        publications {
+            api(MavenPublication) {
+                afterEvaluate {
+                    def thisGroupId = groupId(project, rootProject)
+                    def thisArtifactId = artifactId(project)
+                    groupId thisGroupId
+                    artifactId thisArtifactId
+                    version version
+                    println "api artifact: ${thisGroupId}:${thisArtifactId}:${version}"
+                    artifact apiJar
+                    artifact javadocs
+                    if(publishSources) {
+                        println "publishing.artifact sources"
+                        artifact sources
+                    }
+                }
+                pom {
+                    description = POM_DESCRIPTION
                 }
             }
-            pom {
-                description = POM_DESCRIPTION
+            maven(MavenPublication) {
+                afterEvaluate {
+                    def thisGroupId = groupId(project, rootProject)
+                    def thisArtifactId = artifactId(project)
+                    groupId thisGroupId
+                    artifactId thisArtifactId
+                    version version
+                    println "artifact: ${thisGroupId}:${thisArtifactId}:${version}"
+                    from components.java
+                    println "publishing.publishSources: ${publishSources}"
+                    if(publishSources) {
+                        println "publishing.artifact sources"
+                        artifact sources
+                    }
+                }
+                pom {
+                    name = POM_ARTIFACT_ID
+                    description = POM_DESCRIPTION
+                    url = POM_SCM_URL
+                    licenses {
+                        license {
+                            name = POM_LICENCE_NAME
+                            url = POM_LICENCE_URL
+                        }
+                    }
+                    developers {
+                        developer {
+                            id = POM_DEVELOPER_ID
+                            name = POM_DEVELOPER_NAME
+                            email = POM_DEVELOPER_EMAIL
+                        }
+                    }
+                    scm {
+                        url = POM_SCM_URL
+                        connection = POM_SCM_CONNECTION
+                        developerConnection = POM_SCM_DEV_CONNECTION
+                    }
+                }
             }
         }
-        maven(MavenPublication) {
-            afterEvaluate {
-                def thisGroupId = groupId(project, rootProject)
-                def thisArtifactId = artifactId(project)
-                groupId thisGroupId
-                artifactId thisArtifactId
-                version version
-                println "artifact: ${thisGroupId}:${thisArtifactId}:${version}"
-                from components.java
-                println "publishing.publishSources: ${publishSources}"
-                if(publishSources) {
-                    println "publishing.artifact sources"
-                    artifact sources
-                }
-            }
-            pom {
-                name = POM_ARTIFACT_ID
-                description = POM_DESCRIPTION
-                url = POM_SCM_URL
-                licenses {
-                    license {
-                        name = POM_LICENCE_NAME
-                        url = POM_LICENCE_URL
-                    }
-                }
-                developers {
-                    developer {
-                        id = POM_DEVELOPER_ID
-                        name = POM_DEVELOPER_NAME
-                        email = POM_DEVELOPER_EMAIL
-                    }
-                }
-                scm {
-                    url = POM_SCM_URL
-                    connection = POM_SCM_CONNECTION
-                    developerConnection = POM_SCM_DEV_CONNECTION
+        repositories {
+            maven {
+                name = 'releaseRepository'
+                url = getRepositoryUrl(rootProject)
+                allowInsecureProtocol true
+                credentials {
+                    username = getRepositoryUsername(rootProject)
+                    password = getRepositoryPassword(rootProject)
                 }
             }
         }
     }
-    repositories {
-        maven {
-            name = 'releaseRepository'
-            url = getRepositoryUrl(rootProject)
-            allowInsecureProtocol true
-            credentials {
-                username = getRepositoryUsername(rootProject)
-                password = getRepositoryPassword(rootProject)
-            }
+
+    if (publish_need_sign) {
+        signing {
+            sign publishing.publications.maven
         }
     }
 }
 
-if (publish_need_sign) {
-    signing {
-        sign publishing.publications.maven
-    }
-}
