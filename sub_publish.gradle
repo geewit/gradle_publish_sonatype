@@ -33,10 +33,16 @@ if(excludeFile.exists()) {
 }
 
 def publish_need_sign = false
-if (rootProject.hasProperty('publish_need_sign')) {
-    publish_need_sign = 'true'.equalsIgnoreCase(rootProject.getProperties().get('publish_need_sign').toString())
+if (rootProject.hasProperty('geewit.gradle.publish_need_sign')) {
+    publish_need_sign = 'true'.equalsIgnoreCase(rootProject.getProperties().get('geewit.gradle.publish_need_sign').toString())
 }
 println "publish_need_sign: ${publish_need_sign}"
+
+def java_version = JavaVersion.VERSION_1_8
+if (rootProject.hasProperty('geewit.gradle.java_version')) {
+    java_version = JavaVersion.toVersion(rootProject.getProperties().get('geewit.gradle.java_version'))
+}
+println "java_version: ${java_version}"
 
 static def groupId(Project thisProject, Project rootProject) {
     println "thisProject.name = ${thisProject.name}"
@@ -329,8 +335,8 @@ subprojects {
         }
 
         tasks.withType(JavaCompile) {
-            sourceCompatibility = JavaVersion.VERSION_1_8
-            targetCompatibility = JavaVersion.VERSION_1_8
+            sourceCompatibility = java_version
+            targetCompatibility = java_version
 
             options*.compilerArgs << "-Xlint:unchecked" << "-Xlint:options"
             options*.encoding = StandardCharsets.UTF_8.name()
@@ -371,7 +377,7 @@ subprojects {
                         groupId thisGroupId
                         artifactId thisArtifactId
                         version version
-                        println "artifact: ${thisGroupId}:${thisArtifactId}:${version}"
+                        println "api artifact: ${thisGroupId}:${thisArtifactId}:${version}"
                         artifact apiJar
                         artifact javadocs
                         if(publishSources) {
@@ -387,59 +393,19 @@ subprojects {
                     afterEvaluate {
                         def thisGroupId = groupId(project, rootProject)
                         def thisArtifactId = artifactId(project)
-
                         groupId thisGroupId
                         artifactId thisArtifactId
                         version version
                         println "artifact: ${thisGroupId}:${thisArtifactId}:${version}"
-                        artifact apiJar
-                        artifact javadocs
-                        artifact sources
+                        from components.java
+                        println "publishing.publishSources: ${publishSources}"
+                        if(publishSources) {
+                            println "publishing.artifact sources"
+                            artifact sources
+                        }
                     }
                     pom {
-                        if (rootProject.hasProperty('POM_ARTIFACT_ID')) {
-                            name = POM_ARTIFACT_ID
-                        }
-                        if (rootProject.hasProperty('POM_DESCRIPTION')) {
-                            description = POM_DESCRIPTION
-                        }
-                        if (rootProject.hasProperty('POM_SCM_URL')) {
-                            url = POM_SCM_URL
-                        }
-                        licenses {
-                            license {
-                                if (rootProject.hasProperty('POM_LICENCE_NAME')) {
-                                    name = POM_LICENCE_NAME
-                                }
-                                if (rootProject.hasProperty('POM_LICENCE_URL')) {
-                                    url = POM_LICENCE_URL
-                                }
-                            }
-                        }
-                        developers {
-                            developer {
-                                if (rootProject.hasProperty('POM_DEVELOPER_ID')) {
-                                    id = POM_DEVELOPER_ID
-                                }
-                                if (rootProject.hasProperty('POM_DEVELOPER_NAME')) {
-                                    name = POM_DEVELOPER_NAME
-                                }
-                                if (rootProject.hasProperty('POM_DEVELOPER_EMAIL')) {
-                                    email = POM_DEVELOPER_EMAIL
-                                }
-                            }
-                        }
-                        scm {
-                            if (rootProject.hasProperty('POM_SCM_URL')) {
-                                url = POM_SCM_URL
-                            }
-                            if (rootProject.hasProperty('POM_SCM_CONNECTION')) {
-                                connection = POM_SCM_CONNECTION
-                            }
-                            if (rootProject.hasProperty('POM_SCM_DEV_CONNECTION')) {
-                                developerConnection = POM_SCM_DEV_CONNECTION
-                            }
-                        }
+                        description = POM_DESCRIPTION
                     }
                 }
             }

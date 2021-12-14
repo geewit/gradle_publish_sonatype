@@ -31,6 +31,12 @@ if (rootProject.hasProperty('publish_need_sign')) {
     publish_need_sign = 'true'.equalsIgnoreCase(rootProject.getProperties().get('publish_need_sign').toString())
 }
 
+def java_version = JavaVersion.VERSION_1_8
+if (rootProject.hasProperty('geewit.gradle.java_version')) {
+    java_version = JavaVersion.toVersion(rootProject.getProperties().get('geewit.gradle.java_version'))
+}
+println "java_version: ${java_version}"
+
 buildscript {
     repositories {
         mavenLocal()
@@ -88,8 +94,8 @@ task javadocs(type: Jar, dependsOn: javadoc) {
 }
 
 tasks.withType(JavaCompile) {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = java_version
+    targetCompatibility = java_version
 
     options*.compilerArgs << "-Xlint:unchecked" << "-Xlint:options"
     options*.encoding = StandardCharsets.UTF_8.name()
@@ -241,18 +247,39 @@ static def getRepositoryPassword(Project rootProject) {
 // https://docs.gradle.org/current/dsl/org.gradle.api.publish.maven.MavenPublication.html
 publishing {
     publications {
+        api(MavenPublication) {
+            afterEvaluate {
+                def thisGroupId = groupId(project, rootProject)
+                def thisArtifactId = artifactId(project)
+                groupId thisGroupId
+                artifactId thisArtifactId
+                version version
+                println "api artifact: ${thisGroupId}:${thisArtifactId}:${version}"
+                artifact apiJar
+                artifact javadocs
+                if(publishSources) {
+                    println "publishing.artifact sources"
+                    artifact sources
+                }
+            }
+            pom {
+                description = POM_DESCRIPTION
+            }
+        }
         maven(MavenPublication) {
             afterEvaluate {
                 def thisGroupId = groupId(project, rootProject)
                 def thisArtifactId = artifactId(project)
-
                 groupId thisGroupId
                 artifactId thisArtifactId
                 version version
                 println "artifact: ${thisGroupId}:${thisArtifactId}:${version}"
-                artifact jar
-                artifact javadocs
-                artifact sources
+                from components.java
+                println "publishing.publishSources: ${publishSources}"
+                if(publishSources) {
+                    println "publishing.artifact sources"
+                    artifact sources
+                }
             }
             pom {
                 name = POM_ARTIFACT_ID
@@ -291,6 +318,7 @@ publishing {
         }
     }
 }
+
 if (publish_need_sign) {
     signing {
         sign publishing.publications.maven
