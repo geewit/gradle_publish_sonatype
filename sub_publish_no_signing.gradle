@@ -3,7 +3,7 @@ import groovy.json.JsonSlurper
 import java.nio.charset.StandardCharsets
 
 
-static def isSkipProject(Project project) {
+def isSkipProject(Project project) {
     def isSkipProject = !project.buildscript.sourceFile.exists()
     println "isSkipProject = ${isSkipProject}"
     return isSkipProject
@@ -33,7 +33,7 @@ if(excludeFile.exists()) {
     }
 }
 
-static def groupId(Project project, Project rootProject) {
+def groupId(Project project) {
     println "project.name = ${project.name}"
     def prj = project.parent
     def groupId = null
@@ -78,7 +78,7 @@ static def groupId(Project project, Project rootProject) {
     return groupId
 }
 
-static def artifactId(Project project) {
+def artifactId(Project project) {
     def prj = project.parent
 
     def artifactId
@@ -101,69 +101,69 @@ static def artifactId(Project project) {
     return artifactId
 }
 
-static def getReleaseRepositoryUrl(Project rootProject) {
+def getReleaseRepositoryUrl() {
     if(rootProject.ext.has('REPOSITORY_RELEASE_URL')) {
         println "rootProject.ext.get('REPOSITORY_RELEASE_URL'): " + rootProject.ext.get('REPOSITORY_RELEASE_URL')
         return rootProject.ext.get('REPOSITORY_RELEASE_URL')
     }
     def property_default_key = 'REPOSITORY_RELEASE_URL'
     def property_key = 'REPOSITORY_RELEASE_URL_KEY'
-    def RELEASE_REPOSITORY_URL_KEY = rootProject.hasProperty(property_key) ? rootProject.getProperty(property_key) : property_default_key
-    def releaseRepositoryUrl = rootProject.hasProperty(RELEASE_REPOSITORY_URL_KEY) ? rootProject.getProperty(RELEASE_REPOSITORY_URL_KEY)
+    def RELEASE_REPOSITORY_URL_KEY = hasProperty(property_key) ? getProperty(property_key) : property_default_key
+    def releaseRepositoryUrl = hasProperty(RELEASE_REPOSITORY_URL_KEY) ? getProperty(RELEASE_REPOSITORY_URL_KEY)
             : "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
     println "releaseRepositoryUrl:" + releaseRepositoryUrl
     rootProject.ext.set('REPOSITORY_RELEASE_URL', releaseRepositoryUrl)
     return releaseRepositoryUrl
 }
 
-static def getSnapshotRepositoryUrl(Project rootProject) {
+def getSnapshotRepositoryUrl() {
     if(rootProject.ext.has('REPOSITORY_SNAPSHOT_URL')) {
         println "rootProject.ext.get('REPOSITORY_SNAPSHOT_URL'): " + rootProject.ext.get('REPOSITORY_SNAPSHOT_URL')
         return rootProject.ext.get('REPOSITORY_SNAPSHOT_URL')
     }
     def property_default_key = 'REPOSITORY_SNAPSHOT_URL'
     def property_key = 'REPOSITORY_SNAPSHOT_URL_KEY'
-    def SNAPSHOT_REPOSITORY_URL_KEY = rootProject.hasProperty(property_key) ? rootProject.getProperty(property_key) : property_default_key
-    def snapshotRepositoryUrl =  rootProject.hasProperty(SNAPSHOT_REPOSITORY_URL_KEY) ? rootProject.getProperty(SNAPSHOT_REPOSITORY_URL_KEY)
+    def SNAPSHOT_REPOSITORY_URL_KEY = hasProperty(property_key) ? getProperty(property_key) : property_default_key
+    def snapshotRepositoryUrl =  hasProperty(SNAPSHOT_REPOSITORY_URL_KEY) ? getProperty(SNAPSHOT_REPOSITORY_URL_KEY)
             : "https://oss.sonatype.org/content/repositories/snapshots/"
     println "snapshotRepositoryUrl:" + snapshotRepositoryUrl
     rootProject.ext.set('REPOSITORY_SNAPSHOT_URL', snapshotRepositoryUrl)
     return snapshotRepositoryUrl
 }
 
-static def getRepositoryUsername(Project rootProject) {
+def getRepositoryUsername() {
     if(rootProject.ext.has('REPOSITORY_USERNAME')) {
         println "rootProject.ext.get('REPOSITORY_USERNAME'): " + rootProject.ext.get('REPOSITORY_USERNAME')
         return rootProject.ext.get('REPOSITORY_USERNAME')
     }
     def property_default_key = 'REPOSITORY_USERNAME'
     def property_key = 'REPOSITORY_USERNAME_KEY'
-    def SONATYPE_USERNAME_KEY = rootProject.hasProperty(property_key) ? rootProject.getProperty(property_key) : property_default_key
-    def username = rootProject.hasProperty(SONATYPE_USERNAME_KEY) ? rootProject.getProperty(SONATYPE_USERNAME_KEY) : ""
+    def SONATYPE_USERNAME_KEY = hasProperty(property_key) ? getProperty(property_key) : property_default_key
+    def username = hasProperty(SONATYPE_USERNAME_KEY) ? getProperty(SONATYPE_USERNAME_KEY) : ""
     println "username: + $username"
     rootProject.ext.set('REPOSITORY_USERNAME', username)
     return username
 }
 
-static def getRepositoryPassword(Project rootProject) {
+def getRepositoryPassword() {
     if(rootProject.ext.has('REPOSITORY_PASSWORD')) {
         println "rootProject.ext.get('REPOSITORY_PASSWORD'): " + rootProject.ext.get('REPOSITORY_PASSWORD')
         return rootProject.ext.get('REPOSITORY_PASSWORD')
     }
     def property_default_key = 'REPOSITORY_PASSWORD'
     def property_key = 'REPOSITORY_PASSWORD_KEY'
-    def SONATYPE_PASSWORD_KEY = rootProject.hasProperty(property_key) ? rootProject.getProperty(property_key) : property_default_key
-    def password = rootProject.hasProperty(SONATYPE_PASSWORD_KEY) ? rootProject.getProperty(SONATYPE_PASSWORD_KEY) : ""
+    def SONATYPE_PASSWORD_KEY = hasProperty(property_key) ? getProperty(property_key) : property_default_key
+    def password = hasProperty(SONATYPE_PASSWORD_KEY) ? getProperty(SONATYPE_PASSWORD_KEY) : ""
     println "password:" + password
     rootProject.ext.set('REPOSITORY_PASSWORD', password)
     return password
 }
 
-static def getRepositoryUrl(Project rootProject) {
-    return isSnapshotBuild(rootProject) ? getSnapshotRepositoryUrl(rootProject) : getReleaseRepositoryUrl(rootProject)
+def getRepositoryUrl(Project project) {
+    return this.isSnapshotBuild(project) ? this.getSnapshotRepositoryUrl() : this.getReleaseRepositoryUrl()
 }
 
-static def isSnapshotBuild(Project project) {
+def isSnapshotBuild(Project project) {
     return project.version.endsWith('SNAPSHOT')
 }
 
@@ -210,29 +210,22 @@ subprojects {
             println "artifactExcludeFiles:" + artifactExcludeFiles
         }
 
-        def publishSources = true
-        if(rootProject.ext.has('PUBLISH_SOURCE')) {
-            println "rootProject.ext.get('PUBLISH_SOURCE'): " + rootProject.ext.get('PUBLISH_SOURCE')
-            publishSources = rootProject.ext.get('PUBLISH_SOURCE').toBoolean()
-        }
-        println "publishSources: ${publishSources}"
-
         repositories {
             mavenLocal()
             maven {
-                url getReleaseRepositoryUrl(rootProject)
+                url getReleaseRepositoryUrl()
                 allowInsecureProtocol true
                 credentials {
-                    username = getRepositoryUsername(rootProject)
-                    password = getRepositoryPassword(rootProject)
+                    username = getRepositoryUsername()
+                    password = getRepositoryPassword()
                 }
             }
             maven {
-                url getSnapshotRepositoryUrl(rootProject)
+                url getSnapshotRepositoryUrl()
                 allowInsecureProtocol true
                 credentials {
-                    username = getRepositoryUsername(rootProject)
-                    password = getRepositoryPassword(rootProject)
+                    username = getRepositoryUsername()
+                    password = getRepositoryPassword()
                 }
             }
             maven {
@@ -295,6 +288,34 @@ subprojects {
             }
         }
 
+        tasks.withType(JavaCompile) {
+            sourceCompatibility = JavaVersion.VERSION_1_8
+            targetCompatibility = JavaVersion.VERSION_1_8
+
+            options*.compilerArgs << "-Xlint:unchecked" << "-Xlint:options"
+            options*.encoding = StandardCharsets.UTF_8.name()
+        }
+
+        def publishSources = true
+        if(rootProject.ext.has('PUBLISH_SOURCE')) {
+            println "rootProject.ext.get('PUBLISH_SOURCE'): " + rootProject.ext.get('PUBLISH_SOURCE')
+            publishSources = rootProject.ext.get('PUBLISH_SOURCE').toBoolean()
+        }
+        println "publishSources: ${publishSources}"
+
+        tasks.withType(Javadoc) {
+            if(publishSources) {
+                options*.encoding = StandardCharsets.UTF_8.name()
+                options.addStringOption('Xdoclint:none', '-quiet')
+            } else {
+                enabled = false
+            }
+        }
+
+        tasks.withType(Jar) {
+            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+        }
+
         task apiJar(type: Jar) {
             baseName "publishing-api"
             from sourceSets.main.output
@@ -317,76 +338,46 @@ subprojects {
             }
         }
 
-        task javadocs(type: Jar, dependsOn: javadoc) {
-            classifier = 'javadoc'
-            from javadoc.destinationDir
-            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-        }
-
-        tasks.withType(JavaCompile) {
-            sourceCompatibility = JavaVersion.VERSION_1_8
-            targetCompatibility = JavaVersion.VERSION_1_8
-
-            options*.compilerArgs << "-Xlint:unchecked" << "-Xlint:options"
-            options*.encoding = StandardCharsets.UTF_8.name()
-        }
-
-        tasks.withType(Jar) {
-            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-        }
-
-        tasks.withType(Javadoc) {
-            if(publishSources) {
-                options*.encoding = StandardCharsets.UTF_8.name()
-                options.addStringOption('Xdoclint:none', '-quiet')
-            } else {
-                enabled = false
-            }
-        }
-
         tasks.withType(Copy) {
             duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-        }
-
-        tasks.withType(Test).configureEach {
-            useJUnitPlatform()
         }
 
         // https://docs.gradle.org/current/dsl/org.gradle.api.publish.maven.MavenPublication.html
         publishing {
             publications {
                 api(MavenPublication) {
-                    afterEvaluate {
-                        def thisGroupId = groupId(project, rootProject)
-                        def thisArtifactId = artifactId(project)
-                        groupId thisGroupId
-                        artifactId thisArtifactId
-                        version version
-                        println "artifact: ${thisGroupId}:${thisArtifactId}:${version}"
-                        artifact apiJar
-                        artifact javadocs
-                        if(publishSources) {
-                            println "publishing.artifact sources"
-                            artifact sources
-                        }
+                    def thisGroupId = groupId(project)
+                    def thisArtifactId = artifactId(project)
+                    groupId thisGroupId
+                    artifactId thisArtifactId
+                    version version
+                    println "artifact: ${thisGroupId}:${thisArtifactId}:${version}"
+                    artifact apiJar
+                    if(publishSources) {
+                        println "publishing.artifact sources"
+                        artifact sources
                     }
+
                     pom {
                         description = POM_DESCRIPTION
                     }
                 }
 
                 maven(MavenPublication) {
-                    afterEvaluate {
-                        def thisGroupId = groupId(project, rootProject)
-                        def thisArtifactId = artifactId(project)
-                        groupId thisGroupId
-                        artifactId thisArtifactId
-                        version version
-                        println "artifact: ${thisGroupId}:${thisArtifactId}:${version}"
-                        artifact apiJar
-                        artifact javadocs
+                    def thisGroupId = groupId(project)
+                    def thisArtifactId = artifactId(project)
+
+                    groupId thisGroupId
+                    artifactId thisArtifactId
+                    version version
+                    println "artifact: ${thisGroupId}:${thisArtifactId}:${version}"
+                    from components.java
+                    println "publishing.publishSources: ${publishSources}"
+                    if(publishSources) {
+                        println "publishing.artifact sources"
                         artifact sources
                     }
+
                     pom {
                         description = POM_DESCRIPTION
                     }
@@ -395,11 +386,11 @@ subprojects {
             repositories {
                 maven {
                     name = 'releaseRepository'
-                    url = getRepositoryUrl(rootProject)
+                    url = getRepositoryUrl(project)
                     allowInsecureProtocol true
                     credentials {
-                        username = getRepositoryUsername(rootProject)
-                        password = getRepositoryPassword(rootProject)
+                        username = getRepositoryUsername()
+                        password = getRepositoryPassword()
                     }
                 }
             }

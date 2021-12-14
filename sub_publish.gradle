@@ -36,6 +36,7 @@ def publish_need_sign = false
 if (rootProject.hasProperty('publish_need_sign')) {
     publish_need_sign = 'true'.equalsIgnoreCase(rootProject.getProperties().get('publish_need_sign').toString())
 }
+println "publish_need_sign: ${publish_need_sign}"
 
 static def groupId(Project thisProject, Project rootProject) {
     println "thisProject.name = ${thisProject.name}"
@@ -363,6 +364,25 @@ subprojects {
         // https://docs.gradle.org/current/dsl/org.gradle.api.publish.maven.MavenPublication.html
         publishing {
             publications {
+                api(MavenPublication) {
+                    afterEvaluate {
+                        def thisGroupId = groupId(project, rootProject)
+                        def thisArtifactId = artifactId(project)
+                        groupId thisGroupId
+                        artifactId thisArtifactId
+                        version version
+                        println "artifact: ${thisGroupId}:${thisArtifactId}:${version}"
+                        artifact apiJar
+                        artifact javadocs
+                        if(publishSources) {
+                            println "publishing.artifact sources"
+                            artifact sources
+                        }
+                    }
+                    pom {
+                        description = POM_DESCRIPTION
+                    }
+                }
                 maven(MavenPublication) {
                     afterEvaluate {
                         def thisGroupId = groupId(project, rootProject)
@@ -377,26 +397,48 @@ subprojects {
                         artifact sources
                     }
                     pom {
-                        name = POM_ARTIFACT_ID
-                        description = POM_DESCRIPTION
-                        url = POM_SCM_URL
+                        if (rootProject.hasProperty('POM_ARTIFACT_ID')) {
+                            name = POM_ARTIFACT_ID
+                        }
+                        if (rootProject.hasProperty('POM_DESCRIPTION')) {
+                            description = POM_DESCRIPTION
+                        }
+                        if (rootProject.hasProperty('POM_SCM_URL')) {
+                            url = POM_SCM_URL
+                        }
                         licenses {
                             license {
-                                name = POM_LICENCE_NAME
-                                url = POM_LICENCE_URL
+                                if (rootProject.hasProperty('POM_LICENCE_NAME')) {
+                                    name = POM_LICENCE_NAME
+                                }
+                                if (rootProject.hasProperty('POM_LICENCE_URL')) {
+                                    url = POM_LICENCE_URL
+                                }
                             }
                         }
                         developers {
                             developer {
-                                id = POM_DEVELOPER_ID
-                                name = POM_DEVELOPER_NAME
-                                email = POM_DEVELOPER_EMAIL
+                                if (rootProject.hasProperty('POM_DEVELOPER_ID')) {
+                                    id = POM_DEVELOPER_ID
+                                }
+                                if (rootProject.hasProperty('POM_DEVELOPER_NAME')) {
+                                    name = POM_DEVELOPER_NAME
+                                }
+                                if (rootProject.hasProperty('POM_DEVELOPER_EMAIL')) {
+                                    email = POM_DEVELOPER_EMAIL
+                                }
                             }
                         }
                         scm {
-                            url = POM_SCM_URL
-                            connection = POM_SCM_CONNECTION
-                            developerConnection = POM_SCM_DEV_CONNECTION
+                            if (rootProject.hasProperty('POM_SCM_URL')) {
+                                url = POM_SCM_URL
+                            }
+                            if (rootProject.hasProperty('POM_SCM_CONNECTION')) {
+                                connection = POM_SCM_CONNECTION
+                            }
+                            if (rootProject.hasProperty('POM_SCM_DEV_CONNECTION')) {
+                                developerConnection = POM_SCM_DEV_CONNECTION
+                            }
                         }
                     }
                 }
