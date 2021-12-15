@@ -389,7 +389,48 @@ subprojects {
                             }
                         }
                         pom {
-                            description = POM_DESCRIPTION
+                            name = POM_ARTIFACT_ID
+                            if (rootProject.ext.has('POM_DESCRIPTION')) {
+                                description = POM_DESCRIPTION
+                            }
+                            if (rootProject.ext.has('POM_SCM_URL')) {
+                                url = POM_SCM_URL
+                            }
+                            licenses {
+                                license {
+                                    if (rootProject.ext.has('POM_LICENCE_NAME')) {
+                                        name = POM_LICENCE_NAME
+                                    }
+                                    if (rootProject.ext.has('POM_LICENCE_URL')) {
+                                        url = POM_LICENCE_URL
+                                    }
+                                }
+                            }
+                            developers {
+                                developer {
+                                    if (rootProject.ext.has('POM_LICENCE_URL')) {
+                                        id = POM_DEVELOPER_ID
+                                    }
+                                    if (rootProject.ext.has('POM_DEVELOPER_NAME')) {
+                                        name = POM_DEVELOPER_NAME
+                                    }
+                                    if (rootProject.ext.has('POM_DEVELOPER_EMAIL')) {
+                                        email = POM_DEVELOPER_EMAIL
+                                    }
+                                }
+                            }
+                            scm {
+                                if (rootProject.ext.has('POM_SCM_URL')) {
+                                    url = POM_SCM_URL
+                                }
+                                if (rootProject.ext.has('POM_SCM_CONNECTION')) {
+                                    connection = POM_SCM_CONNECTION
+                                }
+                                if (rootProject.ext.has('POM_SCM_DEV_CONNECTION')) {
+                                    developerConnection = POM_SCM_DEV_CONNECTION
+                                }
+
+                            }
                         }
                     }
                     maven(MavenPublication) {
@@ -408,7 +449,48 @@ subprojects {
                             }
                         }
                         pom {
-                            description = POM_DESCRIPTION
+                            name = POM_ARTIFACT_ID
+                            if (rootProject.ext.has('POM_DESCRIPTION')) {
+                                description = POM_DESCRIPTION
+                            }
+                            if (rootProject.ext.has('POM_SCM_URL')) {
+                                url = POM_SCM_URL
+                            }
+                            licenses {
+                                license {
+                                    if (rootProject.ext.has('POM_LICENCE_NAME')) {
+                                        name = POM_LICENCE_NAME
+                                    }
+                                    if (rootProject.ext.has('POM_LICENCE_URL')) {
+                                        url = POM_LICENCE_URL
+                                    }
+                                }
+                            }
+                            developers {
+                                developer {
+                                    if (rootProject.ext.has('POM_LICENCE_URL')) {
+                                        id = POM_DEVELOPER_ID
+                                    }
+                                    if (rootProject.ext.has('POM_DEVELOPER_NAME')) {
+                                        name = POM_DEVELOPER_NAME
+                                    }
+                                    if (rootProject.ext.has('POM_DEVELOPER_EMAIL')) {
+                                        email = POM_DEVELOPER_EMAIL
+                                    }
+                                }
+                            }
+                            scm {
+                                if (rootProject.ext.has('POM_SCM_URL')) {
+                                    url = POM_SCM_URL
+                                }
+                                if (rootProject.ext.has('POM_SCM_CONNECTION')) {
+                                    connection = POM_SCM_CONNECTION
+                                }
+                                if (rootProject.ext.has('POM_SCM_DEV_CONNECTION')) {
+                                    developerConnection = POM_SCM_DEV_CONNECTION
+                                }
+
+                            }
                         }
                     }
                 }
