@@ -498,6 +498,7 @@ subprojects {
                     maven {
                         name = 'releaseRepository'
                         url = getRepositoryUrl(rootProject)
+                        allowInsecureProtocol true
                         credentials {
                             username = getRepositoryUsername(rootProject)
                             password = getRepositoryPassword(rootProject)
