@@ -443,6 +443,7 @@ subprojects {
                                 version version
                                 logger.debug("artifact: ${thisGroupId}:${thisArtifactId}:${version}")
                                 from components.java
+                                artifact javadocs
                                 logger.debug("publishing.publishSources: ${publishSources}")
                                 if(publishSources) {
                                     logger.debug("publishing.artifact sources")
