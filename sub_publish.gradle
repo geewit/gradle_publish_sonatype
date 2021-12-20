@@ -96,7 +96,7 @@ static def generateArtifactId(Project project) {
 
     def artifactId
     if(project.hasProperty("artifactId")) {
-        artifactId = project.property("artifactId")
+        artifactId = project.getProperty("artifactId")
         println "project.artifactId = ${artifactId}"
     } else {
         println "project has not artifactId"
