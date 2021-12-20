@@ -1,9 +1,8 @@
 import groovy.json.JsonSlurper
-import java.nio.charset.StandardCharsets
 
 logger.info("rootProject: ${rootProject.name}")
 
-def isSkipProject(Project project) {
+def isSkipProject(org.gradle.api.Project project) {
     def isSkipProject = !project.buildscript.sourceFile.exists()
     logger.info("isSkipProject: ${isSkipProject}")
     return isSkipProject
@@ -37,13 +36,13 @@ if (rootProject.hasProperty('io.geewit.gradle.publish_need_sign')) {
 }
 logger.info("publish_need_sign: ${publish_need_sign}")
 
-def java_version = JavaVersion.VERSION_1_8
+def java_version = org.gradle.api.JavaVersion.VERSION_1_8
 if (rootProject.hasProperty('io.geewit.gradle.java_version')) {
-    java_version = JavaVersion.toVersion(rootProject.getProperties().get('io.geewit.gradle.java_version'))
+    java_version = org.gradle.api.JavaVersion.toVersion(rootProject.getProperties().get('io.geewit.gradle.java_version'))
 }
 logger.info("java_version: ${java_version}")
 
-static def generateGroupId(Project thisProject, Project rootProject) {
+static def generateGroupId(org.gradle.api.Project thisProject, org.gradle.api.Project rootProject) {
     println "thisProject.name = ${thisProject.name}"
     def parentProject = thisProject.parent
     def groupId = null
@@ -91,7 +90,7 @@ static def generateGroupId(Project thisProject, Project rootProject) {
     return groupId
 }
 
-static def generateArtifactId(Project project) {
+static def generateArtifactId(org.gradle.api.Project project) {
     def prj = project.parent
 
     def artifactId
@@ -114,7 +113,7 @@ static def generateArtifactId(Project project) {
     return artifactId
 }
 
-static def isNeedPublish(Project thisProject, Project rootProject) {
+static def isNeedPublish(org.gradle.api.Project thisProject, org.gradle.api.Project rootProject) {
     println "thisProject.name = ${thisProject.name}"
     def need_publish = false
     if (rootProject.hasProperty('io.geewit.gradle.need_publish')) {
@@ -129,10 +128,12 @@ static def isNeedPublish(Project thisProject, Project rootProject) {
             need_publish = thisNeedPublish
         }
     }
+    println "thisProject(${thisProject.name}).need_publish = ${need_publish}"
+    thisProject.ext.set('need_publish', need_publish)
     return need_publish
 }
 
-static def getReleaseRepositoryUrl(Project rootProject) {
+static def getReleaseRepositoryUrl(org.gradle.api.Project rootProject) {
     if(rootProject.ext.has('REPOSITORY_RELEASE_URL')) {
         println "rootProject.ext.get('REPOSITORY_RELEASE_URL'): " + rootProject.ext.get('REPOSITORY_RELEASE_URL')
         return rootProject.ext.get('REPOSITORY_RELEASE_URL')
@@ -147,7 +148,7 @@ static def getReleaseRepositoryUrl(Project rootProject) {
     return releaseRepositoryUrl
 }
 
-static def getSnapshotRepositoryUrl(Project rootProject) {
+static def getSnapshotRepositoryUrl(org.gradle.api.Project rootProject) {
     if(rootProject.ext.has('REPOSITORY_SNAPSHOT_URL')) {
         println "rootProject.ext.get('REPOSITORY_SNAPSHOT_URL'): " + rootProject.ext.get('REPOSITORY_SNAPSHOT_URL')
         return rootProject.ext.get('REPOSITORY_SNAPSHOT_URL')
@@ -162,7 +163,7 @@ static def getSnapshotRepositoryUrl(Project rootProject) {
     return snapshotRepositoryUrl
 }
 
-static def getRepositoryUsername(Project rootProject) {
+static def getRepositoryUsername(org.gradle.api.Project rootProject) {
     if(rootProject.ext.has('REPOSITORY_USERNAME')) {
         println "rootProject.ext.get('REPOSITORY_USERNAME'): " + rootProject.ext.get('REPOSITORY_USERNAME')
         return rootProject.ext.get('REPOSITORY_USERNAME')
@@ -176,7 +177,7 @@ static def getRepositoryUsername(Project rootProject) {
     return username
 }
 
-static def getRepositoryPassword(Project rootProject) {
+static def getRepositoryPassword(org.gradle.api.Project rootProject) {
     if(rootProject.ext.has('REPOSITORY_PASSWORD')) {
         println "rootProject.ext.get('REPOSITORY_PASSWORD'): " + rootProject.ext.get('REPOSITORY_PASSWORD')
         return rootProject.ext.get('REPOSITORY_PASSWORD')
@@ -190,11 +191,11 @@ static def getRepositoryPassword(Project rootProject) {
     return password
 }
 
-static def getRepositoryUrl(Project rootProject) {
+static def getRepositoryUrl(org.gradle.api.Project rootProject) {
     return isSnapshotBuild(rootProject) ? getSnapshotRepositoryUrl(rootProject) : getReleaseRepositoryUrl(rootProject)
 }
 
-static def isSnapshotBuild(Project rootProject) {
+static def isSnapshotBuild(org.gradle.api.Project rootProject) {
     return rootProject.version.endsWith('SNAPSHOT')
 }
 
@@ -228,12 +229,13 @@ subprojects {
     ext {
         profile = System.getProperty("profile") ?: "development"
         println "profile = ${profile}"
-        need_publish = isNeedPublish(project, rootProject)
     }
 
-    if(!isSkipProject(it as Project)) {
+    if(!isSkipProject(it as org.gradle.api.Project)) {
         apply plugin: 'java-library'
-        if (ext.get('need_publish')) {
+        def need_publish = isNeedPublish(project, rootProject)
+        println "project(${project.name}).need_publish = ${need_publish}"
+        if (need_publish) {
             apply plugin: 'maven-publish'
             if (publish_need_sign) {
                 apply plugin: 'signing'
@@ -310,7 +312,7 @@ subprojects {
                     config.exclude group: item.group, module: item.module
                 }
                 resolutionStrategy.eachDependency { details ->
-                    resolutionStrategy(details as DependencyResolveDetails)
+                    resolutionStrategy(details as org.gradle.api.artifacts.DependencyResolveDetails)
                 }
             }
         }
@@ -337,7 +339,7 @@ subprojects {
             task apiJar(type: Jar) {
                 baseName "publishing-api"
                 from sourceSets.main.output
-                duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+                duplicatesStrategy = org.gradle.api.file.DuplicatesStrategy.EXCLUDE
                 exclude artifactExcludeFiles
             }
         }
@@ -345,7 +347,7 @@ subprojects {
         task sources(type: Jar) {
             archiveClassifier.set('sources')
             from sourceSets.main.allSource
-            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+            duplicatesStrategy = org.gradle.api.file.DuplicatesStrategy.EXCLUDE
             if(artifactExcludeFiles) {
                 exclude artifactExcludeFiles
             }
@@ -354,7 +356,7 @@ subprojects {
         task javadocs(type: Jar, dependsOn: javadoc) {
             archiveClassifier.set('javadoc')
             from javadoc.destinationDir
-            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+            duplicatesStrategy = org.gradle.api.file.DuplicatesStrategy.EXCLUDE
         }
 
         tasks.withType(JavaCompile) {
@@ -362,31 +364,30 @@ subprojects {
             targetCompatibility = java_version
 
             options*.compilerArgs << "-Xlint:unchecked" << "-Xlint:options"
-            options*.encoding = StandardCharsets.UTF_8.name()
+            options*.encoding = java.nio.charset.StandardCharsets.UTF_8.name()
         }
 
         tasks.withType(Jar) {
-            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+            duplicatesStrategy = org.gradle.api.file.DuplicatesStrategy.EXCLUDE
         }
 
         tasks.withType(Javadoc) {
             failOnError = false
             options.windowTitle("${project.name} Javadoc ${project.version}")
-            options*.encoding = StandardCharsets.UTF_8.name()
+            options*.encoding = java.nio.charset.StandardCharsets.UTF_8.name()
             options.addStringOption('Xdoclint:none', '-quiet')
         }
 
-        tasks.withType(Copy) {
-            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+        tasks.withType(org.gradle.api.tasks.Copy) {
+            duplicatesStrategy = org.gradle.api.file.DuplicatesStrategy.EXCLUDE
         }
 
         tasks.withType(Test).configureEach {
             useJUnitPlatform()
         }
 
-        logger.info("need_publish: {}, publish_need_sign: {}", ext.get('need_publish'), publish_need_sign)
         // https://docs.gradle.org/current/dsl/org.gradle.api.publish.maven.MavenPublication.html
-        if (ext.get('need_publish')) {
+        if (need_publish) {
             publishing {
                 publications {
                     if(artifactExcludeFiles) {
@@ -540,27 +541,33 @@ subprojects {
 }
 
 subprojects.each {
-    if (it.ext.get('need_publish')) {
-        Task rootPublish = rootProject.tasks.findByName('publish')
+    def need_publish = null
+    if (it.ext.has('need_publish')) {
+        need_publish = it.ext.get('need_publish')
+    }
+    if (need_publish == null) {
+        need_publish = isNeedPublish(it, rootProject)
+    }
+    if (need_publish) {
+        org.gradle.api.Task rootPublish = rootProject.tasks.findByName('publish')
         if (rootPublish != null) {
-            Task publish = it.tasks.findByName('publish')
+            org.gradle.api.Task publish = it.tasks.findByName('publish')
             if (publish != null) {
                 rootPublish.finalizedBy(publish)
             }
         }
-        Task rootPublishToMavenLocal = rootProject.tasks.findByName('publishToMavenLocal')
+        org.gradle.api.Task rootPublishToMavenLocal = rootProject.tasks.findByName('publishToMavenLocal')
         if (rootPublishToMavenLocal != null) {
-            Task publishToMavenLocal = it.tasks.findByName('publishToMavenLocal')
+            org.gradle.api.Task publishToMavenLocal = it.tasks.findByName('publishToMavenLocal')
             if (publishToMavenLocal != null) {
                 rootPublishToMavenLocal.finalizedBy(publishToMavenLocal)
             }
         }
-
     }
 
-    Task rootClean = rootProject.tasks.findByName('clean')
+    org.gradle.api.Task rootClean = rootProject.tasks.findByName('clean')
     if (rootClean != null) {
-        Task clean = it.tasks.findByName('clean')
+        org.gradle.api.Task clean = it.tasks.findByName('clean')
         if (clean != null) {
             rootClean.finalizedBy(clean)
         }
