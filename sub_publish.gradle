@@ -31,12 +31,6 @@ if(excludeFile.exists()) {
     }
 }
 
-def need_publish = false
-if (rootProject.hasProperty('io.geewit.gradle.need_publish')) {
-    need_publish = 'true'.equalsIgnoreCase(rootProject.getProperties().get('io.geewit.gradle.need_publish').toString())
-}
-logger.info("need_publish: ${need_publish}")
-
 def publish_need_sign = false
 if (rootProject.hasProperty('io.geewit.gradle.publish_need_sign')) {
     publish_need_sign = 'true'.equalsIgnoreCase(rootProject.getProperties().get('io.geewit.gradle.publish_need_sign').toString())
@@ -51,13 +45,16 @@ logger.info("java_version: ${java_version}")
 
 static def generateGroupId(Project thisProject, Project rootProject) {
     println "thisProject.name = ${thisProject.name}"
-    def prj = thisProject.parent
+    def parentProject = thisProject.parent
     def groupId = null
     Properties projectProps = new Properties()
     def projectPropsFile = thisProject.file('gradle.properties')
     if(projectPropsFile.exists()) {
         projectProps.load(projectPropsFile.newReader() as Reader)
-        groupId = projectProps.getProperty('group')
+        def thisGroup = projectProps.getProperty('group')
+        if (thisGroup != null) {
+            groupId = thisGroup
+        }
     }
     if(groupId == null) {
         println "project has not groupId"
@@ -67,17 +64,17 @@ static def generateGroupId(Project thisProject, Project rootProject) {
             def deepth = 1
             println "thisProject.name = ${thisProject.name}"
             def group_suffix = ""
-            while (prj != null) {
+            while (parentProject != null) {
                 println "deepth = ${deepth}"
-                if(prj.parent != null) {
+                if(parentProject.parent != null) {
                     if(group_suffix.length() > 0) {
-                        group_suffix = prj.name + "." + group_suffix
+                        group_suffix = parentProject.name + "." + group_suffix
                     } else {
-                        group_suffix = prj.name
+                        group_suffix = parentProject.name
                     }
                 }
                 println "group_suffix = ${group_suffix}"
-                prj = prj.parent
+                parentProject = parentProject.parent
                 deepth++
             }
             if(group_suffix.length() > 0) {
@@ -115,6 +112,24 @@ static def generateArtifactId(Project project) {
     }
     println "--------- final artifactId = ${artifactId}"
     return artifactId
+}
+
+static def isNeedPublish(Project thisProject, Project rootProject) {
+    println "thisProject.name = ${thisProject.name}"
+    def need_publish = false
+    if (rootProject.hasProperty('io.geewit.gradle.need_publish')) {
+        need_publish = 'true'.equalsIgnoreCase(rootProject.getProperties().get('io.geewit.gradle.need_publish').toString())
+    }
+    Properties projectProps = new Properties()
+    def projectPropsFile = thisProject.file('gradle.properties')
+    if(projectPropsFile.exists()) {
+        projectProps.load(projectPropsFile.newReader() as Reader)
+        def thisNeedPublish = projectProps.getProperty('io.geewit.gradle.need_publish')
+        if (thisNeedPublish != null) {
+            need_publish = thisNeedPublish
+        }
+    }
+    return need_publish
 }
 
 static def getReleaseRepositoryUrl(Project rootProject) {
@@ -213,11 +228,12 @@ subprojects {
     ext {
         profile = System.getProperty("profile") ?: "development"
         println "profile = ${profile}"
+        need_publish = isNeedPublish(project, rootProject)
     }
 
     if(!isSkipProject(it as Project)) {
         apply plugin: 'java-library'
-        if (need_publish) {
+        if (ext.get('need_publish')) {
             apply plugin: 'maven-publish'
             if (publish_need_sign) {
                 apply plugin: 'signing'
@@ -368,9 +384,9 @@ subprojects {
             useJUnitPlatform()
         }
 
-        logger.info("need_publish: {}, publish_need_sign: {}", need_publish, publish_need_sign)
+        logger.info("need_publish: {}, publish_need_sign: {}", ext.get('need_publish'), publish_need_sign)
         // https://docs.gradle.org/current/dsl/org.gradle.api.publish.maven.MavenPublication.html
-        if (need_publish) {
+        if (ext.get('need_publish')) {
             publishing {
                 publications {
                     if(artifactExcludeFiles) {
@@ -524,20 +540,22 @@ subprojects {
 }
 
 subprojects.each {
-    Task rootPublish = rootProject.tasks.findByName('publish')
-    if (rootPublish != null) {
-        Task publish = it.tasks.findByName('publish')
-        if (publish != null) {
-            rootPublish.finalizedBy(publish)
+    if (it.ext.get('need_publish')) {
+        Task rootPublish = rootProject.tasks.findByName('publish')
+        if (rootPublish != null) {
+            Task publish = it.tasks.findByName('publish')
+            if (publish != null) {
+                rootPublish.finalizedBy(publish)
+            }
         }
-    }
+        Task rootPublishToMavenLocal = rootProject.tasks.findByName('publishToMavenLocal')
+        if (rootPublishToMavenLocal != null) {
+            Task publishToMavenLocal = it.tasks.findByName('publishToMavenLocal')
+            if (publishToMavenLocal != null) {
+                rootPublishToMavenLocal.finalizedBy(publishToMavenLocal)
+            }
+        }
 
-    Task rootPublishToMavenLocal = rootProject.tasks.findByName('publishToMavenLocal')
-    if (rootPublishToMavenLocal != null) {
-        Task publishToMavenLocal = it.tasks.findByName('publishToMavenLocal')
-        if (publishToMavenLocal != null) {
-            rootPublishToMavenLocal.finalizedBy(publishToMavenLocal)
-        }
     }
 
     Task rootClean = rootProject.tasks.findByName('clean')
