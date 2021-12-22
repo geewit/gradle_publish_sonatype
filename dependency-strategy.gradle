@@ -320,6 +320,10 @@ def resolutionStrategy(DependencyResolveDetails details) {
         if (rootProject.hasProperty("guava_version")) {
             details.useVersion guava_version
         }
+    } else if (details.requested.group == 'com.google.inject' && details.requested.name == 'guice') {
+        if (rootProject.hasProperty("guice_version")) {
+            details.useVersion guice_version
+        }
     } else if (details.requested.group == 'org.hibernate') {
         if (rootProject.hasProperty("hibernate_version")) {
             details.useVersion hibernate_version
