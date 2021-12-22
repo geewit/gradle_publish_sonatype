@@ -463,3 +463,9 @@ if (need_publish) {
     }
 }
 
+rootProject.tasks.forEach(task -> {
+    println "project(${rootProject.name}).task(${task.name})"
+    if (task.name.toLowerCase().contains("kotlin")) {
+        task.setEnabled(false)
+    }
+})

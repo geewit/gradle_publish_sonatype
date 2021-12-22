@@ -214,6 +214,13 @@ allprojects {
     }
 
     project.ext.set('excludeArtifacts', excludeArtifacts)
+
+    project.tasks.forEach(task -> {
+        println "project(${project.name}).task(${task.name})"
+        if (task.name.toLowerCase().contains("kotlin")) {
+            task.setEnabled(false)
+        }
+    })
 }
 
 subprojects {
@@ -540,7 +547,7 @@ subprojects {
     }
 }
 
-subprojects.each {
+for (it in subprojects) {
     def need_publish = null
     if (it.ext.has('need_publish')) {
         need_publish = it.ext.get('need_publish')
