@@ -215,12 +215,14 @@ allprojects {
 
     project.ext.set('excludeArtifacts', excludeArtifacts)
 
-    project.tasks.forEach(task -> {
-        println "project(${project.name}).task(${task.name})"
-        if (task.name.toLowerCase().contains("kotlin")) {
-            task.setEnabled(false)
+    project.tasks.forEach {
+        action -> {
+            println "project(${project.name}).task(${action.name})"
+            if (action.name.toLowerCase().contains("kotlin")) {
+                action.setEnabled(false)
+            }
         }
-    })
+    }
 }
 
 subprojects {
