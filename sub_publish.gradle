@@ -284,11 +284,11 @@ subprojects {
                 }
             }
             maven {
-                name "aliyun"
+                name 'aliyun'
                 url "https://maven.aliyun.com/repository/central"
             }
             maven {
-                name "central"
+                name 'central'
                 url "https://repo.maven.apache.org/maven2"
             }
         }
@@ -557,12 +557,14 @@ for (it in subprojects) {
     }
     if (need_publish) {
         org.gradle.api.Task rootPublish = rootProject.tasks.findByName('publish')
-        if (rootPublish != null) {
-            org.gradle.api.Task publish = it.tasks.findByName('publish')
-            if (publish != null) {
-                rootPublish.finalizedBy(publish)
-            }
+        if (rootPublish == null) {
+            rootPublish = rootProject.tasks.register('publish').get()
         }
+        org.gradle.api.Task publish = it.tasks.findByName('publish')
+        if (publish == null) {
+            publish = it.tasks.register('publish').get()
+        }
+        rootPublish.finalizedBy(publish)
         org.gradle.api.Task rootPublishToMavenLocal = rootProject.tasks.findByName('publishToMavenLocal')
         if (rootPublishToMavenLocal != null) {
             org.gradle.api.Task publishToMavenLocal = it.tasks.findByName('publishToMavenLocal')
@@ -573,10 +575,12 @@ for (it in subprojects) {
     }
 
     org.gradle.api.Task rootClean = rootProject.tasks.findByName('clean')
-    if (rootClean != null) {
-        org.gradle.api.Task clean = it.tasks.findByName('clean')
-        if (clean != null) {
-            rootClean.finalizedBy(clean)
-        }
+    if (rootClean == null) {
+        rootClean = rootProject.tasks.register('clean').get()
     }
+    org.gradle.api.Task clean = it.tasks.findByName('clean')
+    if (clean == null) {
+        clean = it.tasks.register('clean').get()
+    }
+    rootClean.finalizedBy(clean)
 }
