@@ -227,15 +227,15 @@ subprojects {
     buildscript {
         repositories {
             mavenLocal()
-            maven { url "https://maven.aliyun.com/repository/gradle-plugin" }
-            maven { url "https://repo.maven.apache.org/maven2" }
+            maven { url 'https://maven.aliyun.com/repository/gradle-plugin' }
+            maven { url 'https://repo.maven.apache.org/maven2' }
             maven { url 'https://repo.spring.io/release' }
         }
     }
     println "subproject.name = ${it.name}"
 
     ext {
-        profile = System.getProperty("profile") ?: "development"
+        profile = System.getProperty("profile") ?: 'development'
         println "profile = ${profile}"
     }
 
@@ -269,6 +269,18 @@ subprojects {
         repositories {
             mavenLocal()
             maven {
+                name 'aliyun'
+                url 'https://maven.aliyun.com/repository/central'
+            }
+            maven {
+                name 'central'
+                url 'https://repo.maven.apache.org/maven2'
+            }
+            maven {
+                name 'spring-release'
+                url 'https://repo.spring.io/release'
+            }
+            maven {
                 url getReleaseRepositoryUrl(rootProject)
                 allowInsecureProtocol true
                 credentials {
@@ -284,41 +296,29 @@ subprojects {
                     password = getRepositoryPassword(rootProject)
                 }
             }
-            maven {
-                name 'aliyun'
-                url 'https://maven.aliyun.com/repository/central'
-            }
-            maven {
-                name 'central'
-                url 'https://repo.maven.apache.org/maven2'
-            }
-            maven {
-                name 'spring-release'
-                url 'https://repo.spring.io/release'
-            }
         }
 
         configurations {
             all { config ->
-                config.exclude group: "org.apache.geronimo.specs"
-                config.exclude group: "org.jboss.spec.javax.annotation"
-                config.exclude group: "org.jboss.spec.javax.servlet"
-                config.exclude group: "org.jboss.spec.javax.transaction"
-                config.exclude group: "org.jboss.spec.javax.websocket"
-                config.exclude group: "org.hibernate.javax.persistence"
-                config.exclude group: "org.springframework.boot", module:"spring-boot-starter-logging"
-                config.exclude group: "org.springframework.boot", module:"spring-boot-starter-tomcat"
-                config.exclude group: "org.apache.tomcat", module:"tomcat-jdbc"
-                config.exclude group: "org.apache.tomcat.embed"
-                config.exclude group: "org.glassfish.hk2", module:"osgi-resource-locator"
-                config.exclude group: "org.glassfish.hk2.external", module:"javax.inject"
-                config.exclude group: "com.vaadin.external.google"
-                config.exclude group: "com.zaxxer"
-                config.exclude group: "org.codehaus.jackson"
-                config.exclude group: "org.codehaus.jettison"
-                config.exclude group: "org.slf4j", module:"slf4j-log4j12"
+                config.exclude group: 'org.apache.geronimo.specs'
+                config.exclude group: 'org.jboss.spec.javax.annotation'
+                config.exclude group: 'org.jboss.spec.javax.servlet'
+                config.exclude group: 'org.jboss.spec.javax.transaction'
+                config.exclude group: 'org.jboss.spec.javax.websocket'
+                config.exclude group: 'org.hibernate.javax.persistence'
+                config.exclude group: 'org.springframework.boot', module:'spring-boot-starter-logging'
+                config.exclude group: 'org.springframework.boot', module:'spring-boot-starter-tomcat'
+                config.exclude group: 'org.apache.tomcat', module:'tomcat-jdbc'
+                config.exclude group: 'org.apache.tomcat.embed'
+                config.exclude group: 'org.glassfish.hk2', module:'osgi-resource-locator'
+                config.exclude group: 'org.glassfish.hk2.external', module:'javax.inject'
+                config.exclude group: 'com.vaadin.external.google'
+                config.exclude group: 'com.zaxxer'
+                config.exclude group: 'org.codehaus.jackson'
+                config.exclude group: 'org.codehaus.jettison'
+                config.exclude group: 'org.slf4j', module:'slf4j-log4j12'
                 if (profile != 'development') {
-                    config.exclude group: "org.springframework.boot", module:"spring-boot-devtools"
+                    config.exclude group: 'org.springframework.boot', module:'spring-boot-devtools'
                 }
                 excludeArtifacts?.each { item ->
                     config.exclude group: item.group, module: item.module
@@ -349,7 +349,7 @@ subprojects {
         }
         if(artifactExcludeFiles) {
             task apiJar(type: Jar) {
-                baseName "publishing-api"
+                baseName 'publishing-api'
                 from sourceSets.main.output
                 duplicatesStrategy = org.gradle.api.file.DuplicatesStrategy.EXCLUDE
                 exclude artifactExcludeFiles
@@ -375,7 +375,7 @@ subprojects {
             sourceCompatibility = java_version
             targetCompatibility = java_version
 
-            options*.compilerArgs << "-Xlint:unchecked" << "-Xlint:options"
+            options*.compilerArgs << '-Xlint:unchecked' << '-Xlint:options'
             options*.encoding = java.nio.charset.StandardCharsets.UTF_8.name()
         }
 
@@ -414,7 +414,7 @@ subprojects {
                                 artifact apiJar
                                 artifact javadocs
                                 if(publishSources) {
-                                    logger.debug("publishing.artifact sources")
+                                    logger.debug('publishing.artifact sources')
                                     artifact sources
                                 }
                             }
@@ -475,7 +475,7 @@ subprojects {
                                 artifact javadocs
                                 logger.debug("publishing.publishSources: ${publishSources}")
                                 if(publishSources) {
-                                    logger.debug("publishing.artifact sources")
+                                    logger.debug('publishing.artifact sources')
                                     artifact sources
                                 }
                             }
