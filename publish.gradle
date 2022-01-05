@@ -46,8 +46,9 @@ logger.info("java_version: ${java_version}")
 buildscript {
     repositories {
         mavenLocal()
-        maven { url "https://maven.aliyun.com/repository/gradle-plugin" }
-        maven { url "https://repo.maven.apache.org/maven2" }
+        maven { url 'https://maven.aliyun.com/repository/gradle-plugin' }
+        maven { url 'https://repo.maven.apache.org/maven2' }
+        maven { url 'https://repo.spring.io/release' }
     }
 }
 
@@ -102,6 +103,10 @@ repositories {
     maven {
         name "central"
         url "https://repo.maven.apache.org/maven2"
+    }
+    maven {
+        name 'spring-release'
+        url 'https://repo.spring.io/release'
     }
 }
 

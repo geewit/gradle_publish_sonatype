@@ -229,6 +229,7 @@ subprojects {
             mavenLocal()
             maven { url "https://maven.aliyun.com/repository/gradle-plugin" }
             maven { url "https://repo.maven.apache.org/maven2" }
+            maven { url 'https://repo.spring.io/release' }
         }
     }
     println "subproject.name = ${it.name}"
@@ -285,11 +286,15 @@ subprojects {
             }
             maven {
                 name 'aliyun'
-                url "https://maven.aliyun.com/repository/central"
+                url 'https://maven.aliyun.com/repository/central'
             }
             maven {
                 name 'central'
-                url "https://repo.maven.apache.org/maven2"
+                url 'https://repo.maven.apache.org/maven2'
+            }
+            maven {
+                name 'spring-release'
+                url 'https://repo.spring.io/release'
             }
         }
 
