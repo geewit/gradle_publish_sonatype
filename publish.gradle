@@ -297,7 +297,7 @@ static def getSnapshotRepositoryUrl(Project rootProject) {
 
 static def getRepositoryUsername(Project rootProject) {
     if(rootProject.ext.has('REPOSITORY_USERNAME')) {
-        println "rootProject.ext.get('REPOSITORY_USERNAME'): $rootProject.ext.get('REPOSITORY_USERNAME')"
+        println "rootProject.ext.get("REPOSITORY_USERNAME"): " + rootProject.ext.get('REPOSITORY_USERNAME')
         return rootProject.ext.get('REPOSITORY_USERNAME')
     }
     def property_default_key = 'REPOSITORY_USERNAME'
@@ -311,7 +311,7 @@ static def getRepositoryUsername(Project rootProject) {
 
 static def getRepositoryPassword(Project rootProject) {
     if(rootProject.ext.has('REPOSITORY_PASSWORD')) {
-        println "rootProject.ext.get('REPOSITORY_PASSWORD'): $rootProject.ext.get('REPOSITORY_PASSWORD')"
+        println "rootProject.ext.get("REPOSITORY_PASSWORD"): " + rootProject.ext.get('REPOSITORY_PASSWORD')
         return rootProject.ext.get('REPOSITORY_PASSWORD')
     }
     def property_default_key = 'REPOSITORY_PASSWORD'

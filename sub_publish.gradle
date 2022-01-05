@@ -135,7 +135,7 @@ static def isNeedPublish(org.gradle.api.Project thisProject, org.gradle.api.Proj
 
 static def getReleaseRepositoryUrl(org.gradle.api.Project rootProject) {
     if(rootProject.ext.has('REPOSITORY_RELEASE_URL')) {
-        println "rootProject.ext.get('REPOSITORY_RELEASE_URL'): $rootProject.ext.get('REPOSITORY_RELEASE_URL')"
+        println "rootProject.ext.get("REPOSITORY_RELEASE_URL"): " + rootProject.ext.get('REPOSITORY_RELEASE_URL')
         return rootProject.ext.get('REPOSITORY_RELEASE_URL')
     }
     def property_default_key = 'REPOSITORY_RELEASE_URL'
@@ -150,7 +150,7 @@ static def getReleaseRepositoryUrl(org.gradle.api.Project rootProject) {
 
 static def getSnapshotRepositoryUrl(org.gradle.api.Project rootProject) {
     if(rootProject.ext.has('REPOSITORY_SNAPSHOT_URL')) {
-        println "rootProject.ext.get('REPOSITORY_SNAPSHOT_URL'): $rootProject.ext.get('REPOSITORY_SNAPSHOT_URL')"
+        println "rootProject.ext.get("REPOSITORY_SNAPSHOT_URL"): " + rootProject.ext.get('REPOSITORY_SNAPSHOT_URL')
         return rootProject.ext.get('REPOSITORY_SNAPSHOT_URL')
     }
     def property_default_key = 'REPOSITORY_SNAPSHOT_URL'
@@ -165,7 +165,7 @@ static def getSnapshotRepositoryUrl(org.gradle.api.Project rootProject) {
 
 static def getRepositoryUsername(org.gradle.api.Project rootProject) {
     if(rootProject.ext.has('REPOSITORY_USERNAME')) {
-        println "rootProject.ext.get('REPOSITORY_USERNAME'): $rootProject.ext.get('REPOSITORY_USERNAME')"
+        println "rootProject.ext.get("REPOSITORY_USERNAME"): " + rootProject.ext.get('REPOSITORY_USERNAME')
         return rootProject.ext.get('REPOSITORY_USERNAME')
     }
     def property_default_key = 'REPOSITORY_USERNAME'
@@ -179,7 +179,7 @@ static def getRepositoryUsername(org.gradle.api.Project rootProject) {
 
 static def getRepositoryPassword(org.gradle.api.Project rootProject) {
     if(rootProject.ext.has('REPOSITORY_PASSWORD')) {
-        println "rootProject.ext.get('REPOSITORY_PASSWORD'): $rootProject.ext.get('REPOSITORY_PASSWORD')"
+        println "rootProject.ext.get("REPOSITORY_PASSWORD"): " + rootProject.ext.get('REPOSITORY_PASSWORD')
         return rootProject.ext.get('REPOSITORY_PASSWORD')
     }
     def property_default_key = 'REPOSITORY_PASSWORD'
