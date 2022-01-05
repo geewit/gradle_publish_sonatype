@@ -3,7 +3,7 @@ import java.nio.charset.StandardCharsets
 
 logger.info("rootProject: ${rootProject.name}")
 ext {
-    profile = System.getProperty("profile") ?: "development"
+    profile = System.getProperty('profile') ?: 'development'
     logger.info("profile = ${profile}")
 }
 
@@ -81,11 +81,11 @@ buildDir = 'target'
 repositories {
     mavenLocal()
     maven {
-        name "aliyun"
+        name 'aliyun'
         url 'https://maven.aliyun.com/repository/central'
     }
     maven {
-        name "central"
+        name 'central'
         url 'https://repo.maven.apache.org/maven2'
     }
     maven {
@@ -176,7 +176,7 @@ tasks.withType(JavaCompile) {
     sourceCompatibility = java_version
     targetCompatibility = java_version
 
-    options*.compilerArgs << "-Xlint:unchecked" << "-Xlint:options"
+    options*.compilerArgs << '-Xlint:unchecked' << '-Xlint:options'
     options*.encoding = StandardCharsets.UTF_8.name()
 }
 
@@ -210,13 +210,13 @@ static def generateGroupId(Project thisProject, Project rootProject) {
         groupId = projectProps.getProperty('group')
     }
     if(groupId == null) {
-        println "project has not groupId"
+        println 'project has not groupId'
         groupId = rootProject.group
         println "groupId = ${groupId}"
         if(thisProject.parent != null) {
             def deepth = 1
             println "thisProject.name = ${thisProject.name}"
-            def group_suffix = ""
+            def group_suffix = ''
             while (prj != null) {
                 println "deepth = ${deepth}"
                 if(prj.parent != null) {
@@ -231,10 +231,10 @@ static def generateGroupId(Project thisProject, Project rootProject) {
                 deepth++
             }
             if(group_suffix.length() > 0) {
-                groupId = groupId + "." + group_suffix
+                groupId = groupId + '.' + group_suffix
             }
         } else {
-            println "thisProject.parent == null"
+            println 'thisProject.parent == null'
             groupId = thisProject.group
             println "groupId = ${groupId}"
         }
@@ -248,11 +248,11 @@ static def generateArtifactId(Project project) {
     def prj = project.parent
 
     def artifactId
-    if(project.hasProperty("artifactId")) {
-        artifactId = project.property("artifactId")
+    if(project.hasProperty('artifactId')) {
+        artifactId = project.property('artifactId')
         println "project.artifactId = ${artifactId}"
     } else {
-        println "project has not artifactId"
+        println 'project has not artifactId'
         artifactId = project.name
         println "artifactId = ${artifactId}"
         while (prj != null) {
@@ -268,7 +268,7 @@ static def generateArtifactId(Project project) {
 }
 
 static def isSnapshotBuild(Project rootProject) {
-    return rootProject.version.contains("SNAPSHOT")
+    return rootProject.version.contains('SNAPSHOT')
 }
 
 static def getRepositoryUrl(Project rootProject) {
@@ -280,7 +280,7 @@ static def getReleaseRepositoryUrl(Project rootProject) {
     def property_key = 'REPOSITORY_RELEASE_URL_KEY'
     def RELEASE_REPOSITORY_URL_KEY = rootProject.hasProperty(property_key) ? rootProject.getProperty(property_key) : property_default_key
     def releaseRepositoryUrl = rootProject.hasProperty(RELEASE_REPOSITORY_URL_KEY) ? rootProject.getProperty(RELEASE_REPOSITORY_URL_KEY)
-            : "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+            : 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
     println "releaseRepositoryUrl: $releaseRepositoryUrl"
     return releaseRepositoryUrl
 }
@@ -290,14 +290,14 @@ static def getSnapshotRepositoryUrl(Project rootProject) {
     def property_key = 'REPOSITORY_SNAPSHOT_URL_KEY'
     def SNAPSHOT_REPOSITORY_URL_KEY = rootProject.hasProperty(property_key) ? rootProject.getProperty(property_key) : property_default_key
     def snapshotRepositoryUrl =  rootProject.hasProperty(SNAPSHOT_REPOSITORY_URL_KEY) ? rootProject.getProperty(SNAPSHOT_REPOSITORY_URL_KEY)
-            : "https://oss.sonatype.org/content/repositories/snapshots/"
+            : 'https://oss.sonatype.org/content/repositories/snapshots/'
     println "snapshotRepositoryUrl: $snapshotRepositoryUrl"
     return snapshotRepositoryUrl
 }
 
 static def getRepositoryUsername(Project rootProject) {
     if(rootProject.ext.has('REPOSITORY_USERNAME')) {
-        println "rootProject.ext.get('REPOSITORY_USERNAME'): " + rootProject.ext.get('REPOSITORY_USERNAME')
+        println "rootProject.ext.get('REPOSITORY_USERNAME'): $rootProject.ext.get('REPOSITORY_USERNAME')"
         return rootProject.ext.get('REPOSITORY_USERNAME')
     }
     def property_default_key = 'REPOSITORY_USERNAME'
@@ -311,7 +311,7 @@ static def getRepositoryUsername(Project rootProject) {
 
 static def getRepositoryPassword(Project rootProject) {
     if(rootProject.ext.has('REPOSITORY_PASSWORD')) {
-        println "rootProject.ext.get('REPOSITORY_PASSWORD'): " + rootProject.ext.get('REPOSITORY_PASSWORD')
+        println "rootProject.ext.get('REPOSITORY_PASSWORD'): $rootProject.ext.get('REPOSITORY_PASSWORD')"
         return rootProject.ext.get('REPOSITORY_PASSWORD')
     }
     def property_default_key = 'REPOSITORY_PASSWORD'
@@ -398,7 +398,7 @@ if (need_publish) {
                     from components.java
                     logger.debug("publishing.publishSources: ${publishSources}")
                     if(publishSources) {
-                        logger.debug("publishing.artifact sources")
+                        logger.debug('publishing.artifact sources')
                         artifact sources
                     }
                 }
@@ -470,7 +470,7 @@ if (need_publish) {
 
 rootProject.tasks.each { action ->
     println "project(${project.name}).task(${action.name})"
-    if (action.name.toLowerCase().contains("kotlin")) {
+    if (action.name.toLowerCase().contains('kotlin')) {
         action.setEnabled(false)
     }
 }

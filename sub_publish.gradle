@@ -56,7 +56,7 @@ static def generateGroupId(org.gradle.api.Project thisProject, org.gradle.api.Pr
         }
     }
     if(groupId == null) {
-        println "project has not groupId"
+        println 'project has not groupId'
         groupId = rootProject.group
         println "groupId = ${groupId}"
         if(thisProject.parent != null) {
@@ -80,7 +80,7 @@ static def generateGroupId(org.gradle.api.Project thisProject, org.gradle.api.Pr
                 groupId = groupId + "." + group_suffix
             }
         } else {
-            println "thisProject.parent == null"
+            println 'thisProject.parent == null'
             groupId = thisProject.group
             println "groupId = ${groupId}"
         }
@@ -94,11 +94,11 @@ static def generateArtifactId(org.gradle.api.Project project) {
     def prj = project.parent
 
     def artifactId
-    if(project.hasProperty("artifactId")) {
-        artifactId = project.getProperty("artifactId")
+    if(project.hasProperty('artifactId')) {
+        artifactId = project.getProperty('artifactId')
         println "project.artifactId = ${artifactId}"
     } else {
-        println "project has not artifactId"
+        println 'project has not artifactId'
         artifactId = project.name
         println "artifactId = ${artifactId}"
         while (prj != null) {
@@ -135,14 +135,14 @@ static def isNeedPublish(org.gradle.api.Project thisProject, org.gradle.api.Proj
 
 static def getReleaseRepositoryUrl(org.gradle.api.Project rootProject) {
     if(rootProject.ext.has('REPOSITORY_RELEASE_URL')) {
-        println "rootProject.ext.get('REPOSITORY_RELEASE_URL'): " + rootProject.ext.get('REPOSITORY_RELEASE_URL')
+        println "rootProject.ext.get('REPOSITORY_RELEASE_URL'): $rootProject.ext.get('REPOSITORY_RELEASE_URL')"
         return rootProject.ext.get('REPOSITORY_RELEASE_URL')
     }
     def property_default_key = 'REPOSITORY_RELEASE_URL'
     def property_key = 'REPOSITORY_RELEASE_URL_KEY'
     def RELEASE_REPOSITORY_URL_KEY = rootProject.hasProperty(property_key) ? rootProject.getProperty(property_key) : property_default_key
     def releaseRepositoryUrl = rootProject.hasProperty(RELEASE_REPOSITORY_URL_KEY) ? rootProject.getProperty(RELEASE_REPOSITORY_URL_KEY)
-            : "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+            : 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
     println "releaseRepositoryUrl: ${releaseRepositoryUrl}"
     rootProject.ext.set('REPOSITORY_RELEASE_URL', releaseRepositoryUrl)
     return releaseRepositoryUrl
@@ -150,14 +150,14 @@ static def getReleaseRepositoryUrl(org.gradle.api.Project rootProject) {
 
 static def getSnapshotRepositoryUrl(org.gradle.api.Project rootProject) {
     if(rootProject.ext.has('REPOSITORY_SNAPSHOT_URL')) {
-        println "rootProject.ext.get('REPOSITORY_SNAPSHOT_URL'): " + rootProject.ext.get('REPOSITORY_SNAPSHOT_URL')
+        println "rootProject.ext.get('REPOSITORY_SNAPSHOT_URL'): $rootProject.ext.get('REPOSITORY_SNAPSHOT_URL')"
         return rootProject.ext.get('REPOSITORY_SNAPSHOT_URL')
     }
     def property_default_key = 'REPOSITORY_SNAPSHOT_URL'
     def property_key = 'REPOSITORY_SNAPSHOT_URL_KEY'
     def SNAPSHOT_REPOSITORY_URL_KEY = rootProject.hasProperty(property_key) ? rootProject.getProperty(property_key) : property_default_key
     def snapshotRepositoryUrl =  rootProject.hasProperty(SNAPSHOT_REPOSITORY_URL_KEY) ? rootProject.getProperty(SNAPSHOT_REPOSITORY_URL_KEY)
-            : "https://oss.sonatype.org/content/repositories/snapshots/"
+            : 'https://oss.sonatype.org/content/repositories/snapshots/'
     println "snapshotRepositoryUrl: ${snapshotRepositoryUrl}"
     rootProject.ext.set('REPOSITORY_SNAPSHOT_URL', snapshotRepositoryUrl)
     return snapshotRepositoryUrl
@@ -165,7 +165,7 @@ static def getSnapshotRepositoryUrl(org.gradle.api.Project rootProject) {
 
 static def getRepositoryUsername(org.gradle.api.Project rootProject) {
     if(rootProject.ext.has('REPOSITORY_USERNAME')) {
-        println "rootProject.ext.get('REPOSITORY_USERNAME'): " + rootProject.ext.get('REPOSITORY_USERNAME')
+        println "rootProject.ext.get('REPOSITORY_USERNAME'): $rootProject.ext.get('REPOSITORY_USERNAME')"
         return rootProject.ext.get('REPOSITORY_USERNAME')
     }
     def property_default_key = 'REPOSITORY_USERNAME'
@@ -179,7 +179,7 @@ static def getRepositoryUsername(org.gradle.api.Project rootProject) {
 
 static def getRepositoryPassword(org.gradle.api.Project rootProject) {
     if(rootProject.ext.has('REPOSITORY_PASSWORD')) {
-        println "rootProject.ext.get('REPOSITORY_PASSWORD'): " + rootProject.ext.get('REPOSITORY_PASSWORD')
+        println "rootProject.ext.get('REPOSITORY_PASSWORD'): $rootProject.ext.get('REPOSITORY_PASSWORD')"
         return rootProject.ext.get('REPOSITORY_PASSWORD')
     }
     def property_default_key = 'REPOSITORY_PASSWORD'
@@ -201,11 +201,11 @@ static def isSnapshotBuild(org.gradle.api.Project rootProject) {
 
 allprojects {
     buildDir = 'target'
-    apply plugin: "idea"
+    apply plugin: 'idea'
     idea {
         module {
-            excludeDirs += file( ".gradle" )
-            excludeDirs += file( ".idea" )
+            excludeDirs += file('.gradle')
+            excludeDirs += file('.idea')
             excludeDirs += buildDir
             downloadJavadoc = false
             downloadSources = true
@@ -217,7 +217,7 @@ allprojects {
 
     project.tasks.each { action ->
         println "project(${project.name}).task(${action.name})"
-        if (action.name.toLowerCase().contains("kotlin")) {
+        if (action.name.toLowerCase().contains('kotlin')) {
             action.setEnabled(false)
         }
     }
@@ -235,7 +235,7 @@ subprojects {
     println "subproject.name = ${it.name}"
 
     ext {
-        profile = System.getProperty("profile") ?: 'development'
+        profile = System.getProperty('profile') ?: 'development'
         println "profile = ${profile}"
     }
 
