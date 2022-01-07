@@ -242,7 +242,7 @@ subprojects {
     if(!isSkipProject(it as org.gradle.api.Project)) {
         apply plugin: 'java-library'
         def need_publish = isNeedPublish(project, rootProject)
-        println "project(${project.name}).need_publish = ${need_publish}"
+        logger.info("project({}).need_publish = {}", project.name, need_publish)
         if (need_publish) {
             apply plugin: 'maven-publish'
             if (publish_need_sign) {
@@ -473,7 +473,7 @@ subprojects {
                                 logger.debug("artifact: ${thisGroupId}:${thisArtifactId}:${version}")
                                 from components.java
                                 artifact javadocs
-                                logger.debug("publishing.publishSources: ${publishSources}")
+                                logger.debug('publishing.publishSources: {}', publishSources)
                                 if(publishSources) {
                                     logger.debug('publishing.artifact sources')
                                     artifact sources
