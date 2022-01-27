@@ -269,7 +269,7 @@ subprojects {
         repositories {
             mavenLocal()
             maven {
-                name 'aliyun'
+                name 'aliyun-central'
                 url 'https://maven.aliyun.com/repository/central'
             }
             maven {

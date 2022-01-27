@@ -368,6 +368,10 @@ def resolutionStrategy(DependencyResolveDetails details) {
         if (rootProject.hasProperty("jackson_version")) {
             details.useVersion jackson_version
         }
+    } else if (details.requested.group.startsWith('com.fasterxml.woodstox')) {
+        if (rootProject.hasProperty("woodstox_version")) {
+            details.useVersion woodstox_version
+        }
     } else if (details.requested.group == 'org.javassist') {
         if (rootProject.hasProperty("javassist_version")) {
             details.useVersion javassist_version
