@@ -274,6 +274,10 @@ subprojects {
         repositories {
             mavenLocal()
             maven {
+                name 'tencent'
+                url 'https://mirrors.tencent.com/nexus/repository/maven-public'
+            }
+            maven {
                 name 'aliyun'
                 url 'https://maven.aliyun.com/repository/central'
             }
@@ -284,10 +288,6 @@ subprojects {
             maven {
                 name 'spring'
                 url 'https://repo.spring.io/release'
-            }
-            maven {
-                name 'tencent'
-                url 'https://mirrors.tencent.com/nexus/repository/maven-public'
             }
             maven {
                 name 'releaseRepository'
