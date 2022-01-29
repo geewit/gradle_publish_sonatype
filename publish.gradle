@@ -474,3 +474,19 @@ rootProject.tasks.each { action ->
         action.setEnabled(false)
     }
 }
+
+if (need_publish) {
+    org.gradle.api.Task rootPublish = rootProject.tasks.findByName('publish')
+    if (rootPublish == null) {
+        rootProject.tasks.register('publish').get()
+    }
+    org.gradle.api.Task rootPublishToMavenLocal = rootProject.tasks.findByName('publishToMavenLocal')
+    if (rootPublishToMavenLocal == null) {
+        rootProject.tasks.register('rootPublishToMavenLocal').get()
+    }
+}
+
+org.gradle.api.Task rootClean = rootProject.tasks.findByName('clean')
+if (rootClean == null) {
+    rootProject.tasks.register('clean').get()
+}
