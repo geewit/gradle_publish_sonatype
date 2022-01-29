@@ -5,6 +5,8 @@ logger.info("rootProject: ${rootProject.name}")
 ext {
     profile = System.getProperty('profile') ?: 'development'
     logger.info("profile = ${profile}")
+    isTencent = rootProject.hasProperty('io.geewit.gradle.is_tencent') ? 'true'.equalsIgnoreCase(rootProject.getProperties().get('io.geewit.gradle.is_tencent').toString()) : false
+    println "isTencent = ${isTencent}"
 }
 
 Properties props = new Properties()
@@ -81,6 +83,10 @@ buildDir = 'target'
 repositories {
     mavenLocal()
     maven {
+        name 'tencent'
+        url 'https://mirrors.tencent.com/nexus/repository/maven-public'
+    }
+    maven {
         name 'aliyun'
         url 'https://maven.aliyun.com/repository/central'
     }
@@ -89,10 +95,11 @@ repositories {
         url 'https://repo.maven.apache.org/maven2'
     }
     maven {
-        name 'spring-release'
+        name 'spring'
         url 'https://repo.spring.io/release'
     }
     maven {
+        name 'releaseRepository'
         url getReleaseRepositoryUrl(rootProject)
         allowInsecureProtocol true
         credentials {
@@ -101,12 +108,26 @@ repositories {
         }
     }
     maven {
+        name 'snapshotRepository'
         url getSnapshotRepositoryUrl(rootProject)
         allowInsecureProtocol true
         credentials {
             username = getRepositoryUsername(rootProject)
             password = getRepositoryPassword(rootProject)
         }
+    }
+}
+
+repositories.withType(ArtifactRepository) {
+    println "${it.name} ${it.url}"
+    if (it.name == 'tencent' && !isTencent) {
+        println "${project.name}.${it.name} isTencent = false, remove tencent repository"
+        project.repositories.remove(it)
+    } else if ((it.name == 'releaseRepository' || it.name == 'snapshotRepository')
+            && it instanceof MavenArtifactRepository
+            && (it.credentials == null || it.credentials.username == null || it.credentials.username.trim() == '' || it.credentials.password == null || it.credentials.password.trim() == '')) {
+        println "${project.name}.${it.name} it.credentials == null, remove ${it.name} repository"
+        project.repositories.remove(it)
     }
 }
 
@@ -157,6 +178,15 @@ sourceSets {
         resources {
             srcDirs = ['src/test/resources']
         }
+    }
+}
+
+if(artifactExcludeFiles) {
+    task apiJar(type: Jar) {
+        baseName 'publishing-api'
+        from sourceSets.main.output
+        duplicatesStrategy = org.gradle.api.file.DuplicatesStrategy.EXCLUDE
+        exclude artifactExcludeFiles
     }
 }
 
@@ -327,123 +357,125 @@ static def getRepositoryPassword(Project rootProject) {
 if (need_publish) {
     publishing {
         publications {
-            api(MavenPublication) {
-                afterEvaluate {
-                    def thisGroupId = generateGroupId(project, rootProject)
-                    def thisArtifactId = generateArtifactId(project)
-                    groupId thisGroupId
-                    artifactId thisArtifactId
-                    version version
-                    logger.debug("api artifact: ${thisGroupId}:${thisArtifactId}:${version}")
-                    artifact apiJar
-                    artifact javadocs
-                    if(publishSources) {
-                        logger.debug('publishing.artifact sources')
-                        artifact sources
-                    }
-                }
-                pom {
-                    name = POM_ARTIFACT_ID
-                    if (rootProject.ext.has('POM_DESCRIPTION')) {
-                        description = POM_DESCRIPTION
-                    }
-                    if (rootProject.ext.has('POM_SCM_URL')) {
-                        url = POM_SCM_URL
-                    }
-                    licenses {
-                        license {
-                            if (rootProject.ext.has('POM_LICENCE_NAME')) {
-                                name = POM_LICENCE_NAME
-                            }
-                            if (rootProject.ext.has('POM_LICENCE_URL')) {
-                                url = POM_LICENCE_URL
-                            }
+            if(artifactExcludeFiles) {
+                api(MavenPublication) {
+                    afterEvaluate {
+                        def thisGroupId = generateGroupId(project, rootProject)
+                        def thisArtifactId = generateArtifactId(project)
+                        groupId thisGroupId
+                        artifactId thisArtifactId
+                        version version
+                        logger.debug("api: ${thisGroupId}:${thisArtifactId}:${version}")
+                        artifact apiJar
+                        artifact javadocs
+                        if(publishSources) {
+                            logger.debug('publishing.artifact sources')
+                            artifact sources
                         }
                     }
-                    developers {
-                        developer {
-                            if (rootProject.ext.has('POM_LICENCE_URL')) {
-                                id = POM_DEVELOPER_ID
-                            }
-                            if (rootProject.ext.has('POM_DEVELOPER_NAME')) {
-                                name = POM_DEVELOPER_NAME
-                            }
-                            if (rootProject.ext.has('POM_DEVELOPER_EMAIL')) {
-                                email = POM_DEVELOPER_EMAIL
-                            }
+                    pom {
+                        name = POM_ARTIFACT_ID
+                        if (rootProject.ext.has('POM_DESCRIPTION')) {
+                            description = POM_DESCRIPTION
                         }
-                    }
-                    scm {
                         if (rootProject.ext.has('POM_SCM_URL')) {
                             url = POM_SCM_URL
                         }
-                        if (rootProject.ext.has('POM_SCM_CONNECTION')) {
-                            connection = POM_SCM_CONNECTION
+                        licenses {
+                            license {
+                                if (rootProject.ext.has('POM_LICENCE_NAME')) {
+                                    name = POM_LICENCE_NAME
+                                }
+                                if (rootProject.ext.has('POM_LICENCE_URL')) {
+                                    url = POM_LICENCE_URL
+                                }
+                            }
                         }
-                        if (rootProject.ext.has('POM_SCM_DEV_CONNECTION')) {
-                            developerConnection = POM_SCM_DEV_CONNECTION
+                        developers {
+                            developer {
+                                if (rootProject.ext.has('POM_LICENCE_URL')) {
+                                    id = POM_DEVELOPER_ID
+                                }
+                                if (rootProject.ext.has('POM_DEVELOPER_NAME')) {
+                                    name = POM_DEVELOPER_NAME
+                                }
+                                if (rootProject.ext.has('POM_DEVELOPER_EMAIL')) {
+                                    email = POM_DEVELOPER_EMAIL
+                                }
+                            }
                         }
-
+                        scm {
+                            if (rootProject.ext.has('POM_SCM_URL')) {
+                                url = POM_SCM_URL
+                            }
+                            if (rootProject.ext.has('POM_SCM_CONNECTION')) {
+                                connection = POM_SCM_CONNECTION
+                            }
+                            if (rootProject.ext.has('POM_SCM_DEV_CONNECTION')) {
+                                developerConnection = POM_SCM_DEV_CONNECTION
+                            }
+                        }
                     }
                 }
-            }
-            maven(MavenPublication) {
-                afterEvaluate {
-                    def thisGroupId = generateGroupId(project, rootProject)
-                    def thisArtifactId = generateArtifactId(project)
-                    groupId thisGroupId
-                    artifactId thisArtifactId
-                    version version
-                    logger.debug("artifact: ${thisGroupId}:${thisArtifactId}:${version}")
-                    from components.java
-                    logger.debug("publishing.publishSources: ${publishSources}")
-                    if(publishSources) {
-                        logger.debug('publishing.artifact sources')
-                        artifact sources
-                    }
-                }
-                pom {
-                    name = POM_ARTIFACT_ID
-                    if (rootProject.ext.has('POM_DESCRIPTION')) {
-                        description = POM_DESCRIPTION
-                    }
-                    if (rootProject.ext.has('POM_SCM_URL')) {
-                        url = POM_SCM_URL
-                    }
-                    licenses {
-                        license {
-                            if (rootProject.ext.has('POM_LICENCE_NAME')) {
-                                name = POM_LICENCE_NAME
-                            }
-                            if (rootProject.ext.has('POM_LICENCE_URL')) {
-                                url = POM_LICENCE_URL
-                            }
+            } else {
+                maven(MavenPublication) {
+                    afterEvaluate {
+                        def thisGroupId = generateGroupId(project, rootProject)
+                        def thisArtifactId = generateArtifactId(project)
+                        groupId thisGroupId
+                        artifactId thisArtifactId
+                        version version
+                        logger.debug("artifact: ${thisGroupId}:${thisArtifactId}:${version}")
+                        from components.java
+                        artifact javadocs
+                        logger.debug('publishing.publishSources: {}', publishSources)
+                        if(publishSources) {
+                            logger.debug('publishing.artifact sources')
+                            artifact sources
                         }
                     }
-                    developers {
-                        developer {
-                            if (rootProject.ext.has('POM_LICENCE_URL')) {
-                                id = POM_DEVELOPER_ID
-                            }
-                            if (rootProject.ext.has('POM_DEVELOPER_NAME')) {
-                                name = POM_DEVELOPER_NAME
-                            }
-                            if (rootProject.ext.has('POM_DEVELOPER_EMAIL')) {
-                                email = POM_DEVELOPER_EMAIL
-                            }
+                    pom {
+                        name = POM_ARTIFACT_ID
+                        if (rootProject.ext.has('POM_DESCRIPTION')) {
+                            description = POM_DESCRIPTION
                         }
-                    }
-                    scm {
                         if (rootProject.ext.has('POM_SCM_URL')) {
                             url = POM_SCM_URL
                         }
-                        if (rootProject.ext.has('POM_SCM_CONNECTION')) {
-                            connection = POM_SCM_CONNECTION
+                        licenses {
+                            license {
+                                if (rootProject.ext.has('POM_LICENCE_NAME')) {
+                                    name = POM_LICENCE_NAME
+                                }
+                                if (rootProject.ext.has('POM_LICENCE_URL')) {
+                                    url = POM_LICENCE_URL
+                                }
+                            }
                         }
-                        if (rootProject.ext.has('POM_SCM_DEV_CONNECTION')) {
-                            developerConnection = POM_SCM_DEV_CONNECTION
+                        developers {
+                            developer {
+                                if (rootProject.ext.has('POM_LICENCE_URL')) {
+                                    id = POM_DEVELOPER_ID
+                                }
+                                if (rootProject.ext.has('POM_DEVELOPER_NAME')) {
+                                    name = POM_DEVELOPER_NAME
+                                }
+                                if (rootProject.ext.has('POM_DEVELOPER_EMAIL')) {
+                                    email = POM_DEVELOPER_EMAIL
+                                }
+                            }
                         }
-
+                        scm {
+                            if (rootProject.ext.has('POM_SCM_URL')) {
+                                url = POM_SCM_URL
+                            }
+                            if (rootProject.ext.has('POM_SCM_CONNECTION')) {
+                                connection = POM_SCM_CONNECTION
+                            }
+                            if (rootProject.ext.has('POM_SCM_DEV_CONNECTION')) {
+                                developerConnection = POM_SCM_DEV_CONNECTION
+                            }
+                        }
                     }
                 }
             }
