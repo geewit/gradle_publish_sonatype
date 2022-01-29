@@ -514,7 +514,7 @@ if (need_publish) {
     }
     org.gradle.api.Task rootPublishToMavenLocal = rootProject.tasks.findByName('publishToMavenLocal')
     if (rootPublishToMavenLocal == null) {
-        rootProject.tasks.register('rootPublishToMavenLocal').get()
+        rootProject.tasks.register('publishToMavenLocal').get()
     }
 }
 
