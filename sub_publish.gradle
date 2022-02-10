@@ -381,6 +381,7 @@ subprojects {
         }
 
         task sources(type: Jar) {
+            enabled = need_publish
             archiveClassifier.set('sources')
             from sourceSets.main.allSource
             duplicatesStrategy = org.gradle.api.file.DuplicatesStrategy.EXCLUDE
@@ -390,6 +391,7 @@ subprojects {
         }
 
         task javadocs(type: Jar, dependsOn: javadoc) {
+            enabled = need_publish
             archiveClassifier.set('javadoc')
             from javadoc.destinationDir
             duplicatesStrategy = org.gradle.api.file.DuplicatesStrategy.EXCLUDE
@@ -408,6 +410,7 @@ subprojects {
         }
 
         tasks.withType(Javadoc) {
+            enabled = need_publish
             failOnError = false
             options.windowTitle("${project.name} Javadoc ${project.version}")
             options*.encoding = java.nio.charset.StandardCharsets.UTF_8.name()
