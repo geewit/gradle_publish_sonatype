@@ -300,31 +300,41 @@ static def generateArtifactId(Project project) {
     return artifactId
 }
 
-static def isSnapshotBuild(Project rootProject) {
-    return rootProject.version.contains('SNAPSHOT')
-}
-
 static def getRepositoryUrl(Project rootProject) {
     return isSnapshotBuild(rootProject) ? getSnapshotRepositoryUrl(rootProject) : getReleaseRepositoryUrl(rootProject)
 }
 
+static def isSnapshotBuild(Project rootProject) {
+    return rootProject.version.endsWith('SNAPSHOT')
+}
+
 static def getReleaseRepositoryUrl(Project rootProject) {
-    def property_default_key = 'REPOSITORY_SONATYP_ERELEASE_URL'
+    if(rootProject.ext.has('REPOSITORY_RELEASE_URL')) {
+        println "rootProject.ext.get('REPOSITORY_RELEASE_URL'): " + rootProject.ext.get('REPOSITORY_RELEASE_URL')
+        return rootProject.ext.get('REPOSITORY_RELEASE_URL')
+    }
+    def property_default_key = 'REPOSITORY_RELEASE_URL'
     def property_key = 'REPOSITORY_RELEASE_URL_KEY'
     def RELEASE_REPOSITORY_URL_KEY = rootProject.hasProperty(property_key) ? rootProject.getProperty(property_key) : property_default_key
     def releaseRepositoryUrl = rootProject.hasProperty(RELEASE_REPOSITORY_URL_KEY) ? rootProject.getProperty(RELEASE_REPOSITORY_URL_KEY)
             : 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
-    println "releaseRepositoryUrl: $releaseRepositoryUrl"
+    println "releaseRepositoryUrl: ${releaseRepositoryUrl}"
+    rootProject.ext.set('REPOSITORY_RELEASE_URL', releaseRepositoryUrl)
     return releaseRepositoryUrl
 }
 
 static def getSnapshotRepositoryUrl(Project rootProject) {
-    def property_default_key = 'REPOSITORY_SONATYP_SNAPSHOT_URL'
+    if(rootProject.ext.has('REPOSITORY_SNAPSHOT_URL')) {
+        println "rootProject.ext.get('REPOSITORY_SNAPSHOT_URL'): " + rootProject.ext.get('REPOSITORY_SNAPSHOT_URL')
+        return rootProject.ext.get('REPOSITORY_SNAPSHOT_URL')
+    }
+    def property_default_key = 'REPOSITORY_SNAPSHOT_URL'
     def property_key = 'REPOSITORY_SNAPSHOT_URL_KEY'
     def SNAPSHOT_REPOSITORY_URL_KEY = rootProject.hasProperty(property_key) ? rootProject.getProperty(property_key) : property_default_key
     def snapshotRepositoryUrl =  rootProject.hasProperty(SNAPSHOT_REPOSITORY_URL_KEY) ? rootProject.getProperty(SNAPSHOT_REPOSITORY_URL_KEY)
             : 'https://oss.sonatype.org/content/repositories/snapshots/'
-    println "snapshotRepositoryUrl: $snapshotRepositoryUrl"
+    println "snapshotRepositoryUrl: ${snapshotRepositoryUrl}"
+    rootProject.ext.set('REPOSITORY_SNAPSHOT_URL', snapshotRepositoryUrl)
     return snapshotRepositoryUrl
 }
 
