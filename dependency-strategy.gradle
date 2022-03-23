@@ -567,7 +567,11 @@ def resolutionStrategy(DependencyResolveDetails details) {
             details.useVersion spring_boot_version
         }
     } else if (details.requested.group == 'org.springframework.cloud') {
-        if (rootProject.hasProperty("spring_cloud_version")) {
+        if (details.requested.name.contains('gateway') && rootProject.hasProperty("spring_cloud_gateway_version")) {
+            details.useVersion spring_cloud_gateway_version
+        } else if (details.requested.name.contains('openfeign') && rootProject.hasProperty("spring_cloud_openfeign_version")) {
+            details.useVersion spring_cloud_openfeign_version
+        } else if (rootProject.hasProperty("spring_cloud_version")) {
             details.useVersion spring_cloud_version
         }
     } else if (details.requested.group == 'org.springframework.data') {
